@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "apollo-server": "2.4.8",
+    "graphql": "14.2.1",
+    "nodemon": "1.18.10"
   }
 }
