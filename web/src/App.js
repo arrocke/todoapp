@@ -1,21 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom'
 import Navigation from './components/Navigation'
-import useGraphQL from './hooks/graphql'
+import PageView from './views/PageView'
 
 const App = () => {
-  const [query, error] = useGraphQL({
-    query: `{
-      hello
-    }`
-  })
 
   return (
     <Router>
-      <div className="bg-black text-white">
+      <div className="min-h-full flex flex-col items-stretch bg-black text-white">
         <Navigation />
-        { JSON.stringify(query)}
-        { JSON.stringify(error)}
+        <main className="flex-grow">
+          <PageView />
+        </main>
       </div>
     </Router>
   );
