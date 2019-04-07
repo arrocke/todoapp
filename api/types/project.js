@@ -28,7 +28,7 @@ module.exports = ({ Query, Mutation, ...types }) => {
 
   const projects = async (_, { input: { limit = 20, pageNumber = 0 } = {} }) => {
     const params = [
-      Math.min(20, limit),
+      Math.min(20, limit) + 1,
       (pageNumber) * limit,
     ]
     let { rows: projects } = await db.query(PROJECTS_QUERY, params)
@@ -36,6 +36,10 @@ module.exports = ({ Query, Mutation, ...types }) => {
     const { rows: [{ count: totalCount }] } = await db.query(PROJECT_COUNT_QUERY)
 
     const hasNext = projects.length > limit
+    if (hasNext) {
+      projects = projects.slice(0, -1)
+    }
+
     const page = projects.map(p => new Project(p))
 
     return { hasNext, totalCount, page }
