@@ -12,7 +12,7 @@ const useGraphQL = ({ query, mutation, variables }) => {
       mutation: mutation ? gql`${mutation}`: null,
       variables
     }).then(response => {
-      setResponse(response)
+      setResponse(response.data)
       setError(null)
     }).catch(e => {
       setResponse(null)
