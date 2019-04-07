@@ -7,23 +7,25 @@ module.exports = gql`
   }
 
   type ProjectsResult {
-    projects: [Project]
-    count: Int!
+    page: [Project]
+    totalCount: Int!
+    hasNext: Boolean!
+  }
+
+  input ProjectsInput {
+    limit: Int
+    pageNumber: Int
   }
 
   input CreateProjectInput {
     name: String!
   }
-
-  type CreateProjectResult {
-    project: Project!
-  }
   
   type Query {
-    projects: ProjectsResult!
+    projects(input: ProjectsInput): ProjectsResult!
   }
 
   type Mutation {
-    createProject(input: CreateProjectInput!): CreateProjectResult!
+    createProject(input: CreateProjectInput!): Project!
   }
 `

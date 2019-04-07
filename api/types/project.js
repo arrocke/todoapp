@@ -1,7 +1,15 @@
-const store = [
-  { id: 1, name: 'Project 1' },
-  { id: 2, name: 'Project 2' }
-]
+const db = require('../db-connection')
+
+const PROJECTS_QUERY = `
+  SELECT name, project_id, created_at FROM project
+  ORDER BY created_at
+  LIMIT $1
+  OFFSET $2;
+`
+
+const PROJECT_COUNT_QUERY = `
+  SELECT COUNT(project_id) FROM project
+`
 
 module.exports = ({ Query, Mutation, ...types }) => {
   class Project {
@@ -10,7 +18,7 @@ module.exports = ({ Query, Mutation, ...types }) => {
     }
 
     get id () {
-      return this._model.id
+      return this._model.project_id
     }
 
     get name () {
@@ -18,11 +26,19 @@ module.exports = ({ Query, Mutation, ...types }) => {
     }
   }
 
-  const projects = () => {
-    return {
-      projects: store.map(p => new Project(p)),
-      count: store.length
-    }
+  const projects = async (_, { input: { limit = 20, pageNumber = 0 } = {} }) => {
+    const params = [
+      Math.min(20, limit),
+      (pageNumber) * limit,
+    ]
+    let { rows: projects } = await db.query(PROJECTS_QUERY, params)
+
+    const { rows: [{ count: totalCount }] } = await db.query(PROJECT_COUNT_QUERY)
+
+    const hasNext = projects.length > limit
+    const page = projects.map(p => new Project(p))
+
+    return { hasNext, totalCount, page }
   }
 
   const createProject = (_, { input }) => {
@@ -30,8 +46,6 @@ module.exports = ({ Query, Mutation, ...types }) => {
       id: store.length,
       name: input.name
     }
-
-    store.push(project)
 
     return {
       project
