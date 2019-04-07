@@ -11,6 +11,10 @@ const PROJECT_COUNT_QUERY = `
   SELECT COUNT(project_id) FROM project
 `
 
+const CREATE_PROJECT_QUERY = `
+  INSERT INTO project (name) VALUES ($1) RETURNING project_id
+`
+
 module.exports = ({ Query, Mutation, ...types }) => {
   class Project {
     constructor(model) {
@@ -45,15 +49,16 @@ module.exports = ({ Query, Mutation, ...types }) => {
     return { hasNext, totalCount, page }
   }
 
-  const createProject = (_, { input }) => {
-    const project = {
-      id: store.length,
-      name: input.name
-    }
+  const createProject = async (_, { input: { name } }) => {
+    const params = [
+      name
+    ]
+    const { rows: [{ project_id }]} = await db.query(CREATE_PROJECT_QUERY, params)
 
-    return {
-      project
-    }
+    return new Project({
+      project_id,
+      name
+    })
   }
 
   return {
