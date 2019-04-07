@@ -1,54 +1,51 @@
-import React, { useState } from 'react'
-import useGraphQL from '../hooks/graphql'
-
-const LIMIT = 5
+import React, { useState, useEffect } from 'react'
+import projectService from '../services/project'
 
 const ProjectsView = () => {
   const [pageNumber, setPageNumber] = useState(0)
-  const [query] = useGraphQL({
-    query: `query Projects($input: ProjectsInput) {
-      projects(input: $input) {
-        page {
-          name
-          id
-        }
-        hasNext
-      }
-    }`,
-    variables: {
-      input: {
-        pageNumber,
-        limit: LIMIT
-      }
+  const [{ projects, hasNext }, setPage] = useState({ projects: [], hasNext: false })
+  const [name, setName] = useState('')
+
+  useEffect(() => {
+    const effect = async () => {
+      setPage(await projectService.getPage(pageNumber))
     }
+    effect()
   }, [pageNumber])
 
-  if (query) {
-    const projects = query.projects.page.map(p => <li key={p.id}>{p.name}</li>)
-
-    return <div>
-      <ul>
-        {projects}
-      </ul>
-      <p className="mt-4">
-        <button
-          className="btn"
-          disabled={pageNumber === 0}
-          type="button"
-          onClick={() => setPageNumber(pageNumber - 1)}
-        >Previous Page</button>
-        <span className="mx-2">{pageNumber + 1}</span>
-        <button
-          className="btn"
-          disabled={!query.projects.hasNext}
-          type="button"
-          onClick={() => setPageNumber(pageNumber + 1)}
-        >Next Page</button>
-      </p>
-    </div>
-  } else {
-    return null
+  const createProject = async () => {
+    await projectService.create({ name })
+    setPage(await projectService.getPage(pageNumber))
   }
+
+  return <div>
+    <input
+      type="text"
+      onInput={e => setName(e.target.value)}
+    />
+    <button
+      className="btn ml-2"
+      onClick={createProject}
+    >Add</button>
+    <ul>
+      {projects.map(p => <li key={p.id}>{p.name}</li>)}
+    </ul>
+    <p className="mt-4">
+      <button
+        className="btn"
+        disabled={pageNumber === 0}
+        type="button"
+        onClick={() => setPageNumber(pageNumber - 1)}
+      >Previous Page</button>
+      <span className="mx-2">{pageNumber + 1}</span>
+      <button
+        className="btn"
+        disabled={!hasNext}
+        type="button"
+        onClick={() => setPageNumber(pageNumber + 1)}
+      >Next Page</button>
+    </p>
+  </div>
 }
 
 export default ProjectsView
