@@ -1,4 +1,4 @@
-const typeList = ['project']
+const typeList = ['project', 'task']
 
 // Construct resolvers from type files.
 module.exports = typeList.reduce(

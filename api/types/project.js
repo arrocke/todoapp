@@ -16,17 +16,12 @@ const CREATE_PROJECT_QUERY = `
 `
 
 module.exports = ({ Query, Mutation, ...types }) => {
-  class Project {
-    constructor(model) {
-      this._model = model
-    }
-
-    get id () {
-      return this._model.project_id
-    }
-
-    get name () {
-      return this._model.name
+  const Project = {
+    id (model) {
+      return model.project_id
+    },
+    name (model) {
+      return model.name
     }
   }
 
@@ -44,9 +39,7 @@ module.exports = ({ Query, Mutation, ...types }) => {
       projects = projects.slice(0, -1)
     }
 
-    const page = projects.map(p => new Project(p))
-
-    return { hasNext, totalCount, page }
+    return { hasNext, totalCount, page: projects }
   }
 
   const createProject = async (_, { input: { name } }) => {
@@ -55,10 +48,7 @@ module.exports = ({ Query, Mutation, ...types }) => {
     ]
     const { rows: [{ project_id }]} = await db.query(CREATE_PROJECT_QUERY, params)
 
-    return new Project({
-      project_id,
-      name
-    })
+    return { project_id, name }
   }
 
   return {

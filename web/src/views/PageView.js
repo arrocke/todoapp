@@ -1,9 +1,13 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import ProjectsView from './ProjectsView'
+import TasksView from './TasksView'
 
-const PageView = ({ className }) => {
-  return <Route exact path="/projects/" component={ProjectsView} />
+const PageView = () => {
+  return <Switch>
+    <Route exact path="/projects/" component={ProjectsView} />
+    <Route exact path="/tasks/" component={TasksView} />
+  </Switch>
 }
 
 export default PageView
