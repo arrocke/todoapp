@@ -1,19 +1,4 @@
-const db = require('../db-connection')
-
-const TASKS_QUERY = `
-  SELECT name, task_id, project_id, created_at FROM task
-  ORDER BY created_at
-  LIMIT $1
-  OFFSET $2;
-`
-
-const TASK_COUNT_QUERY = `
-  SELECT COUNT(task_id) FROM task
-`
-
-const CREATE_TASK_QUERY = `
-  INSERT INTO task (name, completed) VALUES ($1, $2) RETURNING task_id
-`
+const taskQueries = require('../queries/task')
 
 module.exports = ({ Query, Mutation, ...types }) => {
   const Task = {
@@ -26,13 +11,12 @@ module.exports = ({ Query, Mutation, ...types }) => {
   }
 
   const tasks = async (_, { input: { limit = 20, pageNumber = 0 } = {} }) => {
-    const params = [
-      Math.min(20, limit) + 1,
-      (pageNumber) * limit,
-    ]
-    let { rows: tasks } = await db.query(TASKS_QUERY, params)
+    let tasks = await taskQueries.find({
+      limit: Math.min(20, limit) + 1,
+      offset: (pageNumber) * limit,
+    })
 
-    const { rows: [{ count: totalCount }] } = await db.query(TASK_COUNT_QUERY)
+    const totalCount = taskQueries.count()
 
     const hasNext = tasks.length > limit
     if (hasNext) {
@@ -46,11 +30,10 @@ module.exports = ({ Query, Mutation, ...types }) => {
 
   const createTask = async (_, { input: { name } }) => {
     const completed = false
-    const params = [
+    const task_id = await taskQueries.insert({
       name,
       completed
-    ]
-    const { rows: [{ task_id }]} = await db.query(CREATE_TASK_QUERY, params)
+    })
 
     return { task_id, name, completed }
   }
