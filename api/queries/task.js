@@ -1,7 +1,7 @@
 const db = require('../db-connection')
 
-const find = async ({ limit, offset, projectId, states }) => {
-  const params = []
+const find = async ({ projectId, states }) => {
+  let params = []
   let query = `
     SELECT name, task_id AS "taskId", project_id AS "projectId", state, created_at AS "createdAt" FROM task
   `
@@ -24,12 +24,9 @@ const find = async ({ limit, offset, projectId, states }) => {
     query += `WHERE ${conditions.join(' AND ')}`
   }
 
-  // Limit to a single page.
-  params.push(limit, offset)
+  // Sort tasks.
   query += `
     ORDER BY created_at
-    LIMIT $${params.length - 1}
-    OFFSET $${params.length}
   `
 
   const { rows } = await db.query(query, params)

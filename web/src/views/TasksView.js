@@ -2,20 +2,18 @@ import React, { useState, useEffect } from 'react'
 import taskService from '../services/task'
 
 const TasksView = () => {
-  const [pageNumber, setPageNumber] = useState(0)
-  const [{ page, hasNext }, setPage] = useState({ page: [], hasNext: false })
+  const [tasks, setTasks] = useState([])
   const [name, setName] = useState('')
 
   useEffect(() => {
-    const effect = async () => {
-      setPage(await taskService.getPage(pageNumber))
-    }
+    const effect = async () => 
+      setTasks(await taskService.getAll())
     effect()
-  }, [pageNumber])
+  }, [])
 
   const createTask = async () => {
-    await taskService.create({ name })
-    setPage(await taskService.getPage(pageNumber))
+    const task = await taskService.create({ name })
+    setTasks([...tasks, task])
   }
 
   return <div>
@@ -28,23 +26,8 @@ const TasksView = () => {
       onClick={createTask}
     >Add</button>
     <ul>
-      {page.map(p => <li key={p.id}>{p.name}</li>)}
+      {tasks.map(p => <li key={p.id}>{p.name}</li>)}
     </ul>
-    <p className="mt-4">
-      <button
-        className="btn"
-        disabled={pageNumber === 0}
-        type="button"
-        onClick={() => setPageNumber(pageNumber - 1)}
-      >Previous Page</button>
-      <span className="mx-2">{pageNumber + 1}</span>
-      <button
-        className="btn"
-        disabled={!hasNext}
-        type="button"
-        onClick={() => setPageNumber(pageNumber + 1)}
-      >Next Page</button>
-    </p>
   </div>
 }
 

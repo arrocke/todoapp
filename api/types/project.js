@@ -12,41 +12,16 @@ module.exports = ({ Query, Mutation, ...types }) => {
     name (model) {
       return model.name
     },
-    async tasks (model, { input: { limit = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_NUMBER, states } = {}}) {
-      let tasks = await taskQueries.find({
-        limit: limit + 1,
-        offset: (pageNumber) * limit,
+    async tasks (model, { input: { states } = {}}) {
+      return await taskQueries.find({
         projectId: model.projectId,
         states
       })
-
-      const totalCount = taskQueries.count({ projectId: model.projectId })
-
-      const hasNext = tasks.length > limit
-      if (hasNext) {
-        tasks = tasks.slice(0, -1)
-      }
-
-      const page = tasks
-
-      return { hasNext, totalCount, page }
     }
   }
 
-  const projects = async (_, { input: { limit = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_NUMBER } = {} }) => {
-    let projects = await projectQueries.find({
-      limit: limit + 1,
-      offset: (pageNumber) * limit,
-    })
-
-    const totalCount = await projectQueries.count()
-
-    const hasNext = projects.length > limit
-    if (hasNext) {
-      projects = projects.slice(0, -1)
-    }
-
-    return { hasNext, totalCount, page: projects }
+  const projects = async () => {
+    return await projectQueries.find()
   }
 
   const project = async (_, { id }) => {

@@ -4,18 +4,18 @@ module.exports = gql`
   type Project {
     id: ID!
     name: String!
-    tasks(input: TasksInput): TasksResult!
+    tasks(input: TasksInput): [Task]
   }
 
-  type ProjectsResult {
-    page: [Project]
-    totalCount: Int!
-    hasNext: Boolean!
+  type Task {
+    id: ID!
+    name: String!
+    project: Project
+    state: String!
   }
 
-  input ProjectsInput {
-    limit: Int
-    pageNumber: Int
+  input TasksInput {
+    states: [String]
   }
 
   input CreateProjectInput {
@@ -26,30 +26,11 @@ module.exports = gql`
     name: String!,
     projectId: ID
   }
-
-  type Task {
-    id: ID!
-    name: String!
-    project: Project
-    state: String!
-  }
-
-  type TasksResult {
-    page: [Task]
-    totalCount: Int!
-    hasNext: Boolean!
-  }
-
-  input TasksInput {
-    limit: Int
-    pageNumber: Int,
-    states: [String]
-  }
   
   type Query {
-    projects(input: ProjectsInput): ProjectsResult!
+    projects: [Project]
     project(id: ID!): Project
-    tasks(input: TasksInput): TasksResult!
+    tasks(input: TasksInput): [Task]
   }
 
   type Mutation {

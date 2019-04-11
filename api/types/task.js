@@ -22,23 +22,8 @@ module.exports = ({ Query, Mutation, ...types }) => {
     }
   }
 
-  const tasks = async (_, { input: { limit = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_SIZE, states } = {} }) => {
-    let tasks = await taskQueries.find({
-      limit: limit + 1,
-      offset: (pageNumber) * limit,
-      states
-    })
-
-    const totalCount = taskQueries.count()
-
-    const hasNext = tasks.length > limit
-    if (hasNext) {
-      tasks = tasks.slice(0, -1)
-    }
-
-    const page = tasks
-
-    return { hasNext, totalCount, page }
+  const tasks = async (_, { input: { states } = {} }) => {
+    return await taskQueries.find({ states })
   }
 
   const createTask = async (_, { input: { name, projectId } }) => {

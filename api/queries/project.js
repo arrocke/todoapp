@@ -1,15 +1,12 @@
 const db = require('../db-connection')
 
-const find = async ({ limit, offset }) => {
-  const params = [limit, offset]
+const find = async () => {
   const query = `
     SELECT name, project_id AS "projectId", created_at AS "createdAt" FROM project
     ORDER BY created_at
-    LIMIT $1
-    OFFSET $2
   `
 
-  const { rows } = await db.query(query, params)
+  const { rows } = await db.query(query)
   return rows
 }
 

@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import projectService from '../services/project'
-import useLazyList from '../hooks/lazyList'
-
-const fetchPage = (pageNumber) =>
-  projectService.getPage(pageNumber)
 
 const ProjectsView = () => {
   const [name, setName] = useState('')
-  const [projects, setProjects, loadingProjects] = useLazyList({ fetchPage })
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    const effect = async () =>
+      setProjects(await projectService.getAll())
+    effect()
+  }, [])
 
   const createProject = async () => {
     const project = await projectService.create({ name })
@@ -32,7 +34,6 @@ const ProjectsView = () => {
     <ul>
       {projects.map(renderProject)}
     </ul>
-    {loadingProjects ? <span>Loading</span> : null}
   </div>
 }
 

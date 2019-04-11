@@ -1,53 +1,33 @@
 import gql from "graphql-tag";
 import client from '../client'
 
-const LIMIT = 5
-
-const getPage = async (pageNumber) => {
+const getAll = async () => {
   const query = gql`
-    query Projects($input: ProjectsInput) {
-      projects(input: $input) {
-        page {
-          name
-          id
-        }
-        hasNext
+    query Projects {
+      projects {
+        name
+        id
       }
     }`
-  const variables = {
-    input: {
-      pageNumber,
-      limit: LIMIT
-    }
-  }
-  const { data: { projects }}  = await client.query({ query, variables, fetchPolicy: 'no-cache' })
+  const { data: { projects }}  = await client.query({ query, fetchPolicy: 'no-cache' })
 
   return projects
 }
 
 const getOne = async ({ id, pageNumber }) => {
   const query = gql`
-    query Project($id: ID!, $tasksInput: TasksInput) {
+    query Project($id: ID!) {
       project(id: $id) {
         id
         name
-        tasks(input: $tasksInput) {
-          page {
-            name
-            id
-          }
-          hasNext
+        tasks {
+          name
+          id
         }
       }
     }
   `
-  const variables = {
-    id,
-    tasksInput: {
-      pageNumber,
-      limit: LIMIT
-    }
-  }
+  const variables = { id }
   const { data: { project }} = await client.query({ query, variables, fetchPolicy: 'no-cache' })
   return project
 }
@@ -69,7 +49,7 @@ const create = async ({ name }) => {
 }
 
 export default {
-  getPage,
+  getAll,
   getOne,
   create
 }
