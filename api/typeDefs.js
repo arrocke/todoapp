@@ -31,7 +31,7 @@ module.exports = gql`
     id: ID!
     name: String!
     project: Project
-    completed: Boolean!
+    state: String!
   }
 
   type TasksResult {
@@ -42,7 +42,8 @@ module.exports = gql`
 
   input TasksInput {
     limit: Int
-    pageNumber: Int
+    pageNumber: Int,
+    states: [String]
   }
   
   type Query {

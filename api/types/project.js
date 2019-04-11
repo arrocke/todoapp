@@ -9,11 +9,12 @@ module.exports = ({ Query, Mutation, ...types }) => {
     name (model) {
       return model.name
     },
-    async tasks (model, { input: { limit = 20, pageNumber = 0 } = {}}) {
+    async tasks (model, { input: { limit = 20, pageNumber = 0, states } = {}}) {
       let tasks = await taskQueries.find({
         limit: Math.min(20, limit) + 1,
         offset: (pageNumber) * limit,
-        projectId: model.projectId
+        projectId: model.projectId,
+        states
       })
 
       const totalCount = taskQueries.count({ projectId: model.projectId })

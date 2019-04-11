@@ -11,7 +11,7 @@ INSERT INTO project (name) VALUES ('Project 10');
 INSERT INTO project (name) VALUES ('Project 11');
 INSERT INTO project (name) VALUES ('Project 12');
 
-INSERT INTO task (name, completed, project_id) VALUES ('Task 1', false, (SELECT project_id FROM project WHERE name = 'Project 1'));
-INSERT INTO task (name, completed, project_id) VALUES ('Task 2', false, (SELECT project_id FROM project WHERE name = 'Project 1'));
-INSERT INTO task (name, completed, project_id) VALUES ('Task 3', false, (SELECT project_id FROM project WHERE name = 'Project 3'));
-INSERT INTO task (name, completed) VALUES ('Task 4', false);
+INSERT INTO task (name, project_id) VALUES ('Task 1', (SELECT project_id FROM project WHERE name = 'Project 1'));
+INSERT INTO task (name, project_id) VALUES ('Task 2', (SELECT project_id FROM project WHERE name = 'Project 1'));
+INSERT INTO task (name, project_id) VALUES ('Task 3', (SELECT project_id FROM project WHERE name = 'Project 3'));
+INSERT INTO task (name) VALUES ('Task 4');

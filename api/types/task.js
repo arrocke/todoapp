@@ -9,6 +9,9 @@ module.exports = ({ Query, Mutation, ...types }) => {
     name (model) {
       return model.name
     },
+    state (model) {
+      return model.state
+    },
     async project (model) {
       if (model.projectId) {
         return await projectQueries.findOne(model.projectId)
@@ -16,10 +19,11 @@ module.exports = ({ Query, Mutation, ...types }) => {
     }
   }
 
-  const tasks = async (_, { input: { limit = 20, pageNumber = 0 } = {} }) => {
+  const tasks = async (_, { input: { limit = 20, pageNumber = 0, states } = {} }) => {
     let tasks = await taskQueries.find({
       limit: Math.min(20, limit) + 1,
       offset: (pageNumber) * limit,
+      states
     })
 
     const totalCount = taskQueries.count()
@@ -36,13 +40,13 @@ module.exports = ({ Query, Mutation, ...types }) => {
 
   const createTask = async (_, { input: { name, projectId } }) => {
     const completed = false
-    const taskId = await taskQueries.insert({
+    const { taskId, state } = await taskQueries.insert({
       name,
       completed,
       projectId
     })
 
-    return { taskId, name, completed, projectId }
+    return { taskId, state, name, completed, projectId }
   }
 
   return {
