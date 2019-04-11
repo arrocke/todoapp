@@ -25,6 +25,20 @@ const getPage = async (pageNumber) => {
   return { projects: page, hasNext}
 }
 
+const getOne = async (id) => {
+  const query = gql`
+    query Project($id: ID!) {
+      project(id: $id) {
+        id
+        name
+      }
+    }
+  `
+  const variables = { id }
+  const { data: { project }} = await client.query({ query, variables, fetchPolicy: 'no-cache' })
+  return project
+}
+
 const create = async ({ name }) => {
   const mutation = gql`
     mutation CreateProject($input: CreateProjectInput!) {
@@ -43,5 +57,6 @@ const create = async ({ name }) => {
 
 export default {
   getPage,
+  getOne,
   create
 }

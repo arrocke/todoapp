@@ -45,6 +45,7 @@ module.exports = gql`
   
   type Query {
     projects(input: ProjectsInput): ProjectsResult!
+    project(id: ID!): Project
     tasks(input: TasksInput): TasksResult!
   }
 

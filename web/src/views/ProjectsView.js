@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import projectService from '../services/project'
 
 const ProjectsView = () => {
@@ -18,6 +19,11 @@ const ProjectsView = () => {
     setPage(await projectService.getPage(pageNumber))
   }
 
+  const renderProject = ({ id, name }) =>
+    <li key={id}>
+      <Link to={`/projects/${id}`}>{name}</Link>
+    </li>
+
   return <div>
     <input
       type="text"
@@ -28,7 +34,7 @@ const ProjectsView = () => {
       onClick={createProject}
     >Add</button>
     <ul>
-      {projects.map(p => <li key={p.id}>{p.name}</li>)}
+      {projects.map(renderProject)}
     </ul>
     <p className="mt-4">
       <button

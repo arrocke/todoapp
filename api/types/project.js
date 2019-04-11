@@ -26,6 +26,10 @@ module.exports = ({ Query, Mutation, ...types }) => {
     return { hasNext, totalCount, page: projects }
   }
 
+  const project = async (_, { id }) => {
+    return await projectQueries.findOne(id)
+  }
+
   const createProject = async (_, { input: { name } }) => {
     const project_id = projectQueries.insert({ name })
     return { project_id, name }
@@ -36,7 +40,8 @@ module.exports = ({ Query, Mutation, ...types }) => {
     Project,
     Query: {
       ...Query,
-      projects
+      projects,
+      project
     },
     Mutation: {
       ...Mutation,

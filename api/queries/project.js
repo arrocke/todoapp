@@ -13,6 +13,17 @@ const find = async ({ limit, offset }) => {
   return rows
 }
 
+const findOne = async (id) => {
+  const params = [id]
+  const query = `
+    SELECT name, project_id, created_at FROM project
+    WHERE project_id = $1
+  `
+
+  const { rows: [project] } = await db.query(query, params)
+  return project
+}
+
 const count = async () => {
   const query = `
     SELECT COUNT(project_id) FROM project
@@ -34,6 +45,7 @@ const insert = async ({ name }) => {
 
 module.exports = {
   find,
+  findOne,
   count,
   insert
 }
