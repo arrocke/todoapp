@@ -14,23 +14,6 @@ const getAll = async () => {
   return tasks
 }
 
-const create = async ({ name, projectId }) => {
-  const mutation = gql`
-    mutation CreateTask($input: CreateTaskInput!) {
-      createTask(input: $input) {
-        id
-      }
-    }
-  `
-  const variables = {
-    input: { name, projectId }
-  }
-  const { data: { createTask: { id } }} = await client.mutate({ mutation, variables })
-
-  return { id, name }
-}
-
 export default {
-  getAll,
-  create
+  getAll
 }
