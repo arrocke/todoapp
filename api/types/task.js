@@ -1,6 +1,9 @@
 const taskQueries = require('../queries/task')
 const projectQueries = require('../queries/project')
 
+const DEFAULT_PAGE_SIZE = 20
+const DEFAULT_PAGE_NUMBER = 0
+
 module.exports = ({ Query, Mutation, ...types }) => {
   const Task = {
     id (model) {
@@ -19,9 +22,9 @@ module.exports = ({ Query, Mutation, ...types }) => {
     }
   }
 
-  const tasks = async (_, { input: { limit = 20, pageNumber = 0, states } = {} }) => {
+  const tasks = async (_, { input: { limit = DEFAULT_PAGE_SIZE, pageNumber = DEFAULT_PAGE_SIZE, states } = {} }) => {
     let tasks = await taskQueries.find({
-      limit: Math.min(20, limit) + 1,
+      limit: limit + 1,
       offset: (pageNumber) * limit,
       states
     })
