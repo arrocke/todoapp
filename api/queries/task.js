@@ -1,14 +1,14 @@
 const db = require('../db-connection')
 
-const find = async ({ limit, offset, project_id }) => {
+const find = async ({ limit, offset, projectId }) => {
   const params = []
   let query = `
-    SELECT name, task_id, project_id, created_at FROM task
+    SELECT name, task_id AS "taskId", project_id AS "projectId", created_at AS "createdAt" FROM task
   `
 
   // Limit to tasks in a specific project.
-  if (typeof project_id !== 'undefined') {
-    params.push(project_id)
+  if (typeof projectId !== 'undefined') {
+    params.push(projectId)
     query += `WHERE project_id = $${params.length}`
   }
 
@@ -24,7 +24,7 @@ const find = async ({ limit, offset, project_id }) => {
   return rows
 }
 
-const count = async ({ project_id }) => {
+const count = async ({ projectId }) => {
   const params = []
   let query = `
     SELECT COUNT(project_id) FROM task
@@ -32,7 +32,7 @@ const count = async ({ project_id }) => {
 
   // Limit to tasks in a specific project.
   if (typeof project_id !== 'undefined') {
-    params.push(project_id)
+    params.push(projectId)
     query += `WHERE project_id = $${params.length}`
   }
 
@@ -43,11 +43,11 @@ const count = async ({ project_id }) => {
 const insert = async ({ name, completed, projectId }) => {
   const params = [name, completed, projectId]
   const query = `
-    INSERT INTO task (name, completed, project_id) VALUES ($1, $2, $3) RETURNING task_id
+    INSERT INTO task (name, completed, project_id) VALUES ($1, $2, $3) RETURNING task_id AS "taskId"
   `
 
-  const { rows: [{ task_id }]} = await db.query(query, params)
-  return task_id
+  const { rows: [{ taskId }]} = await db.query(query, params)
+  return taskId
 }
 
 module.exports = {

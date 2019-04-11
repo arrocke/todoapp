@@ -3,7 +3,7 @@ const db = require('../db-connection')
 const find = async ({ limit, offset }) => {
   const params = [limit, offset]
   const query = `
-    SELECT name, project_id, created_at FROM project
+    SELECT name, project_id AS "projectId", created_at AS "createdAt" FROM project
     ORDER BY created_at
     LIMIT $1
     OFFSET $2
@@ -16,7 +16,7 @@ const find = async ({ limit, offset }) => {
 const findOne = async (id) => {
   const params = [id]
   const query = `
-    SELECT name, project_id, created_at FROM project
+    SELECT name, project_id AS "projectId", created_at AS "createdAt" FROM project
     WHERE project_id = $1
   `
 
@@ -36,11 +36,11 @@ const count = async () => {
 const insert = async ({ name }) => {
   const params = [name]
   const query = `
-    INSERT INTO project (name) VALUES ($1) RETURNING project_id
+    INSERT INTO project (name) VALUES ($1) RETURNING project_id AS "projectId"
   `
 
-  const { rows: [{ project_id }]} = await db.query(query, params)
-  return project_id
+  const { rows: [{ projectId }]} = await db.query(query, params)
+  return projectId
 }
 
 module.exports = {
