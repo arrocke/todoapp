@@ -4,7 +4,6 @@ const find = async ({ limit, offset, project_id }) => {
   const params = []
   let query = `
     SELECT name, task_id, project_id, created_at FROM task
-    ORDER BY created_at
   `
 
   // Limit to tasks in a specific project.
@@ -16,6 +15,7 @@ const find = async ({ limit, offset, project_id }) => {
   // Limit to a single page.
   params.push(limit, offset)
   query += `
+    ORDER BY created_at
     LIMIT $${params.length - 1}
     OFFSET $${params.length}
   `

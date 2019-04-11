@@ -4,6 +4,7 @@ module.exports = gql`
   type Project {
     id: ID!
     name: String!
+    tasks(input: TasksInput): TasksResult!
   }
 
   type ProjectsResult {

@@ -4,7 +4,7 @@ import projectService from '../services/project'
 
 const ProjectsView = () => {
   const [pageNumber, setPageNumber] = useState(0)
-  const [{ projects, hasNext }, setPage] = useState({ projects: [], hasNext: false })
+  const [{ page, hasNext }, setPage] = useState({ page: [], hasNext: false })
   const [name, setName] = useState('')
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const ProjectsView = () => {
       onClick={createProject}
     >Add</button>
     <ul>
-      {projects.map(renderProject)}
+      {page.map(renderProject)}
     </ul>
     <p className="mt-4">
       <button

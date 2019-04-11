@@ -1,4 +1,5 @@
 const projectQueries = require('../queries/project')
+const taskQueries = require('../queries/task')
 
 module.exports = ({ Query, Mutation, ...types }) => {
   const Project = {
@@ -7,6 +8,24 @@ module.exports = ({ Query, Mutation, ...types }) => {
     },
     name (model) {
       return model.name
+    },
+    async tasks (model, { input: { limit = 20, pageNumber = 0 } = {}}) {
+      let tasks = await taskQueries.find({
+        limit: Math.min(20, limit) + 1,
+        offset: (pageNumber) * limit,
+        project_id: model.project_id
+      })
+
+      const totalCount = taskQueries.count({ project_id: model.project_id })
+
+      const hasNext = tasks.length > limit
+      if (hasNext) {
+        tasks = tasks.slice(0, -1)
+      }
+
+      const page = tasks
+
+      return { hasNext, totalCount, page }
     }
   }
 

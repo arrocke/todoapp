@@ -20,9 +20,9 @@ const getPage = async (pageNumber) => {
       limit: LIMIT
     }
   }
-  const { data: { tasks: { page, hasNext }}}  = await client.query({ query, variables, fetchPolicy: 'no-cache' })
+  const { data: { tasks }}  = await client.query({ query, variables, fetchPolicy: 'no-cache' })
 
-  return { tasks: page, hasNext}
+  return tasks
 }
 
 const create = async ({ name }) => {

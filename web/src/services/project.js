@@ -20,21 +20,34 @@ const getPage = async (pageNumber) => {
       limit: LIMIT
     }
   }
-  const { data: { projects: { page, hasNext }}}  = await client.query({ query, variables, fetchPolicy: 'no-cache' })
+  const { data: { projects }}  = await client.query({ query, variables, fetchPolicy: 'no-cache' })
 
-  return { projects: page, hasNext}
+  return projects
 }
 
-const getOne = async (id) => {
+const getOne = async ({ id, pageNumber }) => {
   const query = gql`
-    query Project($id: ID!) {
+    query Project($id: ID!, $tasksInput: TasksInput) {
       project(id: $id) {
         id
         name
+        tasks(input: $tasksInput) {
+          page {
+            name
+            id
+          }
+          hasNext
+        }
       }
     }
   `
-  const variables = { id }
+  const variables = {
+    id,
+    tasksInput: {
+      pageNumber,
+      limit: LIMIT
+    }
+  }
   const { data: { project }} = await client.query({ query, variables, fetchPolicy: 'no-cache' })
   return project
 }

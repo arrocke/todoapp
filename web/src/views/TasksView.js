@@ -3,7 +3,7 @@ import taskService from '../services/task'
 
 const TasksView = () => {
   const [pageNumber, setPageNumber] = useState(0)
-  const [{ tasks, hasNext }, setPage] = useState({ tasks: [], hasNext: false })
+  const [{ page, hasNext }, setPage] = useState({ page: [], hasNext: false })
   const [name, setName] = useState('')
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const TasksView = () => {
       onClick={createTask}
     >Add</button>
     <ul>
-      {tasks.map(p => <li key={p.id}>{p.name}</li>)}
+      {page.map(p => <li key={p.id}>{p.name}</li>)}
     </ul>
     <p className="mt-4">
       <button
