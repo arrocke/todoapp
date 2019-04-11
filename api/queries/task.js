@@ -32,8 +32,6 @@ const find = async ({ limit, offset, projectId, states }) => {
     OFFSET $${params.length}
   `
 
-  console.log(query)
-
   const { rows } = await db.query(query, params)
   return rows
 }

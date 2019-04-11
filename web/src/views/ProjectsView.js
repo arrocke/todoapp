@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import projectService from '../services/project'
+import useLazyList from '../hooks/lazyList'
+
+const fetchPage = (pageNumber) =>
+  projectService.getPage(pageNumber)
 
 const ProjectsView = () => {
-  const [pageNumber, setPageNumber] = useState(0)
-  const [{ page, hasNext }, setPage] = useState({ page: [], hasNext: false })
   const [name, setName] = useState('')
-
-  useEffect(() => {
-    const effect = async () => {
-      setPage(await projectService.getPage(pageNumber))
-    }
-    effect()
-  }, [pageNumber])
+  const [projects, setProjects, loadingProjects] = useLazyList({ fetchPage })
 
   const createProject = async () => {
-    await projectService.create({ name })
-    setPage(await projectService.getPage(pageNumber))
+    const project = await projectService.create({ name })
+    setProjects([...projects, project])
   }
 
   const renderProject = ({ id, name }) =>
@@ -34,23 +30,9 @@ const ProjectsView = () => {
       onClick={createProject}
     >Add</button>
     <ul>
-      {page.map(renderProject)}
+      {projects.map(renderProject)}
     </ul>
-    <p className="mt-4">
-      <button
-        className="btn"
-        disabled={pageNumber === 0}
-        type="button"
-        onClick={() => setPageNumber(pageNumber - 1)}
-      >Previous Page</button>
-      <span className="mx-2">{pageNumber + 1}</span>
-      <button
-        className="btn"
-        disabled={!hasNext}
-        type="button"
-        onClick={() => setPageNumber(pageNumber + 1)}
-      >Next Page</button>
-    </p>
+    {loadingProjects ? <span>Loading</span> : null}
   </div>
 }
 

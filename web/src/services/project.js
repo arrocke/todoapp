@@ -63,7 +63,7 @@ const create = async ({ name }) => {
   const variables = {
     input: { name }
   }
-  const { data: { id }} = await client.mutate({ mutation, variables })
+  const { data: { createProject: { id } }} = await client.mutate({ mutation, variables })
 
   return { id, name }
 }
