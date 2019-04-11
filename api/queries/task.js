@@ -40,8 +40,8 @@ const count = async ({ project_id }) => {
   return count
 }
 
-const insert = async ({ name, completed, project_id }) => {
-  const params = [name, completed, project_id]
+const insert = async ({ name, completed, projectId }) => {
+  const params = [name, completed, projectId]
   const query = `
     INSERT INTO task (name, completed, project_id) VALUES ($1, $2, $3) RETURNING task_id
   `

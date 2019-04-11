@@ -23,7 +23,8 @@ module.exports = gql`
   }
 
   input CreateTaskInput {
-    name: String!
+    name: String!,
+    projectId: ID
   }
 
   type Task {

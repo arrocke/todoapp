@@ -25,7 +25,7 @@ const getPage = async (pageNumber) => {
   return tasks
 }
 
-const create = async ({ name }) => {
+const create = async ({ name, projectId }) => {
   const mutation = gql`
     mutation CreateTask($input: CreateTaskInput!) {
       createTask(input: $input) {
@@ -34,7 +34,7 @@ const create = async ({ name }) => {
     }
   `
   const variables = {
-    input: { name }
+    input: { name, projectId }
   }
   const { data: { id }} = await client.mutate({ mutation, variables })
 

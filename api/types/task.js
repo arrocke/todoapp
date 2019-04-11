@@ -1,4 +1,5 @@
 const taskQueries = require('../queries/task')
+const projectQueries = require('../queries/project')
 
 module.exports = ({ Query, Mutation, ...types }) => {
   const Task = {
@@ -7,6 +8,11 @@ module.exports = ({ Query, Mutation, ...types }) => {
     },
     name (model) {
       return model.name
+    },
+    async project (model) {
+      if (model.project_id) {
+        return await projectQueries.findOne(model.project_id)
+      }
     }
   }
 
@@ -28,14 +34,15 @@ module.exports = ({ Query, Mutation, ...types }) => {
     return { hasNext, totalCount, page }
   }
 
-  const createTask = async (_, { input: { name } }) => {
+  const createTask = async (_, { input: { name, projectId } }) => {
     const completed = false
     const task_id = await taskQueries.insert({
       name,
-      completed
+      completed,
+      projectId
     })
 
-    return { task_id, name, completed }
+    return { task_id, name, completed, project_id: projectId }
   }
 
   return {
