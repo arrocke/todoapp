@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import projectService from '../services/project'
+import CardList from '../components/CardList'
 
 const ProjectsView = () => {
   const [name, setName] = useState('')
@@ -18,9 +19,7 @@ const ProjectsView = () => {
   }
 
   const renderProject = ({ id, name }) =>
-    <li key={id}>
-      <Link to={`/projects/${id}`}>{name}</Link>
-    </li>
+    <Link to={`/projects/${id}`} className="text-black no-underline">{name}</Link>
 
   return <div>
     <input
@@ -31,9 +30,11 @@ const ProjectsView = () => {
       className="btn ml-2"
       onClick={createProject}
     >Add</button>
-    <ul>
-      {projects.map(renderProject)}
-    </ul>
+    <CardList
+      list={projects}
+      renderCard={renderProject}
+      selectKey={p => p.id}
+    />
   </div>
 }
 
