@@ -11,18 +11,11 @@ const NavigationLink = ({ to, icon, title }) =>
     <div className="mt-1 text-xs font-bold">{title}</div>
   </NavLink>
 
-const NavigationSpacer = () =>
-  <span className="inline-block h-full w-px bg-grey"/>
-
-const Navigation = () => {
-  return <nav className="flex justify-center items-center border-b border-grey">
-    <NavigationSpacer/>
+const Navigation = ({ className }) => {
+  return <nav className={`flex justify-center items-center bg-white ${className}`}>
     <NavigationLink to="/projects" icon="projects" title="PROJECTS"/>
-    <NavigationSpacer/>
     <NavigationLink to="#" icon="add" title="NEW"/>
-    <NavigationSpacer/>
     <NavigationLink to="/tasks" icon="tasks" title="TASKS"/>
-    <NavigationSpacer/>
   </nav>
 }
 

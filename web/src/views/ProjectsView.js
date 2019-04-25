@@ -19,18 +19,23 @@ const ProjectsView = () => {
   }
 
   const renderProject = ({ id, name }) =>
-    <Link to={`/projects/${id}`} className="text-black no-underline">{name}</Link>
+    <Link to={`/projects/${id}`} className="p-3 text-black no-underline block">{name}</Link>
 
-  return <div>
-    <input
-      type="text"
-      onInput={e => setName(e.target.value)}
-    />
-    <button
-      className="btn ml-2"
-      onClick={createProject}
-    >Add</button>
+  return <div className="w-full max-w-md h-full m-auto px-4 pt-4 flex flex-col">
+    <div className="mb-4 flex">
+      <button
+        className="btn mr-2"
+        onClick={createProject}
+      >Add</button>
+      <input
+        className="text-input flex-grow"
+        type="text"
+        onInput={e => setName(e.target.value)}
+        placeholder="Project name..."
+      />
+    </div>
     <CardList
+      className="overflow-scroll"
       list={projects}
       renderCard={renderProject}
       selectKey={p => p.id}

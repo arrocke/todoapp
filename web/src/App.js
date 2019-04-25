@@ -6,9 +6,9 @@ import PageView from './views/PageView'
 const App = () => {
   return (
     <Router>
-      <div className="min-h-full flex flex-col items-stretch">
-        <Navigation />
-        <main className="flex-grow relative">
+      <div className="h-full flex flex-col items-stretch bg-grey-light">
+        <Navigation className="flex-no-shrink"/>
+        <main className="flex-grow relative overflow-hidden">
           <PageView />
         </main>
       </div>

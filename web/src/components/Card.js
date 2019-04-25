@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Card = ({ children }) => {
-  return <div className="bg-grey-lighter rounded-lg p-3 shadow-md">
+  return <div className="bg-white">
     {children}
   </div>
 }
