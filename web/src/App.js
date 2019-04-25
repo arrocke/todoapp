@@ -4,10 +4,9 @@ import Navigation from './components/Navigation'
 import PageView from './views/PageView'
 
 const App = () => {
-
   return (
     <Router>
-      <div className="min-h-full flex flex-col items-stretch bg-black text-white">
+      <div className="min-h-full flex flex-col items-stretch">
         <Navigation />
         <main className="flex-grow relative">
           <PageView />

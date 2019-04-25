@@ -1,15 +1,29 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+
+const NavigationLink = ({ to, icon, title }) =>
+  <NavLink
+    to={to}
+    className="w-24 relative no-underline block flex flex-col items-center py-3 text-black hover:bg-grey"
+    activeClassName="bg-grey-light" 
+  >
+    <div className={`icon icon-${icon}`}/>
+    <div className="mt-1 text-xs font-bold">{title}</div>
+  </NavLink>
+
+const NavigationSpacer = () =>
+  <span className="inline-block h-full w-px bg-grey"/>
 
 const Navigation = () => {
-  return <header className="p-4 flex">
-    <h1>Todo App</h1>
-    <span className="flex-grow" />
-    <ul className="list-reset display-flex">
-      <li className="p-3 inline-block"><Link to="/projects" className="text-white font-bold no-underline">PROJECTS</Link></li>
-      <li className="p-3 inline-block"><Link to="/tasks" className="text-white font-bold no-underline">TASKS</Link></li>
-    </ul>
-  </header>
+  return <nav className="flex justify-center items-center border-b border-grey">
+    <NavigationSpacer/>
+    <NavigationLink to="/projects" icon="projects" title="PROJECTS"/>
+    <NavigationSpacer/>
+    <NavigationLink to="#" icon="add" title="NEW"/>
+    <NavigationSpacer/>
+    <NavigationLink to="/tasks" icon="tasks" title="TASKS"/>
+    <NavigationSpacer/>
+  </nav>
 }
 
 export default Navigation

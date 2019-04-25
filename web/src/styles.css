@@ -2,11 +2,23 @@
 @tailwind components;
 
 .btn {
-  @apply bg-white rounded-lg px-3 py-2 text-black;
+  @apply rounded-lg px-3 py-2 text-black;
 }
 
-.btn:disabled {
-  @apply bg-grey;
+.icon {
+  @apply w-8 h-8 bg-center bg-no-repeat bg-contain;
+}
+
+.icon-projects {
+  background-image: url('./assets/icons/projects.png');
+}
+
+.icon-tasks {
+  background-image: url('./assets/icons/tasks.png');
+}
+
+.icon-add {
+  background-image: url('./assets/icons/add.png');
 }
 
 @tailwind utilities;
