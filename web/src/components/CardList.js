@@ -1,12 +1,9 @@
 import React from 'react'
-import Card from './Card'
 
-const CardList = ({ list, renderCard, selectKey, className }) => {
+const CardList = ({ list, Card, selectKey, className }) => {
   const render = (el) =>
     <li key={selectKey(el)} className="mb-2">
-      <Card>
-        {renderCard(el)}
-      </Card>
+      <Card data={el}/>
     </li>
 
   return <ul className={`list-reset ${className}`}>

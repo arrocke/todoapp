@@ -1,7 +1,36 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import projectService from '../services/project'
+import client from '../client'
 import CardList from '../components/CardList'
+import ProjectCard from '../components/ProjectCard'
+
+const fetch = async () => {
+  const { data: { projects }} = await client.query({
+    query: `
+      query Projects {
+        projects {
+          name
+          id
+        }
+      }`
+  })
+  return projects
+}
+
+const create = async ({ name }) => {
+  const { data: { createTask: { id }}} = await client.mutate({
+    mutation: `
+      mutation CreateProject($input: CreateProjectInput!) {
+        createProject(input: $input) {
+          id
+        }
+      }
+    `,
+    variables: {
+      input: { name }
+    }
+  })
+  return { id, name }
+}
 
 const ProjectsView = () => {
   const [name, setName] = useState('')
@@ -9,19 +38,16 @@ const ProjectsView = () => {
 
   useEffect(() => {
     const effect = async () =>
-      setProjects(await projectService.getAll())
+      setProjects(await fetch())
     effect()
   }, [])
 
   const createProject = async () => {
-    const project = await projectService.create({ name })
+    const project = await create({ name })
     setProjects([...projects, project])
   }
 
-  const renderProject = ({ id, name }) =>
-    <Link to={`/projects/${id}`} className="p-3 text-black no-underline block">{name}</Link>
-
-  return <div className="w-full max-w-md h-full m-auto px-4 pt-4 flex flex-col">
+  return <div className="w-full max-w-md h-full m-auto flex flex-col">
     <div className="mb-4 flex">
       <button
         className="btn mr-2"
@@ -37,7 +63,7 @@ const ProjectsView = () => {
     <CardList
       className="overflow-scroll"
       list={projects}
-      renderCard={renderProject}
+      Card={ProjectCard}
       selectKey={p => p.id}
     />
   </div>

@@ -8,7 +8,7 @@ const App = () => {
     <Router>
       <div className="h-full flex flex-col items-stretch bg-grey-light">
         <Navigation className="flex-no-shrink"/>
-        <main className="flex-grow relative overflow-hidden">
+        <main className="flex-grow relative overflow-hidden p-4">
           <PageView />
         </main>
       </div>
