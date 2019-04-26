@@ -1,11 +1,11 @@
 const db = require('../db-connection')
 
 const find = async ({ projectId, states }) => {
-  let params = []
+  const params = []
+  const conditions = []
   let query = `
     SELECT name, task_id AS "taskId", project_id AS "projectId", state, created_at AS "createdAt" FROM task
   `
-  let conditions = []
 
   // Limit to tasks in a specific project.
   if (typeof projectId !== 'undefined') {
@@ -33,16 +33,28 @@ const find = async ({ projectId, states }) => {
   return rows
 }
 
-const count = async ({ projectId }) => {
+const count = async ({ projectId, states }) => {
   const params = []
+  const conditions = []
   let query = `
     SELECT COUNT(project_id) FROM task
   `
 
   // Limit to tasks in a specific project.
-  if (typeof project_id !== 'undefined') {
+  if (typeof projectId !== 'undefined') {
     params.push(projectId)
-    query += `WHERE project_id = $${params.length}`
+    conditions.push(`project_id = $${params.length}`)
+  }
+
+  // Limit to tasks with specified state.
+  if (states) {
+    conditions.push(`state IN (${states.map((_, i) => '$' + (i + params.length + 1)).join(',')})`)
+    params.push(...states)
+  }
+
+  // Build WHERE query.
+  if (conditions.length > 0) {
+    query += `WHERE ${conditions.join(' AND ')}`
   }
 
   const { rows: [{ count }] } = await db.query(query, params)

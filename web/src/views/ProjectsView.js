@@ -10,6 +10,7 @@ const fetch = async () => {
         projects {
           name
           id
+          taskCount
         }
       }`
   })

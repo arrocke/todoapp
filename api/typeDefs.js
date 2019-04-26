@@ -5,6 +5,7 @@ module.exports = gql`
     id: ID!
     name: String!
     tasks(input: TasksInput): [Task]
+    taskCount: Int!
   }
 
   type Task {

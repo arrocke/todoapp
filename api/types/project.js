@@ -12,11 +12,11 @@ module.exports = ({ Query, Mutation, ...types }) => {
     name (model) {
       return model.name
     },
-    async tasks (model, { input: { states } = {}}) {
-      return await taskQueries.find({
-        projectId: model.projectId,
-        states
-      })
+    async tasks ({ projectId }, { input: { states } = {}}) {
+      return await taskQueries.find({ projectId, states })
+    },
+    async taskCount ({ projectId }, { input: { states } = {}}) {
+      return await taskQueries.count({ projectId, states })
     }
   }
 
