@@ -1,0 +1,9 @@
+{
+  "integrationfolder": "test/e2e/integration",
+  "fixturesfolder": "test/e2e/fixture",
+  "screenshotsfolder": "test/e2e/screenshots",
+  "videosfolder": "test/e2e/videos",
+  "supportfile": "test/e2e/support/index.js",
+  "pluginsfile": "test/e2e/plugins/index.js",
+  "baseurl": "http://localhost:8080"
+}

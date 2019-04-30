@@ -11,7 +11,7 @@ module.exports = {
     "react-app-polyfill/jsdom"
   ],
   testMatch: [
-    "<rootDir>/tests/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
+    "<rootDir>/tests/unit/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
   ],
   testEnvironment: "jsdom",
   testURL: "http://localhost",
