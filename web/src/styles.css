@@ -1,14 +1,6 @@
 @tailwind preflight;
 @tailwind components;
 
-.btn {
-  @apply bg-white px-3 py-2 text-black;
-}
-
-.text-input {
-  @apply bg-white px-3 py-2 text-black;
-}
-
 .icon {
   @apply w-8 h-8 bg-center bg-no-repeat bg-contain;
 }
