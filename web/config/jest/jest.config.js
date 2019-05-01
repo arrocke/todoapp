@@ -8,7 +8,8 @@ module.exports = {
   ],
   resolver: "jest-pnp-resolver",
   setupFiles: [
-    "react-app-polyfill/jsdom"
+    "react-app-polyfill/jsdom",
+    "<rootDir>/tests/unit/setup.js"
   ],
   testMatch: [
     "<rootDir>/tests/unit/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
