@@ -14,6 +14,14 @@ describe('TaskCard', () => {
     }
   })
 
+  test('renders empty task name with no props', () => {
+    const root = shallow(
+      <TaskCard />
+    )
+    const nameElement = root.find('[data-test="task-name"]')
+    expect(nameElement.text()).toEqual('')
+  })
+
   test('renders task name from prop', () => {
     const root = shallow(
       <TaskCard task={task}/>
