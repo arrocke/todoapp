@@ -1,12 +1,20 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import TaskCard from '../../src/components/TaskCard'
+import TaskCard from '../../../src/components/TaskCard'
 
 describe('TaskCard', () => {
-  test('renders task name from prop', () => {
-    const task = {
-      name: 'Test Task'
+  let task
+
+  beforeEach(() => {
+    task = {
+      name: 'Test Task',
+      project: {
+        name: 'Test Project'
+      }
     }
+  })
+
+  test('renders task name from prop', () => {
     const root = shallow(
       <TaskCard task={task}/>
     )
@@ -15,12 +23,6 @@ describe('TaskCard', () => {
   })
 
   test('renders project name from prop', () => {
-    const task = {
-      name: 'Test Task',
-      project: {
-        name: 'Test Project'
-      }
-    }
     const root = shallow(
       <TaskCard task={task}/>
     )
@@ -29,9 +31,7 @@ describe('TaskCard', () => {
   })
 
   test('does not render project field if not set on task', () => {
-    const task = {
-      name: 'Test Task'
-    }
+    delete task.project
     const root = shallow(
       <TaskCard task={task}/>
     )
@@ -40,12 +40,6 @@ describe('TaskCard', () => {
   })
 
   test('does not render project field if flag is set', () => {
-    const task = {
-      name: 'Test Task',
-      project: {
-        name: 'Test Project'
-      }
-    }
     const root = shallow(
       <TaskCard task={task} hideProject={true}/>
     )
