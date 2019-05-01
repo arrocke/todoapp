@@ -46,4 +46,11 @@ describe('TaskCard', () => {
     const projectElement = root.find('[data-test="task-project"]')
     expect(projectElement.exists()).toBe(false)
   })
+
+  test('passes className prop to root element', () => {
+    const root = shallow(
+      <TaskCard task={task} className="mt-2"/>
+    )
+    expect(root.hasClass('mt-2')).toBe(true)
+  })
 })

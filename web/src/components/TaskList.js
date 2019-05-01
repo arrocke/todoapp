@@ -3,9 +3,10 @@ import TaskCard from './TaskCard'
 
 export default ({
   tasks = [],
-  hideProject = false
+  hideProject = false,
+  className = ''
 } = {}) => {
-  return <ul>
+  return <ul className={className}>
     {
       tasks.map(task =>
         <li key={task.taskId}>

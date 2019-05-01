@@ -2,9 +2,10 @@ import React from 'react'
 
 export default ({
   task: { name, project } = {},
-  hideProject = false
+  hideProject = false,
+  className = ''
 } = {}) => {
-  return <div>
+  return <div className={className}>
     <span data-test="task-name">{name}</span>
     {
       !hideProject && project

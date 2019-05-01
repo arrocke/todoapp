@@ -63,4 +63,11 @@ describe('TaskList', () => {
       expect(listElements.at(i).prop('hideProject')).toEqual(true)
     }
   })
+
+  test('passes className prop to root element', () => {
+    const root = shallow(
+      <TaskList tasks={tasks} className="mt-2"/>
+    )
+    expect(root.hasClass('mt-2')).toBe(true)
+  })
 })
