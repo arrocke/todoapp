@@ -52,4 +52,15 @@ describe('TaskList', () => {
       expect(listElements.at(i).key()).toEqual(tasks[i].taskId.toString())
     }
   })
+
+  test('passes hideProject to each TaskCard', () => {
+    const root = shallow(
+      <TaskList tasks={tasks} hideProject={true} />
+    )
+    const listElements = root.find(TaskCard)
+    expect(listElements).toHaveLength(tasks.length)
+    for (let i in tasks) {
+      expect(listElements.at(i).prop('hideProject')).toEqual(true)
+    }
+  })
 })
