@@ -1,16 +1,22 @@
 @tailwind preflight;
 @tailwind components;
 
+.bg-shadow {
+  background-color: #10030040;
+}
+
 .icon {
-  @apply w-8 h-8 bg-center bg-no-repeat bg-contain;
+  @apply bg-center bg-no-repeat bg-contain;
 }
 
-.icon-projects {
-  background-image: url('./assets/icons/projects.png');
+.icon-menu {
+  background-image: url('./assets/icons/menu.png');
+  background-size: 26px;
 }
 
-.icon-tasks {
-  background-image: url('./assets/icons/tasks.png');
+.icon-profile {
+  background-image: url('./assets/icons/profile.png');
+  background-size: 24px;
 }
 
 .icon-add {
