@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 
 export default () => {
   const [isOpen, setOpen] = useState(false)
@@ -21,15 +22,24 @@ export default () => {
       onClick={() => setOpen(false)}
     >
       <div
-        className={`w-96 bg-white h-full p-3 shadow-lg transition ${isOpen ? '' : '-ml-96'}`}
+        className={`w-96 bg-white h-full shadow-lg transition ${isOpen ? '' : '-ml-96'}`}
         style={{ transitionProperty: 'margin-left' }}
         onClick={e => e.stopPropagation()}
       >
-        <button
-          className="icon icon-close w-8 h-8 float-right"
-          data-test="close-menu-button"
+        <div className="flex flex-row-reverse p-3">
+          <button
+            className="icon icon-close w-8 h-8"
+            data-test="close-menu-button"
+            onClick={() => setOpen(false)}
+          />
+        </div>
+        <NavLink
+          className="px-3 py-4 hover:bg-grey-light block text-black no-underline"
+          activeClassName="bg-grey-light"
+          to="/today"
+          data-test="today-link"
           onClick={() => setOpen(false)}
-        />
+        >Today</NavLink>
       </div>
     </div>
   </div>
