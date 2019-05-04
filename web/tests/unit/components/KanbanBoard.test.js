@@ -39,7 +39,7 @@ describe('KanbanBoard', () => {
     ]
   })
 
-  test('renders empty lists with no props', () => {
+  it('renders empty lists with no props', () => {
     const root = shallow(
       <KanbanBoard />
     )
@@ -47,7 +47,7 @@ describe('KanbanBoard', () => {
     expect(listElements).toHaveLength(5)
   })
 
-  test('renders list titles', () => {
+  it('renders list titles', () => {
     const root = shallow(
       <KanbanBoard />
     )
@@ -60,7 +60,7 @@ describe('KanbanBoard', () => {
     expect(titles.at(4).text()).toEqual('Complete')
   })
 
-  test('renders backlog list from tasks with the backlog state', () => {
+  it('renders backlog list from tasks with the backlog state', () => {
     const root = shallow(
       <KanbanBoard tasks={tasks} />
     )
@@ -69,7 +69,7 @@ describe('KanbanBoard', () => {
     expect(list.prop('tasks')).toEqual(filteredTasks)
   })
 
-  test('renders planned list from tasks with the planned state', () => {
+  it('renders planned list from tasks with the planned state', () => {
     const root = shallow(
       <KanbanBoard tasks={tasks} />
     )
@@ -78,7 +78,7 @@ describe('KanbanBoard', () => {
     expect(list.prop('tasks')).toEqual(filteredTasks)
   })
 
-  test('renders in progress list from tasks with the in-progress state', () => {
+  it('renders in progress list from tasks with the in-progress state', () => {
     const root = shallow(
       <KanbanBoard tasks={tasks} />
     )
@@ -87,7 +87,7 @@ describe('KanbanBoard', () => {
     expect(list.prop('tasks')).toEqual(filteredTasks)
   })
 
-  test('renders blocked list from tasks with the blocked state', () => {
+  it('renders blocked list from tasks with the blocked state', () => {
     const root = shallow(
       <KanbanBoard tasks={tasks} />
     )
@@ -96,7 +96,7 @@ describe('KanbanBoard', () => {
     expect(list.prop('tasks')).toEqual(filteredTasks)
   })
 
-  test('renders complete list from tasks with the complete state', () => {
+  it('renders complete list from tasks with the complete state', () => {
     const root = shallow(
       <KanbanBoard tasks={tasks} />
     )
@@ -105,7 +105,7 @@ describe('KanbanBoard', () => {
     expect(list.prop('tasks')).toEqual(filteredTasks)
   })
 
-  test('passes hideProject to each TaskList', () => {
+  it('passes hideProject to each TaskList', () => {
     const root = shallow(
       <KanbanBoard tasks={tasks} hideProject={true} />
     )
@@ -116,7 +116,7 @@ describe('KanbanBoard', () => {
     }
   })
 
-  test('passes className prop to root element', () => {
+  it('passes className prop to root element', () => {
     const root = shallow(
       <KanbanBoard tasks={tasks} className="mt-2"/>
     )

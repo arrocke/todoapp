@@ -14,7 +14,7 @@ describe('TaskCard', () => {
     }
   })
 
-  test('renders empty task name with no props', () => {
+  it('renders empty task name with no props', () => {
     const root = shallow(
       <TaskCard />
     )
@@ -22,7 +22,7 @@ describe('TaskCard', () => {
     expect(nameElement.text()).toEqual('')
   })
 
-  test('renders task name from prop', () => {
+  it('renders task name from prop', () => {
     const root = shallow(
       <TaskCard task={task}/>
     )
@@ -30,7 +30,7 @@ describe('TaskCard', () => {
     expect(nameElement.text()).toEqual(task.name)
   })
 
-  test('renders project name from prop', () => {
+  it('renders project name from prop', () => {
     const root = shallow(
       <TaskCard task={task}/>
     )
@@ -38,7 +38,7 @@ describe('TaskCard', () => {
     expect(projectElement.text()).toEqual(task.project.name)
   })
 
-  test('does not render project field if not set on task', () => {
+  it('does not render project field if not set on task', () => {
     delete task.project
     const root = shallow(
       <TaskCard task={task}/>
@@ -47,7 +47,7 @@ describe('TaskCard', () => {
     expect(projectElement.exists()).toBe(false)
   })
 
-  test('does not render project field if flag is set', () => {
+  it('does not render project field if flag is set', () => {
     const root = shallow(
       <TaskCard task={task} hideProject={true}/>
     )
@@ -55,7 +55,7 @@ describe('TaskCard', () => {
     expect(projectElement.exists()).toBe(false)
   })
 
-  test('passes className prop to root element', () => {
+  it('passes className prop to root element', () => {
     const root = shallow(
       <TaskCard task={task} className="mt-2"/>
     )

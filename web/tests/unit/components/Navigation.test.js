@@ -3,7 +3,7 @@ import { shallow } from 'enzyme'
 import Navigation from '../../../src/components/Navigation'
 
 describe('Navigation', () => {
-  test('side menu is initially closed.', () => {
+  it('side menu is initially closed.', () => {
     const wrapper = shallow(
       <Navigation />
     )
@@ -12,7 +12,7 @@ describe('Navigation', () => {
     expect(menu.hasClass('invisible')).toBe(true)
   })
 
-  test('opens side menu when the menu button is clicked.', () => {
+  it('opens side menu when the menu button is clicked.', () => {
     const wrapper = shallow(
       <Navigation />
     )
@@ -25,7 +25,7 @@ describe('Navigation', () => {
     expect(menu.hasClass('invisible')).toBe(false)
   })
 
-  test('closes side menu when the screen is clicked.', () => {
+  it('closes side menu when the screen is clicked.', () => {
     const wrapper = shallow(
       <Navigation />
     )
@@ -42,7 +42,7 @@ describe('Navigation', () => {
     expect(menu.hasClass('invisible')).toBe(true)
   })
 
-  test('closes side menu when the close button is clicked.', () => {
+  it('closes side menu when the close button is clicked.', () => {
     const wrapper = shallow(
       <Navigation />
     )

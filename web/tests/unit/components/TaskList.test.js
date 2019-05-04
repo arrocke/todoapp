@@ -23,7 +23,7 @@ describe('TaskList', () => {
     ]
   })
 
-  test('renders empty list with no props', () => {
+  it('renders empty list with no props', () => {
     const root = shallow(
       <TaskList />
     )
@@ -31,7 +31,7 @@ describe('TaskList', () => {
     expect(listElements).toHaveLength(0)
   })
 
-  test('renders a TaskCard for each task', () => {
+  it('renders a TaskCard for each task', () => {
     const root = shallow(
       <TaskList tasks={tasks} />
     )
@@ -42,7 +42,7 @@ describe('TaskList', () => {
     }
   })
 
-  test('sets key for each TaskCard', () => {
+  it('sets key for each TaskCard', () => {
     const root = shallow(
       <TaskList tasks={tasks} />
     )
@@ -53,7 +53,7 @@ describe('TaskList', () => {
     }
   })
 
-  test('passes hideProject to each TaskCard', () => {
+  it('passes hideProject to each TaskCard', () => {
     const root = shallow(
       <TaskList tasks={tasks} hideProject={true} />
     )
@@ -64,7 +64,7 @@ describe('TaskList', () => {
     }
   })
 
-  test('passes className prop to root element', () => {
+  it('passes className prop to root element', () => {
     const root = shallow(
       <TaskList tasks={tasks} className="mt-2"/>
     )
