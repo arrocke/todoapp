@@ -1,6 +1,7 @@
 let defaultConfig = require('tailwindcss/defaultConfig')()
 
 let colors = {
+  'transparent': '#00000000',
   'black': '#000000',
   'grey': '#cccccc',
   'grey-light': '#eeeeee',
@@ -257,6 +258,7 @@ module.exports = {
     '20': '5rem',
     '24': '6rem',
     '32': '8rem',
+    '96': '20rem'
   },
 
   shadows: {

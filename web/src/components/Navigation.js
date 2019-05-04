@@ -15,12 +15,14 @@ export default () => {
     </nav>
 
     <div
-      className={`bg-shadow fixed pin ${isOpen ? '' : 'invisible'}`}
+      className={`bg-shadow fixed pin transition ${isOpen ? '' : 'bg-transparent invisible'}`}
+      style={{ transitionProperty: `background-color, ${isOpen ? '' : 'visibility'}` }}
       data-test="side-menu"
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-96 bg-white h-full p-3 shadow-lg"
+        className={`w-96 bg-white h-full p-3 shadow-lg transition ${isOpen ? '' : '-ml-96'}`}
+        style={{ transitionProperty: 'margin-left' }}
         onClick={e => e.stopPropagation()}
       >
         <button

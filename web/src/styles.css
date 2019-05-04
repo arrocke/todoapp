@@ -2,7 +2,7 @@
 @tailwind components;
 
 .bg-shadow {
-  background-color: #10030040;
+  background-color: #10030050;
 }
 
 .icon {
@@ -26,6 +26,10 @@
 
 .icon-add {
   background-image: url('./assets/icons/add.png');
+}
+
+.transition {
+  transition-duration: 0.5s;
 }
 
 @tailwind utilities;
