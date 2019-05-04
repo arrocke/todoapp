@@ -19,6 +19,11 @@
   background-size: 24px;
 }
 
+.icon-close {
+  background-image: url('./assets/icons/close.png');
+  background-size: 32px;
+}
+
 .icon-add {
   background-image: url('./assets/icons/add.png');
 }

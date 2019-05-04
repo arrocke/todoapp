@@ -41,4 +41,21 @@ describe('Navigation', () => {
     const menu = wrapper.find('[data-test="side-menu"]')
     expect(menu.hasClass('invisible')).toBe(true)
   })
+
+  test('closes side menu when the close button is clicked.', () => {
+    const wrapper = shallow(
+      <Navigation />
+    )
+
+    // Open menu
+    const button = wrapper.find('[data-test="menu-button"]')
+    button.simulate('click')
+
+    // Close menu
+    const closeButton = wrapper.find('[data-test="close-menu-button"]')
+    closeButton.simulate('click')
+
+    const menu = wrapper.find('[data-test="side-menu"]')
+    expect(menu.hasClass('invisible')).toBe(true)
+  })
 })

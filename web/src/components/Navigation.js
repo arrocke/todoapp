@@ -20,10 +20,14 @@ export default () => {
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-96 bg-white h-full shadow-lg"
+        className="w-96 bg-white h-full p-3 shadow-lg"
         onClick={e => e.stopPropagation()}
       >
-
+        <button
+          className="icon icon-close w-8 h-8 float-right"
+          data-test="close-menu-button"
+          onClick={() => setOpen(false)}
+        />
       </div>
     </div>
   </div>
