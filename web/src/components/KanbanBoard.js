@@ -18,7 +18,10 @@ export default ({
       />
     </div>
 
-  return <div className={className}>
+  return <div
+    className={className}
+    data-test="kanban-board"
+  >
     {renderList({
       title: 'Added',
       state: 'added'
