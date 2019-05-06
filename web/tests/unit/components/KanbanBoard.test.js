@@ -10,7 +10,7 @@ describe('KanbanBoard', () => {
     tasks = [
       {
         taskId: 1,
-        state: 'backlog'
+        state: 'added'
       },
       {
         taskId: 2,
@@ -53,19 +53,19 @@ describe('KanbanBoard', () => {
     )
     const titles = root.find('[data-test="kanban-list-title"]')
     expect(titles).toHaveLength(5)
-    expect(titles.at(0).text()).toEqual('Backlog')
+    expect(titles.at(0).text()).toEqual('Added')
     expect(titles.at(1).text()).toEqual('Planned')
     expect(titles.at(2).text()).toEqual('In Progress')
     expect(titles.at(3).text()).toEqual('Blocked')
     expect(titles.at(4).text()).toEqual('Complete')
   })
 
-  it('renders backlog list from tasks with the backlog state', () => {
+  it('renders added list from tasks with the added state', () => {
     const root = shallow(
       <KanbanBoard tasks={tasks} />
     )
     const list = root.find(TaskList).at(0)
-    const filteredTasks = tasks.filter(({ state }) => state === 'backlog')
+    const filteredTasks = tasks.filter(({ state }) => state === 'added')
     expect(list.prop('tasks')).toEqual(filteredTasks)
   })
 

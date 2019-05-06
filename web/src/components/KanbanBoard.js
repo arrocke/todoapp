@@ -10,7 +10,7 @@ export default ({
     title = '',
     state: testState
   }) =>
-    <div>
+    <div data-test="kanban-list" key={testState}>
       <h1 data-test="kanban-list-title">{title}</h1>
       <TaskList
         tasks={tasks.filter(({ state }) => state === testState)}
@@ -20,8 +20,8 @@ export default ({
 
   return <div className={className}>
     {renderList({
-      title: 'Backlog',
-      state: 'backlog'
+      title: 'Added',
+      state: 'added'
     })}
     {renderList({
       title: 'Planned',
