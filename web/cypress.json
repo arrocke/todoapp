@@ -1,5 +1,5 @@
 {
-  "integrationFolder": "tests/e2e/integration",
+  "integrationFolder": "tests/e2e/tests",
   "fixturesFolder": "tests/e2e/fixture",
   "screenshotsFolder": "tests/e2e/screenshots",
   "videosFolder": "tests/e2e/videos",

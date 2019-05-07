@@ -9,7 +9,7 @@ export default ({
   return <ul className={className}>
     {
       tasks.map(task =>
-        <li key={task.taskId}>
+        <li key={task.id}>
           <TaskCard task={task} hideProject={hideProject}/>
         </li>)
     } 
