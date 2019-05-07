@@ -10,7 +10,7 @@ export default ({
     title = '',
     state: testState
   }) =>
-    <div data-test="kanban-list" key={testState}>
+    <div data-test="kanban-list">
       <h1 data-test="kanban-list-title">{title}</h1>
       <TaskList
         tasks={tasks.filter(({ state }) => state === testState)}
