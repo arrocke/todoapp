@@ -18,13 +18,14 @@ export default () => {
     <div
       className={`bg-shadow fixed pin transition ${isOpen ? '' : 'bg-transparent invisible'}`}
       style={{ transitionProperty: `background-color, ${isOpen ? '' : 'visibility'}` }}
-      data-test="side-menu"
       onClick={() => setOpen(false)}
+      data-test="side-menu-overlay"
     >
       <div
         className={`w-96 bg-white h-full shadow-lg transition ${isOpen ? '' : '-ml-96'}`}
         style={{ transitionProperty: 'margin-left' }}
         onClick={e => e.stopPropagation()}
+        data-test="side-menu"
       >
         <div className="flex flex-row-reverse p-3">
           <button
@@ -37,7 +38,6 @@ export default () => {
           className="px-3 py-4 hover:bg-grey-light block text-black no-underline"
           activeClassName="bg-grey-light"
           to="/today"
-          data-test="today-link"
           onClick={() => setOpen(false)}
         >Today</NavLink>
       </div>

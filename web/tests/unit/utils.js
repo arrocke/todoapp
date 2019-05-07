@@ -16,8 +16,11 @@ export const renderWithRouter = (
       history = createMemoryHistory({ initialEntries: [route] })
   } = {}
 ) =>
-  render(
-    <Router history={history}>
-      {ui}
-    </Router>
-  )
+  ({
+    ...render(
+      <Router history={history}>
+        {ui}
+      </Router>
+    ),
+    history
+  })
