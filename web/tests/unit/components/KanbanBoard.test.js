@@ -1,50 +1,113 @@
 import React from 'react'
+import { build, incrementingId, fake, oneOf } from 'test-data-bot'
 import { within, render } from 'react-testing-library'
 import KanbanBoard from '../../../src/components/KanbanBoard'
 
-it('displays a list for each task state', () => {
-  const { getAllByTestId } = render(<KanbanBoard />)
-  const listTitles = getAllByTestId('kanban-list-title')
-    .map(el => el.textContent)
-  const expected = ['Added', 'Planned', 'In Progress', 'Blocked', 'Complete']
-  expect(listTitles).toEqual(expected)
+const taskBuilder = build('Task')
+  .fields({
+    id: incrementingId(),
+    name: fake(f => f.lorem.word()),
+    state: oneOf('added', 'planned', 'in-progress', 'blocked', 'complete')
+  })
+  .map(task => ({
+    ...task,
+    id: task.id.toString()
+  }))
+
+const renderKanbanBoard = ({
+  tasks = new Array(15).fill().map(() => taskBuilder())
+} = {}) =>
+  ({
+    ...render(<KanbanBoard tasks={tasks} />),
+    tasks
+  })
+
+it('displays a list of added tasks.', () => {
+  const { tasks, getAllByTestId } = renderKanbanBoard()
+  const listElement = getAllByTestId('kanban-list')[0]
+
+  const titleElement = within(listElement).getByTestId('kanban-list-title')
+  expect(titleElement).toHaveTextContent('Added')
+
+  const taskElements = within(listElement)
+    .queryAllByTestId('task-name')
+    .map(card => card.textContent)
+
+  const expected = tasks
+    .filter(({ state }) => state === 'added')
+    .map(({ name }) => name)
+  
+  expect(taskElements).toEqual(expected)
 })
 
-it('displays tasks in the correct list', () => {
-  const tasks = [
-    {
-      id: '1',
-      name: 'Task One',
-      state: 'added'
-    },
-    {
-      id: '2',
-      name: 'Task Two',
-      state: 'planned'
-    },
-    {
-      id: '3',
-      name: 'Task Three',
-      state: 'in-progress'
-    },
-    {
-      id: '4',
-      name: 'Task Four',
-      state: 'blocked'
-    },
-    {
-      id: '5',
-      name: 'Task Five',
-      state: 'complete'
-    }
-  ]
-  const { getAllByTestId } = render(<KanbanBoard tasks={tasks} />)
+it('displays a list of planned tasks.', () => {
+  const { tasks, getAllByTestId } = renderKanbanBoard()
+  const listElement = getAllByTestId('kanban-list')[1]
 
-  const list = getAllByTestId('kanban-list')
+  const titleElement = within(listElement).getByTestId('kanban-list-title')
+  expect(titleElement).toHaveTextContent('Planned')
 
-  expect(within(list[0]).findByText(tasks[0].name)).not.toBeUndefined()
-  expect(within(list[1]).findByText(tasks[1].name)).not.toBeUndefined()
-  expect(within(list[2]).findByText(tasks[2].name)).not.toBeUndefined()
-  expect(within(list[3]).findByText(tasks[3].name)).not.toBeUndefined()
-  expect(within(list[4]).findByText(tasks[4].name)).not.toBeUndefined()
+  const taskElements = within(listElement)
+    .queryAllByTestId('task-name')
+    .map(card => card.textContent)
+
+  const expected = tasks
+    .filter(({ state }) => state === 'planned')
+    .map(({ name }) => name)
+  
+  expect(taskElements).toEqual(expected)
+})
+
+it('displays a list of in progress tasks.', () => {
+  const { tasks, getAllByTestId } = renderKanbanBoard()
+  const listElement = getAllByTestId('kanban-list')[2]
+
+  const titleElement = within(listElement).getByTestId('kanban-list-title')
+  expect(titleElement).toHaveTextContent('In Progress')
+
+  const taskElements = within(listElement)
+    .queryAllByTestId('task-name')
+    .map(card => card.textContent)
+
+  const expected = tasks
+    .filter(({ state }) => state === 'in-progress')
+    .map(({ name }) => name)
+  
+  expect(taskElements).toEqual(expected)
+})
+
+it('displays a list of blocked tasks.', () => {
+  const { tasks, getAllByTestId } = renderKanbanBoard()
+  const listElement = getAllByTestId('kanban-list')[3]
+
+  const titleElement = within(listElement).getByTestId('kanban-list-title')
+  expect(titleElement).toHaveTextContent('Blocked')
+
+  const taskElements = within(listElement)
+    .queryAllByTestId('task-name')
+    .map(card => card.textContent)
+
+  const expected = tasks
+    .filter(({ state }) => state === 'blocked')
+    .map(({ name }) => name)
+  
+  expect(taskElements).toEqual(expected)
+})
+
+it('displays a list of completed tasks.', () => {
+  const { tasks, getAllByTestId } = renderKanbanBoard()
+  const listElement = getAllByTestId('kanban-list')[4]
+
+  const titleElement = within(listElement).getByTestId('kanban-list-title')
+  expect(titleElement).toHaveTextContent('Complete')
+
+  const taskElements = within(listElement)
+    .queryAllByTestId('task-name')
+    .map(card => card.textContent)
+
+  const expected = tasks
+    .filter(({ state }) => state === 'complete')
+    .map(({ name }) => name)
+  
+  expect(taskElements).toEqual(expected)
 })

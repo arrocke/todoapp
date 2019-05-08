@@ -1,7 +1,7 @@
 import React from 'react'
 import TaskList from './TaskList'
 
-export default ({
+const KanbanBoard = ({
   tasks = [],
   hideProject = false,
   className = ''
@@ -44,3 +44,5 @@ export default ({
     })}
   </div>
 }
+
+export default KanbanBoard
