@@ -1,9 +1,11 @@
-import enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import styles from '../../src/styles.css'
 import { configure } from 'dom-testing-library'
 import 'jest-dom/extend-expect'
 
-enzyme.configure({ adapter: new Adapter() })
+// Wait for styles to load.
+beforeAll(async () => {
+  await styles
+})
 
 configure({
   testIdAttribute: 'data-test'
