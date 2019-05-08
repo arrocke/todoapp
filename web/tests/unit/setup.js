@@ -1,4 +1,3 @@
-import styles from '../../src/styles.css'
 import { configure } from 'dom-testing-library'
 import 'jest-dom/extend-expect'
 import 'react-testing-library/cleanup-after-each'
@@ -10,7 +9,6 @@ beforeAll(async () => {
   jest.spyOn(console, 'error').mockImplementation((...args) => 
     args[0].toString().includes('not wrapped in act(') || error(...args))
 
-  await styles
 })
 
 afterAll(() => {
