@@ -27,7 +27,7 @@ it('displays a list of added tasks.', () => {
   const listElement = getAllByTestId('kanban-list')[0]
 
   const titleElement = within(listElement).getByTestId('kanban-list-title')
-  expect(titleElement).toHaveTextContent('Added')
+  expect(titleElement).toHaveTextContent(/added/i)
 
   const taskElements = within(listElement)
     .queryAllByTestId('task-name')
@@ -45,7 +45,7 @@ it('displays a list of planned tasks.', () => {
   const listElement = getAllByTestId('kanban-list')[1]
 
   const titleElement = within(listElement).getByTestId('kanban-list-title')
-  expect(titleElement).toHaveTextContent('Planned')
+  expect(titleElement).toHaveTextContent(/planned/i)
 
   const taskElements = within(listElement)
     .queryAllByTestId('task-name')
@@ -63,7 +63,7 @@ it('displays a list of in progress tasks.', () => {
   const listElement = getAllByTestId('kanban-list')[2]
 
   const titleElement = within(listElement).getByTestId('kanban-list-title')
-  expect(titleElement).toHaveTextContent('In Progress')
+  expect(titleElement).toHaveTextContent(/in progress/i)
 
   const taskElements = within(listElement)
     .queryAllByTestId('task-name')
@@ -81,7 +81,7 @@ it('displays a list of blocked tasks.', () => {
   const listElement = getAllByTestId('kanban-list')[3]
 
   const titleElement = within(listElement).getByTestId('kanban-list-title')
-  expect(titleElement).toHaveTextContent('Blocked')
+  expect(titleElement).toHaveTextContent(/blocked/i)
 
   const taskElements = within(listElement)
     .queryAllByTestId('task-name')
@@ -99,7 +99,7 @@ it('displays a list of completed tasks.', () => {
   const listElement = getAllByTestId('kanban-list')[4]
 
   const titleElement = within(listElement).getByTestId('kanban-list-title')
-  expect(titleElement).toHaveTextContent('Complete')
+  expect(titleElement).toHaveTextContent(/complete/i)
 
   const taskElements = within(listElement)
     .queryAllByTestId('task-name')

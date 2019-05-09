@@ -9,7 +9,7 @@ const KanbanBoard = ({
     task: { name, project } = {},
     className = ''
   } = {}) =>
-    <li className={className}>
+    <li className={`my-2 p-2 rounded bg-white shadow ${className}`}>
       <span data-test="task-name">{name}</span>
       {
         !hideProject && project
@@ -24,11 +24,14 @@ const KanbanBoard = ({
     className = ''
   }) =>
     <div 
-      className={className}
+      className={`w-full pb-4 m-2 rounded-lg shadow-inner bg-grey-light ${className}`}
       data-test="kanban-list"
     >
-      <h1 data-test="kanban-list-title">{title}</h1>
-        <ul >
+      <h2
+        className="p-4 pb-1 text-base"
+        data-test="kanban-list-title"
+      >{title}</h2>
+        <ul className="px-2 m-0 list-reset">
           {
             tasks
               .filter(({ state }) => state === testState)
@@ -43,14 +46,14 @@ const KanbanBoard = ({
     </div>
 
   return <div
-    className={className}
+    className={`flex items-start p-2 ${className}`}
     data-test="kanban-board"
   >
-    <KanbanList title="Added" state="added" />
-    <KanbanList title="Planned" state="planned" />
-    <KanbanList title="In Progress" state="in-progress" />
-    <KanbanList title="Blocked" state="blocked" />
-    <KanbanList title="Complete" state="complete" />
+    <KanbanList title="ADDED" state="added" />
+    <KanbanList title="PLANNED" state="planned" />
+    <KanbanList title="IN PROGRESS" state="in-progress" />
+    <KanbanList title="BLOCKED" state="blocked" />
+    <KanbanList title="COMPLETE" state="complete" />
   </div>
 }
 
