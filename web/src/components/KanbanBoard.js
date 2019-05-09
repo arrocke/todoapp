@@ -1,10 +1,15 @@
 import React from 'react'
+import useMediaQuery from '../hooks/media-query'
+
+const BREAKPOINT = 1000
 
 const KanbanBoard = ({
   tasks = [],
   hideProject = false,
   className = ''
 } = {}) => {
+  const [screens] = useMediaQuery()
+
   const TaskCard = ({
     task: { name, project } = {},
     className = ''
@@ -24,7 +29,7 @@ const KanbanBoard = ({
     className = ''
   }) =>
     <div 
-      className={`w-full pb-4 m-2 rounded-lg shadow-inner bg-grey-light ${className}`}
+      className={`lg:w-full pb-4 m-2 rounded-lg shadow-inner bg-grey-light ${className}`}
       data-test="kanban-list"
     >
       <h2
@@ -45,16 +50,23 @@ const KanbanBoard = ({
         </ul>
     </div>
 
-  return <div
-    className={`flex items-start p-2 ${className}`}
-    data-test="kanban-board"
-  >
-    <KanbanList title="ADDED" state="added" />
-    <KanbanList title="PLANNED" state="planned" />
-    <KanbanList title="IN PROGRESS" state="in-progress" />
-    <KanbanList title="BLOCKED" state="blocked" />
-    <KanbanList title="COMPLETE" state="complete" />
-  </div>
+  return screens.lg
+    ? <div
+        className={`flex items-start p-2 ${className}`}
+        data-test="kanban-board"
+      >
+        <KanbanList title="ADDED" state="added" />
+        <KanbanList title="PLANNED" state="planned" />
+        <KanbanList title="IN PROGRESS" state="in-progress" />
+        <KanbanList title="BLOCKED" state="blocked" />
+        <KanbanList title="COMPLETE" state="complete" />
+      </div>
+    : <div
+        className={`p-2 ${className}`}
+        data-test="kanban-board"
+      >
+        <KanbanList title="IN PROGRESS" state="in-progress" />
+      </div>
 }
 
 export default KanbanBoard

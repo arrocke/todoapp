@@ -1,4 +1,5 @@
 let defaultConfig = require('tailwindcss/defaultConfig')()
+let screens = require('../src/breakpoints')
 
 let colors = {
   'transparent': '#00000000',
@@ -10,14 +11,9 @@ let colors = {
 
 module.exports = {
 
-  colors: colors,
+  colors,
 
-  screens: {
-    'sm': '576px',
-    'md': '768px',
-    'lg': '992px',
-    'xl': '1200px',
-  },
+  screens,
 
   fonts: {
     'sans': [
