@@ -1,14 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useMediaQuery from '../hooks/media-query'
 
-const BREAKPOINT = 1000
+const TASK_STATE_MAP = {
+  'added': { title: 'ADDED' },
+  'planned': { title: 'PLANNED' },
+  'in-progress': { title: 'IN PROGRESS' },
+  'blocked': { title: 'BLOCKED' },
+  'complete': { title: 'COMPLETE' }
+}
 
 const KanbanBoard = ({
   tasks = [],
   hideProject = false,
   className = ''
 } = {}) => {
-  const [screens] = useMediaQuery()
+  const [visibleState, setVisibleState] = useState('in-progress')
+  const [screen] = useMediaQuery()
 
   const TaskCard = ({
     task: { name, project } = {},
@@ -24,22 +31,21 @@ const KanbanBoard = ({
     </li>
 
   const KanbanList = ({
-    title = '',
-    state: testState,
+    state,
     className = ''
   }) =>
     <div 
-      className={`lg:w-full pb-4 m-2 rounded-lg shadow-inner bg-grey-light ${className}`}
+      className={`flex flex-col lg:w-full max-h-full pb-4 m-2 rounded-lg shadow-inner bg-grey-light ${className}`}
       data-test="kanban-list"
     >
       <h2
         className="p-4 pb-1 text-base"
         data-test="kanban-list-title"
-      >{title}</h2>
-        <ul className="px-2 m-0 list-reset">
+      >{TASK_STATE_MAP[state].title}</h2>
+        <ul className="flex-1 px-2 m-0 overflow-auto list-reset">
           {
             tasks
-              .filter(({ state }) => state === testState)
+              .filter(task => task.state === state)
               .map(
                 task => <TaskCard
                   key={task.id}
@@ -50,23 +56,44 @@ const KanbanBoard = ({
         </ul>
     </div>
 
-  return screens.lg
-    ? <div
-        className={`flex items-start p-2 ${className}`}
-        data-test="kanban-board"
-      >
-        <KanbanList title="ADDED" state="added" />
-        <KanbanList title="PLANNED" state="planned" />
-        <KanbanList title="IN PROGRESS" state="in-progress" />
-        <KanbanList title="BLOCKED" state="blocked" />
-        <KanbanList title="COMPLETE" state="complete" />
+  const ListButton = ({
+    state,
+    className = ''
+  }) =>
+    <button
+      className={`px-1 sm:px-2 py-3 text-2xs sm:text-xs md:text-sm font-bold ${ state === visibleState ? 'bg-grey-light' : ''} ${className}`}
+      type="button"
+      onClick={() => setVisibleState(state)}
+    >
+      {TASK_STATE_MAP[state].title}
+    </button>
+
+  if (screen.lg) {
+    // Generate a list for each task state.
+    const lists = Object
+      .getOwnPropertyNames(TASK_STATE_MAP)
+      .map(state => <KanbanList key={state} state={state} />)
+
+    return <div
+      className={`flex-1 flex items-start p-2 ${className}`}
+      data-test="kanban-board"
+    > { lists } </div>
+  } else {
+    // Generate a button for each task state.
+    const buttons = Object
+      .getOwnPropertyNames(TASK_STATE_MAP)
+      .map(state => <ListButton key={state} state={state} />)
+
+    return <div
+      className={`flex-1 flex flex-col ${className}`}
+      data-test="kanban-board"
+    >
+      <div className="flex-1 flex justify-center">
+        <KanbanList className="w-full max-w-sm" state={visibleState} />
       </div>
-    : <div
-        className={`p-2 ${className}`}
-        data-test="kanban-board"
-      >
-        <KanbanList title="IN PROGRESS" state="in-progress" />
-      </div>
+      <nav className="flex justify-center border-t-2 border-black">{ buttons }</nav>
+    </div>
+  }
 }
 
 export default KanbanBoard

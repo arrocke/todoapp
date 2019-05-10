@@ -20,6 +20,6 @@ export default () => {
   if (loading) {
     return null
   } else {
-    return <KanbanBoard className='h-full' tasks={tasks} />
+    return <KanbanBoard className='flex-grow' tasks={tasks} />
   }
 }
