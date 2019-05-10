@@ -35,7 +35,7 @@ const KanbanBoard = ({
     className = ''
   }) =>
     <div 
-      className={`flex flex-col lg:w-full max-h-full pb-4 m-2 rounded-lg shadow-inner bg-grey-light ${className}`}
+      className={`flex flex-col lg:w-full max-h-full pb-2 mx-2 rounded-lg shadow-inner bg-grey-light ${className}`}
       data-test="kanban-list"
     >
       <h2
@@ -75,7 +75,7 @@ const KanbanBoard = ({
       .map(state => <KanbanList key={state} state={state} />)
 
     return <div
-      className={`flex-1 flex items-start p-2 ${className}`}
+      className={`flex-1 flex px-2 py-4 ${className}`}
       data-test="kanban-board"
     > { lists } </div>
   } else {
@@ -85,10 +85,10 @@ const KanbanBoard = ({
       .map(state => <ListButton key={state} state={state} />)
 
     return <div
-      className={`flex-1 flex flex-col ${className}`}
+      className={`flex-1 flex flex-col max-h-full ${className}`}
       data-test="kanban-board"
     >
-      <div className="flex-1 flex justify-center">
+      <div className="flex-1 flex justify-center px-2 py-4">
         <KanbanList className="w-full max-w-sm" state={visibleState} />
       </div>
       <nav className="flex justify-center border-t-2 border-black">{ buttons }</nav>
