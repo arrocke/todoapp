@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import useMediaQuery from '../hooks/media-query'
+import client from '../client'
 
 const TASK_STATE_MAP = {
   'added': { title: 'ADDED' },
@@ -9,19 +10,43 @@ const TASK_STATE_MAP = {
   'complete': { title: 'COMPLETE' }
 }
 
+const updateTask = async ({ id, name, state }) => {
+  const { data } = await client.mutate({
+    mutation: `
+      mutation Update($input: UpdateTaskInput!) {
+        updateTask(input: $input) {
+          state
+        }
+      }
+    `,
+    variables: { input: { id, name, state } }
+  })
+  return data
+}
+
 const KanbanBoard = ({
   tasks = [],
   hideProject = false,
-  className = ''
+  className = '',
+  onTasksChange = () => {}
 } = {}) => {
   const [visibleState, setVisibleState] = useState('in-progress')
   const [screen] = useMediaQuery()
 
   const TaskCard = ({
-    task: { name, project } = {},
+    task: { name, project, id } = {},
     className = ''
-  } = {}) =>
-    <li className={`my-2 p-2 rounded bg-white shadow ${className}`}>
+  } = {}) => {
+    const onDragStart = e => {
+      e.dataTransfer.setData('text/plain', id)
+      e.dataTransfer.dropEffect = 'move'
+    }
+
+    return <li
+      className={`my-2 p-2 rounded bg-white shadow ${className}`}
+      draggable="true"
+      onDragStart={onDragStart}
+    >
       <span data-test="task-name">{name}</span>
       {
         !hideProject && project
@@ -29,14 +54,39 @@ const KanbanBoard = ({
           : null
       }
     </li>
+  }
 
   const KanbanList = ({
     state,
     className = ''
-  }) =>
-    <div 
+  }) => {
+    const onDragOver = e => {
+      e.preventDefault()
+      e.dataTransfer.dropEffect = 'move'
+    }
+
+    const onDrop = e => {
+      e.preventDefault()
+      const id = e.dataTransfer.getData('text/plain')
+      const task = tasks.find(task => task.id === id)
+      if (task.state !== state) {
+        const index = tasks.findIndex(t => t.id === id)
+        const updatedTasks = tasks.slice()
+        const updatedTask = {
+          ...task,
+          state
+        }
+        updatedTasks[index] = updatedTask
+        onTasksChange(updatedTasks)
+        updateTask(updatedTask)
+      }
+    }
+
+    return <div 
       className={`flex flex-col lg:w-full max-h-full pb-2 mx-2 rounded-lg shadow-inner bg-grey-light ${className}`}
       data-test="kanban-list"
+      onDragOver={onDragOver}
+      onDrop={onDrop}
     >
       <h2
         className="p-4 pb-1 text-base"
@@ -55,6 +105,7 @@ const KanbanBoard = ({
           } 
         </ul>
     </div>
+  }
 
   const ListButton = ({
     state,

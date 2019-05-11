@@ -24,8 +24,14 @@ module.exports = gql`
   }
 
   input CreateTaskInput {
-    name: String!,
+    name: String!
     projectId: ID
+  }
+
+  input UpdateTaskInput {
+    id: ID!
+    name: String
+    state: String
   }
   
   type Query {
@@ -37,5 +43,6 @@ module.exports = gql`
   type Mutation {
     createProject(input: CreateProjectInput!): Project!
     createTask(input: CreateTaskInput!): Task!
+    updateTask(input: UpdateTaskInput!): Task!
   }
 `

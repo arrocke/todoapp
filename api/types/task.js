@@ -37,6 +37,10 @@ module.exports = ({ Query, Mutation, ...types }) => {
     return { taskId, state, name, completed, projectId }
   }
 
+  const updateTask = async (_, { input: { name, state, id: taskId } }) => {
+    return await taskQueries.update({ taskId, name, state })
+  }
+
   return {
     ...types,
     Task,
@@ -46,7 +50,8 @@ module.exports = ({ Query, Mutation, ...types }) => {
     },
     Mutation: {
       ...Mutation,
-      createTask
+      createTask,
+      updateTask
     }
   }
 }

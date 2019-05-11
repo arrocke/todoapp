@@ -31,13 +31,18 @@ const reducer = (state, { type, data, error }) => {
   }
 }
 
-const useGraphql = ({ query, mutation, variables }) => {
+const useGraphql = ({
+  query,
+  mutation,
+  variables,
+  onResolved = () => {}
+}) => {
   const initialData = {
     loading: false,
     error: null,
     data: {}
   }
-  const [{ data, loading, error }, dispatch] = useReducer(reducer, initialData)
+  const [{ loading, error }, dispatch] = useReducer(reducer, initialData)
 
   useEffect(() => {
     let cancelled = false
@@ -60,7 +65,8 @@ const useGraphql = ({ query, mutation, variables }) => {
         if (cancelled) {
           dispatch({ type: 'cancelled' })
         } else {
-          dispatch({ data, type: 'end' })
+          dispatch({ type: 'end' })
+          onResolved(data)
         }
       } catch (error) {
         dispatch({ error, type: 'error' })
@@ -72,7 +78,7 @@ const useGraphql = ({ query, mutation, variables }) => {
     return () => { cancelled = true }
   }, [ query, mutation, variables ])
 
-  return [data, loading, error]
+  return [loading, error]
 }
 
 export default useGraphql

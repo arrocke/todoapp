@@ -71,8 +71,47 @@ const insert = async ({ name, projectId }) => {
   return { taskId, state }
 }
 
+const update = async ({ taskId, name, state }) => {
+  const params = []
+  const set = []
+  const setParams = []
+  let query = 'UPDATE task'
+
+  // Update the task name.
+  if (name) {
+    setParams.push(name)
+    set.push(`name = $${setParams.length}`)
+  }
+
+  // Update the task state.
+  if (state) {
+    setParams.push(state)
+    set.push(`state = $${setParams.length}`)
+  }
+
+  // If there are changes to the task,
+  // Compile the query and run it.
+  if (set.length > 0) {
+    params.push(...setParams)
+    params.push(taskId)
+    query += `
+      SET ${set.join(', ')}
+      WHERE task_id = $${params.length}
+    `
+    await db.query(query, params)
+  }
+
+  // Fetch the updated task.
+  const { rows: [updatedTask] } = await db.query(
+    `SELECT * FROM task WHERE task_id = $1`,
+    [taskId]
+  )
+  return updatedTask
+}
+
 module.exports = {
   find,
   count,
-  insert
+  insert,
+  update
 }

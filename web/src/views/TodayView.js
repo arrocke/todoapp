@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import useGraphql from '../hooks/graphql'
 import KanbanBoard from '../components/KanbanBoard'
 
@@ -13,13 +13,22 @@ const fetchTasks = `
 `
 
 export default () => {
-  const [{ tasks }, loading, error] = useGraphql({
-    query: fetchTasks
+  const [tasks, setTasks] = useState([])
+  const [loading, error] = useGraphql({
+    query: fetchTasks,
+    onResolved ({ tasks }) {
+      setTasks(tasks)
+    }
   })
+
 
   if (loading) {
     return null
   } else {
-    return <KanbanBoard className='flex-grow' tasks={tasks} />
+    return <KanbanBoard
+      className='flex-grow'
+      tasks={tasks}
+      onTasksChange={setTasks}
+    />
   }
 }
