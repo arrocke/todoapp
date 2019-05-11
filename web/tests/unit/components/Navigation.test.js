@@ -8,14 +8,14 @@ it('clicking menu button opens the side menu', () => {
 
   // Menu is closed.
   const overlay = getByTestId('side-menu-overlay')
-  expect(overlay).not.toBeVisible()
+  expect(overlay).toHaveClass('invisible')
   
   // Click menu button.
   const menuButton = getByTestId('menu-button')
   fireEvent.click(menuButton)
 
   // Menu is open.
-  expect(overlay).toBeVisible()
+  expect(overlay).not.toHaveClass('invisible')
 })
 
 it('clicking on screen closes the side menu', () => {
@@ -31,7 +31,7 @@ it('clicking on screen closes the side menu', () => {
 
   // Menu is closed.
   const overlay = getByTestId('side-menu-overlay')
-  expect(overlay).not.toBeVisible()
+  expect(overlay).toHaveClass('invisible')
 })
 
 it('clicking on close button closes the side menu', () => {
@@ -47,7 +47,7 @@ it('clicking on close button closes the side menu', () => {
 
   // Menu is closed.
   const overlay = getByTestId('side-menu-overlay')
-  expect(overlay).not.toBeVisible()
+  expect(overlay).toHaveClass('invisible')
 })
 
 it('clicking on the menu does not close it', () => {
@@ -63,7 +63,7 @@ it('clicking on the menu does not close it', () => {
 
   // Menu is open.
   const overlay = getByTestId('side-menu-overlay')
-  expect(overlay).toBeVisible()
+  expect(overlay).not.toHaveClass('invisible')
 })
 
 it('clicking on the today link navigates to the today page', () => {
@@ -79,6 +79,6 @@ it('clicking on the today link navigates to the today page', () => {
 
   // Navigated and closed menu.
   const menu = getByTestId('side-menu-overlay')
-  expect(menu).not.toBeVisible()
+  expect(menu).toHaveClass('invisible')
   expect(history.location.pathname).toEqual('/today')
 })
