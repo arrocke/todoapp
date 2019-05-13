@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import useMediaQuery from '../hooks/media-query'
 import client from '../client'
+import TaskCard from './TaskCard'
 
 const TASK_STATE_MAP = {
   'added': { title: 'ADDED' },
@@ -32,30 +33,6 @@ const KanbanBoard = ({
 } = {}) => {
   const [visibleState, setVisibleState] = useState('in-progress')
   const [screen] = useMediaQuery()
-
-  const TaskCard = useCallback(({
-    task: { name, project, id } = {},
-    className = ''
-  } = {}) => {
-    const onDragStart = useCallback(e => {
-      e.dataTransfer.setData('text/plain', id)
-      e.dataTransfer.dropEffect = 'move'
-    }, [id])
-
-    return <li
-      className={`my-2 p-2 rounded bg-white shadow cursor-pointer ${className}`}
-      draggable="true"
-      onDragStart={onDragStart}
-      data-test="task-card"
-    >
-      <span data-test="task-name">{name}</span>
-      {
-        !hideProject && project
-          ? <span data-test="task-project">{project.name}</span>
-          : null
-      }
-    </li>
-  }, [hideProject])
 
   const KanbanList = useCallback(({
     state,
@@ -101,6 +78,7 @@ const KanbanBoard = ({
                 task => <TaskCard
                   key={task.id}
                   task={task}
+                  hideProject={hideProject}
                 />
               )
           } 
