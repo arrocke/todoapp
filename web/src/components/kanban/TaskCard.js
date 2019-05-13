@@ -30,6 +30,7 @@ const TaskCard = ({
     .filter(s => s !== state)
     .map(state =>
       <button
+        key={state}
         type="button"
         className="block py-2 font-bold text-sm text-right"
         onClick={() => onMenuClick(state)}

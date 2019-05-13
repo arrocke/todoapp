@@ -2,6 +2,22 @@ import React, { useState, useCallback } from 'react'
 import useMediaQuery from '../../hooks/media-query'
 import KanbanList from './KanbanList'
 import { TITLE_MAP } from './config'
+import client from '../../client'
+
+// Save task changes to the server.
+const saveTask = async ({ id, name, state }) => {
+  const { data } = await client.mutate({
+    mutation: `
+      mutation Update($input: UpdateTaskInput!) {
+        updateTask(input: $input) {
+          state
+        }
+      }
+    `,
+    variables: { input: { id, name, state } }
+  })
+  return data
+}
 
 // Sorts tasks into different lists their state.
 // Enables tasks to be dragged between lists to change their state.
@@ -14,6 +30,16 @@ const KanbanBoard = ({
   const [visibleState, setVisibleState] = useState('in-progress')
   const [screen] = useMediaQuery()
 
+  // Event handler for when a task is updated.
+  // Updates parent component and persists changes to the task to the server.
+  const onTaskUpdate = useCallback(async task => {
+    const index = tasks.findIndex(({ id }) => id === task.id)
+    const updatedTasks = tasks.slice()
+    updatedTasks[index] = task
+    onTasksChange(updatedTasks)
+    await saveTask({ id: task.id, state: task.state })
+  }, [tasks, onTasksChange])
+
   // Render all of the lists on larger screens.
   if (screen.lg) {
     // Generate a list for each task state.
@@ -24,7 +50,7 @@ const KanbanBoard = ({
         tasks={tasks}
         state={state}
         hideProject={hideProject}
-        onTasksChange={onTasksChange}
+        onTaskUpdate={onTaskUpdate}
       />)
 
     return <div
@@ -57,7 +83,7 @@ const KanbanBoard = ({
           tasks={tasks}
           state={visibleState}
           hideProject={hideProject}
-          onTasksChange={onTasksChange}
+          onTaskUpdate={onTaskUpdate}
         />
       </div>
       <nav
