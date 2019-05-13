@@ -1,7 +1,10 @@
 import React, { useState, useCallback } from 'react'
-import useMediaQuery from '../hooks/media-query'
-import KanbanList, { TITLE_MAP } from './KanbanList'
+import useMediaQuery from '../../hooks/media-query'
+import KanbanList from './KanbanList'
+import { TITLE_MAP } from './config'
 
+// Sorts tasks into different lists their state.
+// Enables tasks to be dragged between lists to change their state.
 const KanbanBoard = ({
   tasks = [],
   hideProject = false,
@@ -11,20 +14,7 @@ const KanbanBoard = ({
   const [visibleState, setVisibleState] = useState('in-progress')
   const [screen] = useMediaQuery()
 
-  const ListButton = useCallback(({
-    state,
-    className = ''
-  }) => {
-    return <button
-      className={`px-1 sm:px-2 py-3 text-2xs sm:text-xs md:text-sm font-bold ${ state === visibleState ? 'bg-grey-light' : ''} ${className}`}
-      type="button"
-      onClick={() => setVisibleState(state)}
-    >
-      {TITLE_MAP[state]}
-    </button>
-  }, [visibleState])
-
-  // Render more lists on larger screens.
+  // Render all of the lists on larger screens.
   if (screen.lg) {
     // Generate a list for each task state.
     const lists = Object
@@ -47,7 +37,15 @@ const KanbanBoard = ({
     // Generate a button for each task state.
     const buttons = Object
       .getOwnPropertyNames(TITLE_MAP)
-      .map(state => <ListButton key={state} state={state} />)
+      .map(state =>
+        <button
+          key={state} state={state}
+          className={`px-1 sm:px-2 py-3 text-2xs sm:text-xs md:text-sm font-bold ${ state === visibleState ? 'bg-grey-light' : ''} ${className}`}
+          type="button"
+          onClick={() => setVisibleState(state)}
+        >
+          {TITLE_MAP[state]}
+        </button>)
 
     return <div
       className={`flex-1 flex flex-col max-h-full ${className}`}
@@ -59,9 +57,13 @@ const KanbanBoard = ({
           tasks={tasks}
           state={visibleState}
           hideProject={hideProject}
+          onTasksChange={onTasksChange}
         />
       </div>
-      <nav className="flex justify-center border-t-2 border-black">{buttons}</nav>
+      <nav
+        className="flex justify-center border-t-2 border-black"
+        data-test="kanban-navigation"
+      >{buttons}</nav>
     </div>
   }
 }

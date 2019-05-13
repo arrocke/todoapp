@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import useGraphql from '../hooks/graphql'
-import KanbanBoard from '../components/KanbanBoard'
+import KanbanBoard from '../components/kanban/KanbanBoard'
 
 const fetchTasks = `
   {

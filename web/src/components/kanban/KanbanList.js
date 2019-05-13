@@ -1,29 +1,9 @@
 import React, { useCallback } from 'react'
-import client from '../client'
 import TaskCard from './TaskCard'
+import { TITLE_MAP, updateTask } from './config'
 
-export const TITLE_MAP = {
-  'added': 'ADDED',
-  'planned': 'planned',
-  'in-progress': 'IN PROGRESS',
-  'blocked': 'BLOCKED',
-  'complete': 'COMPLETE'
-}
-
-const updateTask = async ({ id, name, state }) => {
-  const { data } = await client.mutate({
-    mutation: `
-      mutation Update($input: UpdateTaskInput!) {
-        updateTask(input: $input) {
-          state
-        }
-      }
-    `,
-    variables: { input: { id, name, state } }
-  })
-  return data
-}
-
+// Renders a list of tasks that are in a specified state.
+// Enables tasks to be moved between lists.
 const KanbanList = ({
   tasks = [],
   state,
@@ -31,28 +11,37 @@ const KanbanList = ({
   className = '',
   onTasksChange = () => {}
 }) => {
+  // Event handler for when a task is updated.
+  // Updates parent component and persists changes to the task to the server.
+  const onTaskUpdate = useCallback(async task => {
+    const index = tasks.findIndex(({ id }) => id === task.id)
+    const updatedTasks = tasks.slice()
+    updatedTasks[index] = task
+    onTasksChange(updatedTasks)
+    await updateTask({ id: task.id, state: task.state })
+  }, [tasks, onTasksChange])
+
+  // Event handler for dragging a task over the list.
   const onDragOver = useCallback(e => {
     e.preventDefault()
     e.dataTransfer.dropEffect = 'move'
   }, [])
 
+  // Event handler for dropping a task over the list.
+  // Finds the task and updates its state.
   const onDrop = useCallback(e => {
     e.preventDefault()
     const id = e.dataTransfer.getData('text/plain')
     const task = tasks.find(task => task.id === id)
     if (task.state !== state) {
-      const index = tasks.findIndex(t => t.id === id)
-      const updatedTasks = tasks.slice()
-      const updatedTask = {
+      onTaskUpdate({
         ...task,
         state
-      }
-      updatedTasks[index] = updatedTask
-      onTasksChange(updatedTasks)
-      updateTask({ id, state })
+      })
     }
   }, [tasks, state, onTasksChange])
 
+  // The list of TaskCards that have the state for this list.
   const title = TITLE_MAP[state]
   const filteredTasks = tasks
     .filter(task => task.state === state)
@@ -61,6 +50,7 @@ const KanbanList = ({
         key={task.id}
         task={task}
         hideProject={hideProject}
+        onUpdate={onTaskUpdate}
       />
     )
 

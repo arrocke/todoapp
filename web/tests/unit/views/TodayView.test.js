@@ -12,6 +12,9 @@ jest.mock('../../../src/client', () => ({
 
 afterEach(() => {
   client.query.mockReset()
+  client.query.mockResolvedValue({})
+  client.mutate.mockReset()
+  client.mutate.mockResolvedValue({})
 })
 
 const renderTodayView = async ({
@@ -33,7 +36,6 @@ const testKanbanList = ({ el, state, title, tasks }) => {
   // Test the list title
   const titleElement = getByTestId('kanban-list-title')
   expect(titleElement).toHaveTextContent(title)
-
 
   // Test for the presence of the correct tasks.
   const taskElements = queryAllByTestId('task-name')
@@ -112,9 +114,7 @@ describe('on wide screens', () => {
 
   it('dragging a task from one list to another changes its state.', async () => {
     const task = taskBuilder({ state: 'planned' })
-    const { getByTestId, getAllByTestId, rerender, debug } = await renderTodayView({ tasks: [task] })
-
-    client.query.mockReset()
+    const { getByTestId, getAllByTestId } = await renderTodayView({ tasks: [task] })
 
     let taskElement = getByTestId('task-card')
     let taskListElement = getAllByTestId('kanban-list')[4]
@@ -126,6 +126,26 @@ describe('on wide screens', () => {
 
     taskElement = getByTestId('task-card')
     taskListElement = getAllByTestId('kanban-list')[4]
+    expect(taskListElement).toContainElement(taskElement)
+  })
+
+  it('using the move menu changes a task state.', async () => {
+    const task = taskBuilder({ state: 'planned' })
+    const { getByTestId, getAllByTestId } = await renderTodayView({ tasks: [task] })
+
+    let taskElement = getByTestId('task-card')
+
+    const menuElement = within(taskElement).getByText(/move/i)
+    fireEvent.click(menuElement)
+
+    const menuItem = within(taskElement).getByText(/complete/i)
+    fireEvent.click(menuItem)
+
+    expect(client.mutate).toHaveBeenCalledTimes(1)
+    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { id: task.id, state: 'complete' } })
+
+    taskElement = getByTestId('task-card')
+    const taskListElement = getAllByTestId('kanban-list')[4]
     expect(taskListElement).toContainElement(taskElement)
   })
 })
@@ -150,9 +170,10 @@ describe('on narrow screens', () => {
   })
 
   it('displays only the added tasks after clicking the added button.', async () => {
-    const { tasks, getByText, getAllByTestId } = await renderTodayView()
+    const { tasks, getByTestId, getAllByTestId } = await renderTodayView()
 
-    const button = getByText(/added/i)
+    const menu = getByTestId('kanban-navigation')
+    const button = within(menu).getByText(/added/i)
     fireEvent.click(button)
 
     const listElements = getAllByTestId('kanban-list')
@@ -167,9 +188,10 @@ describe('on narrow screens', () => {
   })
 
   it('displays only the planned tasks after clicking the planned button.', async () => {
-    const { tasks, getByText, getAllByTestId } = await renderTodayView()
+    const { tasks, getByTestId, getAllByTestId } = await renderTodayView()
 
-    const button = getByText(/planned/i)
+    const menu = getByTestId('kanban-navigation')
+    const button = within(menu).getByText(/planned/i)
     fireEvent.click(button)
 
     const listElements = getAllByTestId('kanban-list')
@@ -184,12 +206,13 @@ describe('on narrow screens', () => {
   })
 
   it('displays only the in progress tasks after clicking the in progress button.', async () => {
-    const { tasks, getByText, getAllByTestId } = await renderTodayView()
+    const { tasks, getByTestId, getAllByTestId } = await renderTodayView()
 
-    const button1 = getByText(/planned/i)
+    const menu = getByTestId('kanban-navigation')
+    const button1 = within(menu).getByText(/planned/i)
     fireEvent.click(button1)
 
-    const button2 = getByText(/in progress/i)
+    const button2 = within(menu).getByText(/in progress/i)
     fireEvent.click(button2)
 
     const listElements = getAllByTestId('kanban-list')
@@ -204,9 +227,10 @@ describe('on narrow screens', () => {
   })
 
   it('displays only the blocked tasks after clicking the blocked button.', async () => {
-    const { tasks, getByText, getAllByTestId } = await renderTodayView()
+    const { tasks, getByTestId, getAllByTestId } = await renderTodayView()
 
-    const button = getByText(/blocked/i)
+    const menu = getByTestId('kanban-navigation')
+    const button = within(menu).getByText(/blocked/i)
     fireEvent.click(button)
 
     const listElements = getAllByTestId('kanban-list')
@@ -221,9 +245,10 @@ describe('on narrow screens', () => {
   })
 
   it('displays only the complete tasks after clicking the complete button.', async () => {
-    const { tasks, getByText, getAllByTestId } = await renderTodayView()
+    const { tasks, getByTestId, getAllByTestId } = await renderTodayView()
 
-    const button = getByText(/complete/i)
+    const menu = getByTestId('kanban-navigation')
+    const button = within(menu).getByText(/complete/i)
     fireEvent.click(button)
 
     const listElements = getAllByTestId('kanban-list')
@@ -235,6 +260,25 @@ describe('on narrow screens', () => {
       title: /complete/i,
       tasks
     })
+  })
+
+  it('using the move menu changes a task state.', async () => {
+    const task = taskBuilder({ state: 'in-progress' })
+    const { getByTestId, debug } = await renderTodayView({ tasks: [task] })
+
+    let taskElement = getByTestId('task-card')
+
+    const menuElement = within(taskElement).getByText(/move/i)
+    fireEvent.click(menuElement)
+
+    const menuItem = within(taskElement).getByText(/complete/i)
+    fireEvent.click(menuItem)
+
+    expect(client.mutate).toHaveBeenCalledTimes(1)
+    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { id: task.id, state: 'complete' } })
+
+    const taskListElement = getByTestId('kanban-list')
+    expect(within(taskListElement).queryAllByTestId('task-card')).toHaveLength(0)
   })
 })
 
