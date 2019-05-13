@@ -1,20 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { TITLE_MAP } from './config'
 
-// Component for setting the state of a task.
-const StateButton = ({
-  state,
-  onClick = () => {}
-}) => {
-  const title = TITLE_MAP[state]
-
-  return <button
-    type="button"
-    className="block py-2 font-bold text-sm text-right"
-    onClick={() => onClick(state)}
-  >{title}</button>
-}
-
 // Renders a task as a card in a list.
 // This component allows a user to change the task's state by dragging between lists
 // or by using a dropdown menu.
@@ -29,7 +15,7 @@ const TaskCard = ({
   // Event handler to update the state of a task.
   const onMenuClick = useCallback(state => {
     onUpdate({ id, name, project, state })
-  }, [id, name, project])
+  }, [id, name, project, onUpdate])
 
   // Event handler to begin dragging a task to another state list.
   const onDragStart = useCallback(e => {
@@ -42,11 +28,12 @@ const TaskCard = ({
   const stateButtons = Object
     .getOwnPropertyNames(TITLE_MAP)
     .filter(s => s !== state)
-    .map(state => <StateButton
-      key={state}
-      state={state}
-      onClick={onMenuClick}
-    />)
+    .map(state =>
+      <button
+        type="button"
+        className="block py-2 font-bold text-sm text-right"
+        onClick={() => onMenuClick(state)}
+      >{TITLE_MAP[state]}</button>)
 
   // The label for the tasks's project.
   // Only rendered if projects are not hidden and the task has a project.

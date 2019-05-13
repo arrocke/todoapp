@@ -39,7 +39,7 @@ const KanbanList = ({
         state
       })
     }
-  }, [tasks, state, onTasksChange])
+  }, [tasks, state, onTasksChange, onTaskUpdate])
 
   // The list of TaskCards that have the state for this list.
   const title = TITLE_MAP[state]
