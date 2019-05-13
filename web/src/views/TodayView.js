@@ -28,7 +28,7 @@ export default () => {
     return <KanbanBoard
       className='flex-grow'
       tasks={tasks}
-      onTasksChange={setTasks}
+      onTasksChange={tasks => setTasks(tasks)}
     />
   }
 }

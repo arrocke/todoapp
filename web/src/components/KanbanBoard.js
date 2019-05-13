@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import useMediaQuery from '../hooks/media-query'
 import client from '../client'
 
@@ -37,15 +37,16 @@ const KanbanBoard = ({
     task: { name, project, id } = {},
     className = ''
   } = {}) => {
-    const onDragStart = e => {
+    const onDragStart = useCallback(e => {
       e.dataTransfer.setData('text/plain', id)
       e.dataTransfer.dropEffect = 'move'
-    }
+    }, [id])
 
     return <li
-      className={`my-2 p-2 rounded bg-white shadow ${className}`}
+      className={`my-2 p-2 rounded bg-white shadow cursor-pointer ${className}`}
       draggable="true"
       onDragStart={onDragStart}
+      data-test="task-card"
     >
       <span data-test="task-name">{name}</span>
       {
@@ -60,12 +61,12 @@ const KanbanBoard = ({
     state,
     className = ''
   }) => {
-    const onDragOver = e => {
+    const onDragOver = useCallback(e => {
       e.preventDefault()
       e.dataTransfer.dropEffect = 'move'
-    }
+    }, [])
 
-    const onDrop = e => {
+    const onDrop = useCallback(e => {
       e.preventDefault()
       const id = e.dataTransfer.getData('text/plain')
       const task = tasks.find(task => task.id === id)
@@ -78,9 +79,9 @@ const KanbanBoard = ({
         }
         updatedTasks[index] = updatedTask
         onTasksChange(updatedTasks)
-        updateTask(updatedTask)
+        updateTask({ id, state })
       }
-    }
+    }, [tasks, state, onTasksChange])
 
     return <div 
       className={`flex flex-col lg:w-full max-h-full pb-2 mx-2 rounded-lg shadow-inner bg-grey-light ${className}`}

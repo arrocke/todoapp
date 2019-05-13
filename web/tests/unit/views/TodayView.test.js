@@ -1,12 +1,13 @@
 import React from 'react'
 import { within, render, fireEvent, wait } from 'react-testing-library'
 import TodayView from '../../../src/views/TodayView'
-import { resizeWindow } from '../utils'
+import { resizeWindow, drag } from '../utils'
 import taskBuilder from '../../builders/task'
 import client from '../../../src/client'
 
 jest.mock('../../../src/client', () => ({
-  query: jest.fn().mockResolvedValue({})
+  query: jest.fn().mockResolvedValue({}),
+  mutate: jest.fn().mockResolvedValue({})
 }))
 
 afterEach(() => {
@@ -107,6 +108,25 @@ describe('on wide screens', () => {
       title: /complete/i,
       tasks
     })
+  })
+
+  it('dragging a task from one list to another changes its state.', async () => {
+    const task = taskBuilder({ state: 'planned' })
+    const { getByTestId, getAllByTestId, rerender, debug } = await renderTodayView({ tasks: [task] })
+
+    client.query.mockReset()
+
+    let taskElement = getByTestId('task-card')
+    let taskListElement = getAllByTestId('kanban-list')[4]
+
+    drag(taskElement, taskListElement)
+
+    expect(client.mutate).toHaveBeenCalledTimes(1)
+    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { id: task.id, state: 'complete' } })
+
+    taskElement = getByTestId('task-card')
+    taskListElement = getAllByTestId('kanban-list')[4]
+    expect(taskListElement).toContainElement(taskElement)
   })
 })
 
