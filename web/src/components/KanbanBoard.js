@@ -33,7 +33,7 @@ const KanbanBoard = ({
   const [visibleState, setVisibleState] = useState('in-progress')
   const [screen] = useMediaQuery()
 
-  const TaskCard = ({
+  const TaskCard = useCallback(({
     task: { name, project, id } = {},
     className = ''
   } = {}) => {
@@ -55,9 +55,9 @@ const KanbanBoard = ({
           : null
       }
     </li>
-  }
+  }, [hideProject])
 
-  const KanbanList = ({
+  const KanbanList = useCallback(({
     state,
     className = ''
   }) => {
@@ -106,20 +106,22 @@ const KanbanBoard = ({
           } 
         </ul>
     </div>
-  }
+  }, [tasks, onTasksChange])
 
-  const ListButton = ({
+  const ListButton = useCallback(({
     state,
     className = ''
-  }) =>
-    <button
+  }) => {
+    return <button
       className={`px-1 sm:px-2 py-3 text-2xs sm:text-xs md:text-sm font-bold ${ state === visibleState ? 'bg-grey-light' : ''} ${className}`}
       type="button"
       onClick={() => setVisibleState(state)}
     >
       {TASK_STATE_MAP[state].title}
     </button>
+  }, [visibleState])
 
+  // Render more lists on larger screens.
   if (screen.lg) {
     // Generate a list for each task state.
     const lists = Object
@@ -129,8 +131,10 @@ const KanbanBoard = ({
     return <div
       className={`flex-1 flex px-2 py-4 ${className}`}
       data-test="kanban-board"
-    > { lists } </div>
-  } else {
+    >{lists}</div>
+  }
+  // On smaller screens render a single list with buttons to select other lists to display. 
+  else {
     // Generate a button for each task state.
     const buttons = Object
       .getOwnPropertyNames(TASK_STATE_MAP)
@@ -143,7 +147,7 @@ const KanbanBoard = ({
       <div className="flex-1 flex justify-center px-2 py-4">
         <KanbanList className="w-full max-w-sm" state={visibleState} />
       </div>
-      <nav className="flex justify-center border-t-2 border-black">{ buttons }</nav>
+      <nav className="flex justify-center border-t-2 border-black">{buttons}</nav>
     </div>
   }
 }
