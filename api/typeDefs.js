@@ -26,6 +26,7 @@ module.exports = gql`
   input CreateTaskInput {
     name: String!
     projectId: ID
+    state: String
   }
 
   input UpdateTaskInput {

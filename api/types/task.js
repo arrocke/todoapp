@@ -26,15 +26,14 @@ module.exports = ({ Query, Mutation, ...types }) => {
     return await taskQueries.find({ states })
   }
 
-  const createTask = async (_, { input: { name, projectId } }) => {
-    const completed = false
-    const { taskId, state } = await taskQueries.insert({
+  const createTask = async (_, { input: { name, projectId, state = 'completed' } }) => {
+    const { taskId } = await taskQueries.insert({
       name,
-      completed,
+      state,
       projectId
     })
 
-    return { taskId, state, name, completed, projectId }
+    return { taskId, state, name, projectId }
   }
 
   const updateTask = async (_, { input: { name, state, id: taskId } }) => {

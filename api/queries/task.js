@@ -61,14 +61,14 @@ const count = async ({ projectId, states }) => {
   return count
 }
 
-const insert = async ({ name, projectId }) => {
-  const params = [name, projectId]
+const insert = async ({ name, projectId, state }) => {
+  const params = [name, projectId, state]
   const query = `
-    INSERT INTO task (name, project_id) VALUES ($1, $2) RETURNING task_id AS "taskId", state
+    INSERT INTO task (name, project_id, state) VALUES ($1, $2, $3) RETURNING task_id AS "taskId"
   `
 
-  const { rows: [{ taskId, state }]} = await db.query(query, params)
-  return { taskId, state }
+  const { rows: [{ taskId }]} = await db.query(query, params)
+  return { taskId }
 }
 
 const update = async ({ taskId, name, state }) => {
