@@ -16,7 +16,7 @@ export default () => {
     </nav>
 
     <div
-      className={`bg-shadow fixed pin transition ${isOpen ? '' : 'bg-transparent invisible'}`}
+      className={`bg-shadow fixed pin transition z-10 ${isOpen ? '' : 'bg-transparent invisible'}`}
       style={{ transitionProperty: `background-color, ${isOpen ? '' : 'visibility'}` }}
       onClick={() => setOpen(false)}
       data-test="side-menu-overlay"
