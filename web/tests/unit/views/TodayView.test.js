@@ -122,11 +122,11 @@ describe('on wide screens', () => {
     drag(taskElement, taskListElement)
 
     expect(client.mutate).toHaveBeenCalledTimes(1)
-    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { id: task.id, state: 'complete' } })
+    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { ...task, state: 'complete' } })
 
     taskElement = getByTestId('task-card')
     taskListElement = getAllByTestId('kanban-list')[4]
-    expect(taskListElement).toContainElement(taskElement)
+    wait(() => expect(taskListElement).toContainElement(taskElement))
   })
 
   it('using the move menu changes a task state.', async () => {
@@ -142,11 +142,11 @@ describe('on wide screens', () => {
     fireEvent.click(menuItem)
 
     expect(client.mutate).toHaveBeenCalledTimes(1)
-    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { id: task.id, state: 'complete' } })
+    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { ...task, state: 'complete' } })
 
     taskElement = getByTestId('task-card')
     const taskListElement = getAllByTestId('kanban-list')[4]
-    expect(taskListElement).toContainElement(taskElement)
+    wait(() => expect(taskListElement).toContainElement(taskElement))
   })
 })
 
@@ -275,10 +275,10 @@ describe('on narrow screens', () => {
     fireEvent.click(menuItem)
 
     expect(client.mutate).toHaveBeenCalledTimes(1)
-    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { id: task.id, state: 'complete' } })
+    expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: { ...task, state: 'complete' } })
 
     const taskListElement = getByTestId('kanban-list')
-    expect(within(taskListElement).queryAllByTestId('task-card')).toHaveLength(0)
+    wait(() => expect(within(taskListElement).queryAllByTestId('task-card')).toHaveLength(0))
   })
 })
 

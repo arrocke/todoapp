@@ -1,16 +1,17 @@
 import React, { useCallback } from 'react'
 import TaskCard from './TaskCard'
 import { TITLE_MAP } from './config'
+import {useTasks} from '../../contexts/task'
 
 // Renders a list of tasks that are in a specified state.
 // Enables tasks to be moved between lists.
 const KanbanList = ({
-  tasks = [],
   state,
   hideProject = false,
-  className = '',
-  onTaskUpdate = () => {}
+  className = ''
 }) => {
+  const { tasks, update } = useTasks()
+
   // Event handler for dragging a task over the list.
   const onDragOver = useCallback(e => {
     e.preventDefault()
@@ -24,12 +25,12 @@ const KanbanList = ({
     const id = e.dataTransfer.getData('text/plain')
     const task = tasks.find(task => task.id === id)
     if (task.state !== state) {
-      onTaskUpdate({
+      update({
         ...task,
         state
       })
     }
-  }, [tasks, state, onTaskUpdate])
+  }, [tasks, state, update])
 
   // The list of TaskCards that have the state for this list.
   const title = TITLE_MAP[state]
@@ -40,7 +41,6 @@ const KanbanList = ({
         key={task.id}
         task={task}
         hideProject={hideProject}
-        onUpdate={onTaskUpdate}
       />
     )
 

@@ -1,34 +1,24 @@
-import React, { useState } from 'react'
-import useGraphql from '../hooks/graphql'
+import React from 'react'
+import client from '../client'
 import KanbanBoard from '../components/kanban/KanbanBoard'
+import {TaskProvider} from '../contexts/task'
 
-const fetchTasks = `
-  {
-    tasks {
-      id,
-      name,
-      state
-    }
-  } 
-`
+const load = async () => {
+  const { data } = await client.query({
+    query: `
+      {
+        tasks {
+          id,
+          name,
+          state
+        }
+      }`
+  })
+  return data.tasks
+}
 
 export default () => {
-  const [tasks, setTasks] = useState([])
-  const [loading, error] = useGraphql({
-    query: fetchTasks,
-    onResolved ({ tasks }) {
-      setTasks(tasks)
-    }
-  })
-
-
-  if (loading) {
-    return null
-  } else {
-    return <KanbanBoard
-      className='flex-grow'
-      tasks={tasks}
-      onTasksChange={tasks => setTasks(tasks)}
-    />
-  }
+  return <TaskProvider load={load}>
+    <KanbanBoard className='flex-grow' />
+  </TaskProvider>
 }

@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { TITLE_MAP } from './config'
+import {useTasks} from '../../contexts/task'
 
 // Renders a task as a card in a list.
 // This component allows a user to change the task's state by dragging between lists
@@ -7,15 +8,15 @@ import { TITLE_MAP } from './config'
 const TaskCard = ({
   task: { name, project, state, id } = {},
   hideProject = false,
-  className = '',
-  onUpdate = () => {}
+  className = ''
 } = {}) => {
+  const { update } = useTasks()
   const [menuOpen, setMenuState] = useState(false)
 
   // Event handler to update the state of a task.
   const onMenuClick = useCallback(state => {
-    onUpdate({ id, name, project, state })
-  }, [id, name, project, onUpdate])
+    update({ id, name, project, state })
+  }, [id, name, project])
 
   // Event handler to begin dragging a task to another state list.
   const onDragStart = useCallback(e => {
