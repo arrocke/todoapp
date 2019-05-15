@@ -1,34 +1,35 @@
 import React, { useState, useCallback } from 'react'
-import { TITLE_MAP } from './config'
+import {STATES, TITLE_MAP} from './config'
 import {useTasks} from '../../contexts/task'
 
-// Renders a task as a card in a list.
-// This component allows a user to change the task's state by dragging between lists
-// or by using a dropdown menu.
+/**
+ * Displays a task as a card. Includes UI to change the state of the task.
+ * @param {Object} props.task The task to display.
+ * @param {Boolean} props.hideProject Flag to hide the project name label for the task.
+ */
 const TaskCard = ({
-  task: { name, project, state, id } = {},
+  task,
   hideProject = false,
   className = ''
 } = {}) => {
-  const { update } = useTasks()
+  const {update} = useTasks()
   const [menuOpen, setMenuState] = useState(false)
 
   // Event handler to update the state of a task.
   const onMenuClick = useCallback(state => {
-    update({ id, name, project, state })
-  }, [id, name, project])
+    update({ ...task, state })
+  }, [task])
 
   // Event handler to begin dragging a task to another state list.
   const onDragStart = useCallback(e => {
-    e.dataTransfer.setData('text/plain', id)
+    e.dataTransfer.setData('task', task)
     e.dataTransfer.dropEffect = 'move'
-  }, [id])
+  }, [task])
 
   // The list of buttons to change the task state.
   // This does not include a button for the current task state.
-  const stateButtons = Object
-    .getOwnPropertyNames(TITLE_MAP)
-    .filter(s => s !== state)
+  const stateButtons = STATES
+    .filter(state => state !== task.state)
     .map(state =>
       <button
         key={state}
@@ -40,8 +41,8 @@ const TaskCard = ({
   // The label for the tasks's project.
   // Only rendered if projects are not hidden and the task has a project.
   const projectLabel = 
-    !hideProject && project
-      ? <span data-test="task-project">{project ? project.name : null}</span>
+    !hideProject && task.project
+      ? <span data-test="task-project">{task.project.name}</span>
       : null
 
   return <li
@@ -50,7 +51,7 @@ const TaskCard = ({
     onDragStart={onDragStart}
     data-test="task-card"
   >
-    <span data-test="task-name">{name}</span>
+    <span data-test="task-name">{task.name}</span>
     {projectLabel}
     <button
       type="button"

@@ -114,6 +114,8 @@ describe('on wide screens', () => {
 
   it('dragging a task from one list to another changes its state.', async () => {
     const task = taskBuilder({ state: 'planned' })
+    client.mutate.mockResolvedValueOnce({ data: { updateTask: { ...task, state: 'complete' }}})
+
     const { getByTestId, getAllByTestId } = await renderTodayView({ tasks: [task] })
 
     let taskElement = getByTestId('task-card')
@@ -131,6 +133,8 @@ describe('on wide screens', () => {
 
   it('using the move menu changes a task state.', async () => {
     const task = taskBuilder({ state: 'planned' })
+    client.mutate.mockResolvedValueOnce({ data: { updateTask: { ...task, state: 'complete' }}})
+
     const { getByTestId, getAllByTestId } = await renderTodayView({ tasks: [task] })
 
     let taskElement = getByTestId('task-card')
@@ -264,6 +268,8 @@ describe('on narrow screens', () => {
 
   it('using the move menu changes a task state.', async () => {
     const task = taskBuilder({ state: 'in-progress' })
+    client.mutate.mockResolvedValueOnce({ data: { updateTask: { ...task, state: 'complete' }}})
+
     const { getByTestId, debug } = await renderTodayView({ tasks: [task] })
 
     let taskElement = getByTestId('task-card')

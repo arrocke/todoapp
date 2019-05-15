@@ -1,10 +1,14 @@
 import React, { useCallback } from 'react'
 import TaskCard from './TaskCard'
-import { TITLE_MAP } from './config'
+import {TITLE_MAP} from './config'
 import {useTasks} from '../../contexts/task'
 
-// Renders a list of tasks that are in a specified state.
-// Enables tasks to be moved between lists.
+/**
+ * Displays a list of tasks with same state.
+ * Also enables TaskCards to be dragged between lists.
+ * @param {String} props.state The state of the cards in this list.
+ * @param {Boolean} props.hideProject Flag to hide the project name label for the task.
+ */
 const KanbanList = ({
   state,
   hideProject = false,
@@ -19,18 +23,17 @@ const KanbanList = ({
   }, [])
 
   // Event handler for dropping a task over the list.
-  // Finds the task and updates its state.
+  // Updates the state only if the task was dropped on a different list.
   const onDrop = useCallback(e => {
     e.preventDefault()
-    const id = e.dataTransfer.getData('text/plain')
-    const task = tasks.find(task => task.id === id)
+    const task = e.dataTransfer.getData('task')
     if (task.state !== state) {
       update({
         ...task,
         state
       })
     }
-  }, [tasks, state, update])
+  }, [state, update])
 
   // The list of TaskCards that have the state for this list.
   const title = TITLE_MAP[state]

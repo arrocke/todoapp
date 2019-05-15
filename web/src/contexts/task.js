@@ -15,13 +15,18 @@ const saveTask = async ({ id, name, state }) => {
     mutation: `
       mutation Update($input: UpdateTaskInput!) {
         updateTask(input: $input) {
+          id
+          name
           state
+          project {
+            name
+          }
         }
       }
     `,
     variables: { input: { id, name, state } }
   })
-  return data
+  return data.updateTask
 }
 
 /**
@@ -31,7 +36,7 @@ const saveTask = async ({ id, name, state }) => {
 const TaskProvider = ({ load, ...props}) => {
   const [tasks, setTasks] = useState([])
 
-  // Load initial tasks.
+  // Load initial tasks on the first render only.
   useEffect(() => {
     const effect = async () =>
       setTasks(await load())
@@ -50,8 +55,7 @@ const TaskProvider = ({ load, ...props}) => {
 
 /**
  * Gives access to the TaskContext.
- * @throws {Error} When not used within a TaskProvider.
- * @returns {Object} Contains the tasks list and a method to update a task.
+ * @throws When not used within a TaskProvider.
  */
 const useTasks = () => {
   const context = useContext(TaskContext)
@@ -64,9 +68,9 @@ const useTasks = () => {
 
   // Update a task and sync with the server.
   const update = async (task) => {
-    await saveTask(task)
+    task = await saveTask(task)
 
-    // If save succeeds update the state.
+    // If save succeeds, update the task list.
     const index = tasks.findIndex(({ id }) => id === task.id)
     const updatedTasks = tasks.slice()
     updatedTasks[index] = task
