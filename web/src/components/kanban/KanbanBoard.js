@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import useMediaQuery from '../../hooks/media-query'
 import KanbanList from './KanbanList'
+import NewTaskModal from './NewTaskModal'
 import {STATES,TITLE_MAP} from './config'
 
 /**
@@ -11,8 +12,18 @@ const KanbanBoard = ({
   hideProject = false,
   className = ''
 } = {}) => {
+  const [showTaskModal, setTaskModalVisibility] = useState(false)
   const [visibleState, setVisibleState] = useState('in-progress')
   const [screen] = useMediaQuery()
+
+  const addButton = <button
+    className="fixed pin-r pin-b m-4 mb-14 lg:mb-4 rounded-full shadow bg-white w-12 h-12"
+    type="button" 
+    data-test="task-modal-button"
+    onClick={() => setTaskModalVisibility(true)}
+  />
+
+  const newTaskModal = <NewTaskModal show={showTaskModal} />
 
   // Render all of the lists on larger screens.
   if (screen.lg) {
@@ -27,7 +38,11 @@ const KanbanBoard = ({
     return <div
       className={`flex-1 flex px-2 py-4 ${className}`}
       data-test="kanban-board"
-    >{lists}</div>
+    >
+      {addButton}
+      {lists}
+      {newTaskModal}
+    </div>
   }
 
   // On smaller screens render a single list with buttons to select other lists to display. 
@@ -47,6 +62,7 @@ const KanbanBoard = ({
       className={`flex-1 flex flex-col max-h-full ${className}`}
       data-test="kanban-board"
     >
+      {addButton}
       <div className="flex-1 flex justify-center px-2 py-4">
         <KanbanList
           className="w-full max-w-sm"
@@ -58,6 +74,7 @@ const KanbanBoard = ({
         className="flex justify-center border-t-2 border-black"
         data-test="kanban-navigation"
       >{buttons}</nav>
+      {newTaskModal}
     </div>
   }
 }

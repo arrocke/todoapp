@@ -77,7 +77,18 @@ const useTasks = () => {
     setTasks(updatedTasks)
   }
 
-  return { tasks, update }
+  // Add a new task and sync with the server.
+  const create = async (task) => {
+    setTasks([
+      ...tasks,
+      {
+        ...task,
+        id: -1
+      }
+    ])
+  }
+
+  return { tasks, update, create }
 }
 
 export {TaskProvider, useTasks}

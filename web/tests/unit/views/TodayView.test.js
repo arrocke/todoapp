@@ -152,6 +152,29 @@ describe('on wide screens', () => {
     const taskListElement = getAllByTestId('kanban-list')[4]
     wait(() => expect(taskListElement).toContainElement(taskElement))
   })
+
+  it('using the add task modal creates a new task on the board.', async () => {
+    const name = 'new task'
+    const { tasks, getByTestId, getAllByTestId } = await renderTodayView()
+
+    const modalButton = getByTestId('task-modal-button')
+    fireEvent.click(modalButton)
+
+    const nameInput = getByTestId('task-name-input')
+    fireEvent.change(nameInput, { target: { value: name }})
+
+    const addButton = getByTestId('add-task-button')
+    fireEvent.click(addButton)
+
+    const listElement = getAllByTestId('kanban-list')[0]
+    const taskElements = within(listElement).queryAllByTestId('task-name')
+      .map(card => card.textContent)
+    const expected = tasks
+      .filter(task => task.state === 'added')
+      .map(({ name }) => name)
+    expected.push(name)
+    expect(taskElements).toEqual(expected)
+  })
 })
 
 describe('on narrow screens', () => {
