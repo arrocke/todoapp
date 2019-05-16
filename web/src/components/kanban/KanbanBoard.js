@@ -53,11 +53,13 @@ const KanbanBoard = ({
     data-test="kanban-board"
   >
     <button
-      className="fixed pin-r pin-b m-4 mb-14 lg:mb-4 rounded-full shadow bg-white w-12 h-12"
+      className="fixed pin-r pin-b w-12 h-12 m-4 mb-14 lg:mb-4 rounded-full shadow bg-white"
       type="button" 
       data-test="task-modal-button"
       onClick={() => setTaskModalVisibility(true)}
-    />
+    >
+      <div className="icon icon-add w-8 h-8 m-2 block"/>
+    </button>
     {screen.lg ? lgLists : smList}
     {screen.lg ? null : navigation}
     <NewTaskModal
