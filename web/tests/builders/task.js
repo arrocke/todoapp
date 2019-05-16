@@ -6,9 +6,9 @@ const taskBuilder = build('Task')
     name: fake(f => f.lorem.word()),
     state: oneOf('added', 'planned', 'in-progress', 'blocked', 'complete')
   })
-  .map(task => ({
+  .map(({ id, ...task }) => ({
     ...task,
-    id: task.id.toString()
+    id: id.toString()
   }))
 
 export default taskBuilder

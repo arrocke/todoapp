@@ -1,8 +1,22 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import {useProjects} from '../contexts/projects'
 
 export default () => {
   const [isOpen, setOpen] = useState(false)
+  const {projects} = useProjects()
+
+  const projectLinks = projects.map(
+    project =>
+      <NavLink
+        key={project.id}
+        className="px-3 py-4 hover:bg-grey-light block text-black no-underline"
+        activeClassName="bg-grey-light"
+        to={`/projects/${project.id}`}
+        onClick={() => setOpen(false)}
+        data-test="nav-link"
+      >{project.name}</NavLink>
+  )
 
   return <div>
     <nav className="p-3 border-b-2 flex items-center">
@@ -39,7 +53,9 @@ export default () => {
           activeClassName="bg-grey-light"
           to="/today"
           onClick={() => setOpen(false)}
+          data-test="nav-link"
         >Today</NavLink>
+        {projectLinks}
       </div>
     </div>
   </div>

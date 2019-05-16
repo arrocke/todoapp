@@ -1,10 +1,42 @@
 import React from 'react'
 import { renderWithRouter } from '../utils'
-import { fireEvent } from 'dom-testing-library'
+import { fireEvent, wait } from 'dom-testing-library'
 import Navigation from '../../../src/components/Navigation'
+import projectBuilder from '../../builders/project'
+import client from '../../../src/client'
+import {ProjectProvider} from '../../../src/contexts/projects'
 
-it('clicking menu button opens the side menu', () => {
-  const { getByTestId } = renderWithRouter(<Navigation />)
+jest.mock('../../../src/client', () => ({
+  query: jest.fn().mockResolvedValue({}),
+  mutate: jest.fn().mockResolvedValue({})
+}))
+
+const renderNavigation = async ({
+  open = true,
+  projects = new Array(8).fill().map(() => projectBuilder())
+} = {}) => {
+  client.query.mockResolvedValue({ data: { projects } })
+
+  const utils = renderWithRouter(
+    <ProjectProvider>
+      <Navigation />
+    </ProjectProvider>
+  )
+  
+  // Open the menu if requested.
+  if (open) {
+    const menuButton = utils.getByTestId('menu-button')
+    fireEvent.click(menuButton)
+
+    await wait(() => utils.getByText(projects[0].name))
+  }
+
+
+  return { projects, ...utils }
+}
+
+it('clicking menu button opens the side menu', async () => {
+  const { getByTestId } = await renderNavigation({ open: false })
 
   // Menu is closed.
   const overlay = getByTestId('side-menu-overlay')
@@ -18,12 +50,8 @@ it('clicking menu button opens the side menu', () => {
   expect(overlay).not.toHaveClass('invisible')
 })
 
-it('clicking on screen closes the side menu', () => {
-  const { getByTestId } = renderWithRouter(<Navigation />)
-
-  // Open menu.
-  const menuButton = getByTestId('menu-button')
-  fireEvent.click(menuButton)
+it('clicking on screen closes the side menu', async () => {
+  const { getByTestId } = await renderNavigation()
 
   // Click screen outside of the menu.
   const screen = getByTestId('side-menu-overlay')
@@ -34,12 +62,8 @@ it('clicking on screen closes the side menu', () => {
   expect(overlay).toHaveClass('invisible')
 })
 
-it('clicking on close button closes the side menu', () => {
-  const { getByTestId } = renderWithRouter(<Navigation />)
-
-  // Open menu.
-  const menuButton = getByTestId('menu-button')
-  fireEvent.click(menuButton)
+it('clicking on close button closes the side menu', async () => {
+  const { getByTestId } = await renderNavigation()
 
   // Click screen outside of the menu.
   const closeButton = getByTestId('close-menu-button')
@@ -50,12 +74,8 @@ it('clicking on close button closes the side menu', () => {
   expect(overlay).toHaveClass('invisible')
 })
 
-it('clicking on the menu does not close it', () => {
-  const { getByTestId } = renderWithRouter(<Navigation />)
-
-  // Open menu.
-  const menuButton = getByTestId('menu-button')
-  fireEvent.click(menuButton)
+it('clicking on the menu does not close it', async () => {
+  const { getByTestId } = await renderNavigation()
 
   // Click screen outside of the menu.
   const menu = getByTestId('side-menu')
@@ -66,12 +86,17 @@ it('clicking on the menu does not close it', () => {
   expect(overlay).not.toHaveClass('invisible')
 })
 
-it('clicking on the today link navigates to the today page', () => {
-  const { getByTestId, getByText, history } = renderWithRouter(<Navigation />)
+it('displays the list of projects in the side menu.', async () => {
+  const { getAllByTestId, projects } = await renderNavigation()
 
-  // Open menu.
-  const menuButton = getByTestId('menu-button')
-  fireEvent.click(menuButton)
+  const linkNames = getAllByTestId('nav-link')
+    .map(link => link.textContent)
+  const projectNames = projects.map(({ name }) => name)
+  expect(linkNames).toEqual(expect.arrayContaining(projectNames))
+})
+
+it('clicking on the today link navigates to the today page', async () => {
+  const { getByTestId, getByText, history } = await renderNavigation()
 
   // Click today link.
   const link = getByText('Today')
@@ -81,4 +106,17 @@ it('clicking on the today link navigates to the today page', () => {
   const menu = getByTestId('side-menu-overlay')
   expect(menu).toHaveClass('invisible')
   expect(history.location.pathname).toEqual('/today')
+})
+
+it('clicking on a project link navigates to the page for the project', async () => {
+  const { getByTestId, getByText, history, projects } = await renderNavigation()
+
+  // Click today link.
+  const link = getByText(projects[0].name)
+  fireEvent.click(link)
+
+  // Navigated and closed menu.
+  const menu = getByTestId('side-menu-overlay')
+  expect(menu).toHaveClass('invisible')
+  expect(history.location.pathname).toEqual(`/projects/${projects[0].id}`)
 })
