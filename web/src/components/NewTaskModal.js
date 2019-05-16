@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import {useTasks} from '../../contexts/task'
+import {useTasks} from '../contexts/task'
 
 /**
  * A modal dialog to add a new task.

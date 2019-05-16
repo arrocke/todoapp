@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import useMediaQuery from '../../hooks/media-query'
+import useMediaQuery from '../hooks/media-query'
 import KanbanList from './KanbanList'
 import NewTaskModal from './NewTaskModal'
-import {STATES,TITLE_MAP} from './config'
+import {STATES,TITLE_MAP} from '../config'
 
 /**
  * Displays tasks in lists by their state. Tasks can be dragged between lists.

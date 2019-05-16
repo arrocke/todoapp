@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import TaskCard from './TaskCard'
-import {TITLE_MAP} from './config'
-import {useTasks} from '../../contexts/task'
+import {TITLE_MAP} from '../config'
+import {useTasks} from '../contexts/task'
 
 /**
  * Displays a list of tasks with same state.

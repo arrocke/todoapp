@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import {STATES, TITLE_MAP} from './config'
-import {useTasks} from '../../contexts/task'
+import {STATES, TITLE_MAP} from '../config'
+import {useTasks} from '../contexts/task'
 
 /**
  * Displays a task as a card. Includes UI to change the state of the task.
