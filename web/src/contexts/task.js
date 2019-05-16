@@ -50,18 +50,10 @@ const createTask = async ({ name, state }) => {
 }
 
 /**
- * Loads and provides tasks to consuming components.
- * @param {Function} props.load An async method that resolves with the initial list of tasks.
+ * Provides tasks to consuming components.
  */
-const TaskProvider = ({ load, ...props}) => {
+const TaskProvider = (props) => {
   const [tasks, setTasks] = useState([])
-
-  // Load initial tasks on the first render only.
-  useEffect(() => {
-    const effect = async () =>
-      setTasks(await load())
-    effect()
-  }, [])
 
   // Expose the list and setter.
   const value = useMemo(() => {
@@ -106,7 +98,9 @@ const useTasks = () => {
     ])
   }
 
-  return { tasks, update, create }
+  const load = setTasks
+
+  return { tasks, update, create, load }
 }
 
 export {TaskProvider, useTasks}
