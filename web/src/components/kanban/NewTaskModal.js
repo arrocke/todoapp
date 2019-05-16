@@ -46,12 +46,12 @@ const NewTaskModal = ({
   return show
     ? <div
         className="fixed pin-b lg:pin w-screen flex lg:items-center justify-center mb-14 lg:mb-3"
-        data-test="task-modal"
       >
         <form
           className="bg-white shadow p-3 rounded-lg max-w-screen"
           onSubmit={onAdd}
           onKeyDown={onKeydown}
+          data-test="task-modal"
         >
           <input
             ref={nameInput}

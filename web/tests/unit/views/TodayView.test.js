@@ -178,19 +178,6 @@ describe('on wide screens', () => {
       expect(listElement).toContain(task.name)
     })
   })
-
-  it('cancelling the add task modal hides the modal.', async () => {
-    const { container, getByTestId, queryByTestId } = await renderTodayView()
-
-    const modalButton = getByTestId('task-modal-button')
-    fireEvent.click(modalButton)
-
-    const cancelButton = getByTestId('cancel-task-button')
-    fireEvent.click(cancelButton)
-
-    const modal = queryByTestId('task-modal')
-    expect(container).not.toContainElement(modal)
-  })
 })
 
 describe('on narrow screens', () => {
@@ -345,19 +332,6 @@ describe('on narrow screens', () => {
 
     expect(client.mutate).toHaveBeenCalledTimes(1)
     expect(client.mutate.mock.calls[0][0].variables).toEqual({ input: task })
-  })
-
-  it('cancelling the add task modal hides the modal.', async () => {
-    const { container, getByTestId, queryByTestId } = await renderTodayView()
-
-    const modalButton = getByTestId('task-modal-button')
-    fireEvent.click(modalButton)
-
-    const cancelButton = getByTestId('cancel-task-button')
-    fireEvent.click(cancelButton)
-
-    const modal = queryByTestId('task-modal')
-    expect(container).not.toContainElement(modal)
   })
 })
 
