@@ -49,7 +49,7 @@ const KanbanBoard = ({
       >{navButtons}</nav>
 
   return <div
-    className={`flex-1 flex flex-col lg:flex-row max-h-full lg:max-h-full lg:px-2 lg:py-4 ${className}`}
+    className={`flex-1 flex flex-col lg:flex-row max-h-full lg:px-2 lg:py-4 ${className}`}
     data-test="kanban-board"
   >
     <button
@@ -60,7 +60,10 @@ const KanbanBoard = ({
     />
     {screen.lg ? lgLists : smList}
     {screen.lg ? null : navigation}
-    <NewTaskModal show={showTaskModal} />
+    <NewTaskModal
+      show={showTaskModal}
+      onClose={() => setTaskModalVisibility(false)}
+    />
   </div>
 }
 

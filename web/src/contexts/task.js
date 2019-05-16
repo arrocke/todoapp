@@ -29,6 +29,26 @@ const saveTask = async ({ id, name, state }) => {
   return data.updateTask
 }
 
+// Create a new task on the server.
+const createTask = async ({ name, state }) => {
+  const { data } = await client.mutate({
+    mutation: `
+      mutation Create($input: CreateTaskInput!) {
+        createTask(input: $input) {
+          id
+          name
+          state
+          project {
+            name
+          }
+        }
+      }
+    `,
+    variables: { input: { name, state } }
+  })
+  return data.createTask
+}
+
 /**
  * Loads and provides tasks to consuming components.
  * @param {Function} props.load An async method that resolves with the initial list of tasks.
@@ -79,12 +99,10 @@ const useTasks = () => {
 
   // Add a new task and sync with the server.
   const create = async (task) => {
+    task = await createTask(task)
     setTasks([
       ...tasks,
-      {
-        ...task,
-        id: -1
-      }
+      task
     ])
   }
 
