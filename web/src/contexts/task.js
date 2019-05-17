@@ -2,7 +2,7 @@
 // It has a provider that loads the initial data,
 // and a hook to get access to the task list and methods to update it.
 
-import React, { useState, useEffect, useContext, useMemo } from 'react'
+import React, { useState, useContext, useMemo } from 'react'
 import client from '../client'
 
 const TaskContext = React.createContext()

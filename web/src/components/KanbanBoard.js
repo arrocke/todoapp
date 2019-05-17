@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import useMediaQuery from '../hooks/media-query'
 import KanbanList from './KanbanList'
-import NewTaskModal from './NewTaskModal'
 import {STATES,TITLE_MAP} from '../config'
 
 /**
@@ -9,10 +8,9 @@ import {STATES,TITLE_MAP} from '../config'
  * @param {Boolean} props.hideProject Flag to hide the project name label for the task.
  */
 const KanbanBoard = ({
-  hideProject = false,
+  showProject,
   className = ''
 } = {}) => {
-  const [showTaskModal, setTaskModalVisibility] = useState(false)
   const [visibleState, setVisibleState] = useState('in-progress')
   const [screen] = useMediaQuery()
 
@@ -21,7 +19,7 @@ const KanbanBoard = ({
       <KanbanList
         key={state}
         state={state}
-        hideProject={hideProject}
+        showProject={showProject}
       />)
 
   const smList =
@@ -29,7 +27,7 @@ const KanbanBoard = ({
       <KanbanList
         className="w-full max-w-sm"
         state={visibleState}
-        hideProject={hideProject}
+        showProject={showProject}
       />
     </div>
 
@@ -62,10 +60,6 @@ const KanbanBoard = ({
     </button>
     {screen.lg ? lgLists : smList}
     {screen.lg ? null : navigation}
-    <NewTaskModal
-      show={showTaskModal}
-      onClose={() => setTaskModalVisibility(false)}
-    />
   </div>
 }
 

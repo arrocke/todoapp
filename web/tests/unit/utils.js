@@ -26,7 +26,7 @@ export const renderWithRouter = (
   })
 
 // Mock DragEvent for JSDOM.
-class DragEvent extends Event {
+export class DragEvent extends Event {
   constructor(event, data) {
     super(event, { cancelable: true, bubbles: true })
 

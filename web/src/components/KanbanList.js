@@ -3,18 +3,20 @@ import TaskCard from './TaskCard'
 import {TITLE_MAP} from '../config'
 import {useTasks} from '../contexts/task'
 
-/**
- * Displays a list of tasks with same state.
- * Also enables TaskCards to be dragged between lists.
- * @param {String} props.state The state of the cards in this list.
- * @param {Boolean} props.hideProject Flag to hide the project name label for the task.
- */
 const KanbanList = ({
   state,
-  hideProject = false,
+  showProject = false,
   className = ''
 }) => {
   const { tasks, update } = useTasks()
+
+  // Event handler to begin dragging a task to another state list.
+  const onDragStart = useCallback((task) => {
+    return e => {
+      e.dataTransfer.setData('task', task)
+      e.dataTransfer.dropEffect = 'move'
+    }
+  }, [])
 
   // Event handler for dragging a task over the list.
   const onDragOver = useCallback(e => {
@@ -42,8 +44,9 @@ const KanbanList = ({
     .map(
       task => <TaskCard
         key={task.id}
-        task={task}
-        hideProject={hideProject}
+        name={task.name}
+        project={showProject && task.project && task.project.name}
+        onDragStart={onDragStart(task)}
       />
     )
 
@@ -57,9 +60,9 @@ const KanbanList = ({
       className="p-4 pb-1 text-base"
       data-test="kanban-list-title"
     >{title}</h2>
-      <ul className="flex-1 px-2 m-0 overflow-auto list-reset">
-        {filteredTasks} 
-      </ul>
+    <ul className="flex-1 px-2 m-0 overflow-auto list-reset">
+      {filteredTasks} 
+    </ul>
   </div>
 }
 

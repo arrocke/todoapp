@@ -6,6 +6,7 @@ const TaskCard = ({
   className,
   ...props
 } = {}) => {
+  // Don't show the project label if there is no project.
   const projectLabel = 
     project
       ? <span data-test="task-project">{project}</span>
