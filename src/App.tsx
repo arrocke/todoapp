@@ -1,14 +1,16 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useProjects } from "./db-client";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import ProjectsView from "./ProjectsView";
+import ProjectView from "./ProjectView";
 
 const App: React.FC = () => {
-  const { projects } = useProjects();
-
-  const projectElements = projects.map(project => (
-    <li key={project.id}>{project.name}</li>
-  ));
-  return <ul>{projectElements}</ul>;
+  return (
+    <Router>
+      <Route exact path="/projects" component={ProjectsView} />
+      <Route exact path="/projects/:id" component={ProjectView} />
+    </Router>
+  );
 };
 
 export default App;
