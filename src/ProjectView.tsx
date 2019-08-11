@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useProject, useTasks } from "./db-client";
 import { RouteComponentProps } from "react-router";
 import LoadingContainer from "./LoadingContainer";
+import KanbanBoard from "./KanbanBoard";
 
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
 
@@ -13,13 +14,12 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
     useMemo(() => ({ projectId: match.params.id }), [match.params.id])
   );
 
-  const taskElements = tasks.map(task => <li key={task.id}>{task.name}</li>);
   return (
     <LoadingContainer isLoading={isLoadingProject || isLoadingTasks}>
       {project ? (
         <div>
-          {project.name}
-          <ul>{taskElements}</ul>
+          <h1>{project.name}</h1>
+          <KanbanBoard tasks={tasks} />
         </div>
       ) : (
         <div>Project not found</div>

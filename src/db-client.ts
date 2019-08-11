@@ -14,6 +14,7 @@ export interface ProjectRecord extends Airtable.FieldSet {
 export interface TaskRecord extends Airtable.FieldSet {
   id: string;
   name: string;
+  status: "backlog" | "todo" | "progress" | "complete";
 }
 
 const db = {

@@ -14,6 +14,7 @@ const ProjectsView: React.FC = () => {
   ));
   return (
     <LoadingContainer isLoading={isLoading}>
+      <h1>Projects</h1>
       <ul>{projectElements}</ul>
     </LoadingContainer>
   );
