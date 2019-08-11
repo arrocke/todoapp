@@ -9,12 +9,14 @@ const base = new Airtable({
 export interface ProjectRecord extends Airtable.FieldSet {
   id: string;
   name: string;
+  tasks: string[];
 }
 
 export interface TaskRecord extends Airtable.FieldSet {
   id: string;
   name: string;
   status: "backlog" | "todo" | "progress" | "complete";
+  project: string[];
 }
 
 const db = {
@@ -78,38 +80,88 @@ export const useProjects = createLoadingHook<
   void
 >({
   load: () => db.projects.select().all(),
-  commit: records => records.map(({ fields }) => fields),
+  commit: records => records.map(({ fields, id }) => ({ ...fields, id })),
   init: () => []
 });
 
-export const useProject = createLoadingHook<
-  ProjectRecord | undefined,
-  readonly Airtable.Row<ProjectRecord>[],
-  string
->({
-  load: id =>
-    db.projects
-      .select({
-        filterByFormula: `id=${id}`
-      })
-      .all(),
-  commit: ([record]) => (record ? record.fields : undefined),
-  init: undefined
-});
+export function useProject(id: string) {
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [project, setProject] = useState<ProjectRecord>();
+  const [tasks, setTasks] = useState<TaskRecord[]>([]);
 
-export const useTasks = createLoadingHook<
-  TaskRecord[],
-  readonly Airtable.Row<TaskRecord>[],
-  { projectId?: string }
->({
-  load: ({ projectId }) =>
-    db.tasks
-      .select({
-        ...(projectId && {
-          filterByFormula: `project="${projectId}"`
-        })
-      })
-      .all(),
-  commit: records => records.map(({ fields }) => fields),
-  init: () => []
-});
+  useEffect(() => {
+    let isCancelled = false;
+    (async () => {
+      setLoading(true);
+      const project = await db.projects.find(id);
+      if (project) {
+        if ((project.fields.tasks || []).length > 0) {
+          const tasks = await db.tasks
+            .select({
+              filterByFormula: `OR(${project.fields.tasks
+                .map(task => `RECORD_ID()="${task}"`)
+                .join(",")})`
+            })
+            .all();
+          if (!isCancelled) {
+            setTasks(tasks.map(({ fields, id }) => ({ ...fields, id })));
+          }
+        }
+
+        // Don't commit state if effect was cancelled.
+        if (!isCancelled) {
+          setProject({ ...project.fields, id: project.id });
+        }
+      }
+      setLoading(false);
+    })();
+    return () => {
+      // Cancel so this doesn't have an async effect.
+      isCancelled = true;
+      setProject(undefined);
+      setLoading(false);
+    };
+  }, [id]);
+
+  async function create({ id, ...task }: TaskRecord) {
+    if (project) {
+      const record = await db.tasks.create({
+        ...task,
+        project: [project.id]
+      } as TaskRecord);
+      setTasks(tasks => [...tasks, record.fields]);
+    }
+  }
+  return { project, tasks, isLoading, create };
+}
+
+export function useTasks() {
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [tasks, setTasks] = useState<TaskRecord[]>([]);
+
+  useEffect(() => {
+    let isCancelled = false;
+    (async () => {
+      setLoading(true);
+      const records = await db.tasks.select().all();
+      // Don't commit state if effect was cancelled.
+      if (!isCancelled) {
+        setTasks(records.map(({ fields, id }) => ({ ...fields, id })));
+      }
+      setLoading(false);
+    })();
+    return () => {
+      // Cancel so this doesn't have an async effect.
+      isCancelled = true;
+      setTasks([]);
+      setLoading(false);
+    };
+  }, []);
+
+  async function create({ id, ...task }: TaskRecord) {
+    const record = await db.tasks.create(task as TaskRecord);
+    setTasks(tasks => [...tasks, record.fields]);
+  }
+
+  return { tasks, isLoading, create };
+}

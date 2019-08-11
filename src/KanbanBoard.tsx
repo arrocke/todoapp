@@ -4,6 +4,7 @@ import { TaskRecord } from "./db-client";
 
 interface KanbanBoardProps {
   tasks: TaskRecord[];
+  onTaskAdd?: (task: TaskRecord) => void;
 }
 
 interface SortedTasks {
@@ -16,10 +17,26 @@ interface SortedTasks {
 interface KanbanListProps {
   title: string;
   tasks: TaskRecord[];
+  onTaskAdd?: () => void;
 }
 
-const KanbanList: React.FC<KanbanListProps> = ({ title, tasks }) => {
-  const listElements = tasks.map(({ name, id }) => <li key={id}>{name}</li>);
+const KanbanList: React.FC<KanbanListProps> = ({
+  title,
+  tasks,
+  onTaskAdd = () => {}
+}) => {
+  const listElements = tasks.map(({ name, id }) => (
+    <li
+      css={{
+        border: "1px solid black",
+        margin: 4,
+        minHeight: 20
+      }}
+      key={id}
+    >
+      {name}
+    </li>
+  ));
   return (
     <div>
       <h2>{title}</h2>
@@ -29,13 +46,19 @@ const KanbanList: React.FC<KanbanListProps> = ({ title, tasks }) => {
           padding: 0
         }}
       >
+        <li>
+          <button onClick={onTaskAdd}>+ Add Task</button>
+        </li>
         {listElements}
       </ul>
     </div>
   );
 };
 
-const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
+const KanbanBoard: React.FC<KanbanBoardProps> = ({
+  tasks,
+  onTaskAdd = () => {}
+}) => {
   const lists = tasks.reduce<SortedTasks>(
     (tasks, task) => {
       const list = tasks[task.status];
@@ -56,10 +79,34 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
         justifyContent: "space-around"
       }}
     >
-      <KanbanList title="Backlog" tasks={lists.backlog} />
-      <KanbanList title="To Do" tasks={lists.todo} />
-      <KanbanList title="In Progress" tasks={lists.progress} />
-      <KanbanList title="Complete" tasks={lists.complete} />
+      <KanbanList
+        title="Backlog"
+        tasks={lists.backlog}
+        onTaskAdd={() =>
+          onTaskAdd({ id: "", name: "", status: "backlog", project: [] })
+        }
+      />
+      <KanbanList
+        title="To Do"
+        tasks={lists.todo}
+        onTaskAdd={() =>
+          onTaskAdd({ id: "", name: "", status: "todo", project: [] })
+        }
+      />
+      <KanbanList
+        title="In Progress"
+        tasks={lists.progress}
+        onTaskAdd={() =>
+          onTaskAdd({ id: "", name: "", status: "progress", project: [] })
+        }
+      />
+      <KanbanList
+        title="Complete"
+        tasks={lists.complete}
+        onTaskAdd={() =>
+          onTaskAdd({ id: "", name: "", status: "complete", project: [] })
+        }
+      />
     </div>
   );
 };
