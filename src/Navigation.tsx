@@ -19,6 +19,9 @@ const Navigation: React.FC = () => {
       <Link css={linkStyles} to="/tasks">
         Tasks
       </Link>
+      <Link css={linkStyles} to="/sprints">
+        Sprints
+      </Link>
     </nav>
   );
 };
