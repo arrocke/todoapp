@@ -6,8 +6,8 @@ import { RouteComponentProps } from "react-router";
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
 
 const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
-  const { project } = useProject(match.params.id);
-  const { tasks } = useTasks(match.params.id);
+  const [project, isLoadingProject] = useProject(match.params.id);
+  const [tasks, isLoadingTasks] = useTasks(match.params.id);
 
   const taskElements = tasks.map(task => <li key={task.id}>{task.name}</li>);
   if (project) {

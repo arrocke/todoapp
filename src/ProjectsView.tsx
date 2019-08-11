@@ -4,7 +4,7 @@ import { useProjects } from "./db-client";
 import { Link } from "react-router-dom";
 
 const ProjectsView: React.FC = () => {
-  const { projects } = useProjects();
+  const [projects, isLoading] = useProjects();
 
   const projectElements = projects.map(project => (
     <li key={project.id}>
