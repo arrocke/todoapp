@@ -23,7 +23,14 @@ const KanbanList: React.FC<KanbanListProps> = ({ title, tasks }) => {
   return (
     <div>
       <h2>{title}</h2>
-      <ul>{listElements}</ul>
+      <ul
+        css={{
+          listStyleType: "none",
+          padding: 0
+        }}
+      >
+        {listElements}
+      </ul>
     </div>
   );
 };
