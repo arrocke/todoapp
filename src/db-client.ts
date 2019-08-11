@@ -99,9 +99,9 @@ export const useProject = createLoadingHook<
 export const useTasks = createLoadingHook<
   TaskRecord[],
   readonly Airtable.Row<TaskRecord>[],
-  string
+  { projectId?: string }
 >({
-  load: projectId =>
+  load: ({ projectId }) =>
     db.tasks
       .select({
         ...(projectId && {
