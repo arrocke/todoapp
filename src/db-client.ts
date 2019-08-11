@@ -24,65 +24,31 @@ const db = {
   tasks: base("Tasks") as Airtable.Table<TaskRecord>
 };
 
-/**
- * Creates a hook that loads data with useEffect.
- * Maintains a loading state and prevents effect from completing if it run again.
- * @param options.load Async step of the loading process.
- * @param options.commit Function that runs when the async step has completed, but only if the effect has not been cancelled.
- * @param options.init The value that the hook is initialized to and is reset to when cancelled.
- * @example
- * const useData = createLoadingHook({
- *   load: (arg) => service.loadAsync(arg),
- *   commit: response => response.data,
- *   init: () => []
- * })
- * const [data, isLoading] = useData(arg)
- */
-function createLoadingHook<State, Response, Argument>({
-  load,
-  commit,
-  init
-}: {
-  load: (arg: Argument) => Promise<Response>;
-  commit: (response: Response) => State;
-  init: State | (() => State);
-}): (arg: Argument) => [State, boolean] {
-  return function(arg: Argument) {
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [state, setState] = useState<State>(init);
+export function useProjects() {
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [projects, setProjects] = useState<ProjectRecord[]>([]);
 
-    useEffect(() => {
-      let isCancelled = false;
-      (async () => {
-        setLoading(true);
-        const response = await load(arg);
-        // Don't commit state if effect was cancelled.
-        if (!isCancelled) {
-          setState(commit(response));
-        }
-        setLoading(false);
-      })();
-      return () => {
-        // Cancel so this doesn't have an async effect.
-        isCancelled = true;
-        setState(init);
-        setLoading(false);
-      };
-    }, [arg]);
+  useEffect(() => {
+    let isCancelled = false;
+    (async () => {
+      setLoading(true);
+      const records = await db.projects.select().all();
+      // Don't commit state if effect was cancelled.
+      if (!isCancelled) {
+        setProjects(records.map(({ fields, id }) => ({ ...fields, id })));
+      }
+      setLoading(false);
+    })();
+    return () => {
+      // Cancel so this doesn't have an async effect.
+      isCancelled = true;
+      setProjects([]);
+      setLoading(false);
+    };
+  }, []);
 
-    return [state, isLoading];
-  };
+  return { projects, isLoading };
 }
-
-export const useProjects = createLoadingHook<
-  ProjectRecord[],
-  readonly Airtable.Row<ProjectRecord>[],
-  void
->({
-  load: () => db.projects.select().all(),
-  commit: records => records.map(({ fields, id }) => ({ ...fields, id })),
-  init: () => []
-});
 
 export function useProject(id: string) {
   const [isLoading, setLoading] = useState<boolean>(false);

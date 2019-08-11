@@ -1,10 +1,11 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { TaskRecord } from "./db-client";
-import { useState, useEffect } from "react";
+import { TaskRecord, ProjectRecord } from "./db-client";
+import { useState, useEffect, useMemo } from "react";
 
 interface KanbanBoardProps {
   tasks: TaskRecord[];
+  projects?: ProjectRecord[];
   onTaskAdd?: (task: TaskRecord) => void;
   onTaskChange?: (task: TaskRecord) => void;
 }
@@ -19,16 +20,19 @@ interface SortedTasks {
 interface KanbanListProps {
   title: string;
   tasks: TaskRecord[];
+  projects: ProjectRecord[];
   onTaskAdd?: () => void;
   onTaskChange?: (task: TaskRecord) => void;
 }
 
 interface KanbanTaskProps {
   task: TaskRecord;
+  projects: ProjectRecord[];
   onTaskChange?: (task: TaskRecord) => void;
 }
 
 const KanbanTask: React.FC<KanbanTaskProps> = ({
+  projects,
   task,
   onTaskChange = () => {}
 }) => {
@@ -41,24 +45,33 @@ const KanbanTask: React.FC<KanbanTaskProps> = ({
     setName({ name: task.name || "", isDirty: false });
   }, [task.name]);
 
+  const project =
+    task.project && task.project[0]
+      ? projects.find(project => project.id === task.project[0])
+      : undefined;
+
   return (
-    <input
-      value={name}
-      onChange={e => setName({ name: e.target.value, isDirty: true })}
-      onBlur={() => isDirty && onTaskChange({ ...task, name })}
-    />
+    <p>
+      <input
+        value={name}
+        onChange={e => setName({ name: e.target.value, isDirty: true })}
+        onBlur={() => isDirty && onTaskChange({ ...task, name })}
+      />
+      <span>{project && project.name}</span>
+    </p>
   );
 };
 
 const KanbanList: React.FC<KanbanListProps> = ({
   title,
   tasks,
+  projects,
   onTaskAdd = () => {},
   onTaskChange = () => {}
 }) => {
   const listElements = tasks.map(task => (
     <li key={task.id}>
-      <KanbanTask task={task} onTaskChange={onTaskChange} />
+      <KanbanTask task={task} projects={projects} onTaskChange={onTaskChange} />
     </li>
   ));
   return (
@@ -81,6 +94,7 @@ const KanbanList: React.FC<KanbanListProps> = ({
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({
   tasks,
+  projects = [],
   onTaskAdd = () => {},
   onTaskChange = () => {}
 }) => {
@@ -107,6 +121,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       <KanbanList
         title="Backlog"
         tasks={lists.backlog}
+        projects={projects}
         onTaskAdd={() =>
           onTaskAdd({ id: "", name: "", status: "backlog", project: [] })
         }
@@ -115,6 +130,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       <KanbanList
         title="To Do"
         tasks={lists.todo}
+        projects={projects}
         onTaskAdd={() =>
           onTaskAdd({ id: "", name: "", status: "todo", project: [] })
         }
@@ -123,6 +139,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       <KanbanList
         title="In Progress"
         tasks={lists.progress}
+        projects={projects}
         onTaskAdd={() =>
           onTaskAdd({ id: "", name: "", status: "progress", project: [] })
         }
@@ -131,6 +148,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       <KanbanList
         title="Complete"
         tasks={lists.complete}
+        projects={projects}
         onTaskAdd={() =>
           onTaskAdd({ id: "", name: "", status: "complete", project: [] })
         }
