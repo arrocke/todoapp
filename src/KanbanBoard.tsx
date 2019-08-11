@@ -51,14 +51,36 @@ const KanbanTask: React.FC<KanbanTaskProps> = ({
       : undefined;
 
   return (
-    <p>
-      <input
-        value={name}
-        onChange={e => setName({ name: e.target.value, isDirty: true })}
-        onBlur={() => isDirty && onTaskChange({ ...task, name })}
-      />
-      <span>{project && project.name}</span>
-    </p>
+    <li>
+      <p css={{ marginBottom: 0 }}>
+        <input
+          value={name}
+          onChange={e => setName({ name: e.target.value, isDirty: true })}
+          onBlur={() => isDirty && onTaskChange({ ...task, name })}
+        />
+        <span>{project && project.name}</span>
+      </p>
+      <p css={{ marginTop: 0 }}>
+        <button
+          onClick={() => onTaskChange({ ...task, name, status: "backlog" })}
+        >
+          B
+        </button>
+        <button onClick={() => onTaskChange({ ...task, name, status: "todo" })}>
+          T
+        </button>
+        <button
+          onClick={() => onTaskChange({ ...task, name, status: "progress" })}
+        >
+          P
+        </button>
+        <button
+          onClick={() => onTaskChange({ ...task, name, status: "complete" })}
+        >
+          C
+        </button>
+      </p>
+    </li>
   );
 };
 
@@ -70,9 +92,12 @@ const KanbanList: React.FC<KanbanListProps> = ({
   onTaskChange = () => {}
 }) => {
   const listElements = tasks.map(task => (
-    <li key={task.id}>
-      <KanbanTask task={task} projects={projects} onTaskChange={onTaskChange} />
-    </li>
+    <KanbanTask
+      key={task.id}
+      task={task}
+      projects={projects}
+      onTaskChange={onTaskChange}
+    />
   ));
   return (
     <div>
