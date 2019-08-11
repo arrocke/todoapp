@@ -8,14 +8,16 @@ import KanbanBoard from "./KanbanBoard";
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
 
 const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
-  const { project, tasks, isLoading, create } = useProject(match.params.id);
+  const { project, tasks, isLoading, create, update } = useProject(
+    match.params.id
+  );
 
   return (
     <LoadingContainer isLoading={isLoading}>
       {project ? (
         <div>
           <h1>{project.name}</h1>
-          <KanbanBoard tasks={tasks} onTaskAdd={create} />
+          <KanbanBoard tasks={tasks} onTaskAdd={create} onTaskChange={update} />
         </div>
       ) : (
         <div>Project not found</div>

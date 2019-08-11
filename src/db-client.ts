@@ -132,7 +132,20 @@ export function useProject(id: string) {
       setTasks(tasks => [...tasks, record.fields]);
     }
   }
-  return { project, tasks, isLoading, create };
+
+  async function update({ id: taskId, ...task }: TaskRecord) {
+    const { fields, id } = await db.tasks.update(taskId, task);
+    setTasks(tasks => {
+      const index = tasks.findIndex(task => task.id === taskId);
+      return [
+        ...tasks.slice(0, index),
+        { ...fields, id },
+        ...tasks.slice(index + 1)
+      ];
+    });
+  }
+
+  return { project, tasks, isLoading, create, update };
 }
 
 export function useTasks() {
@@ -163,5 +176,17 @@ export function useTasks() {
     setTasks(tasks => [...tasks, record.fields]);
   }
 
-  return { tasks, isLoading, create };
+  async function update({ id: taskId, ...task }: TaskRecord) {
+    const { fields, id } = await db.tasks.update(taskId, task);
+    setTasks(tasks => {
+      const index = tasks.findIndex(task => task.id === taskId);
+      return [
+        ...tasks.slice(0, index),
+        { ...fields, id },
+        ...tasks.slice(index + 1)
+      ];
+    });
+  }
+
+  return { tasks, isLoading, create, update };
 }
