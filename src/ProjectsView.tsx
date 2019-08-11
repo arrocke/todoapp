@@ -2,6 +2,7 @@
 import { jsx } from "@emotion/core";
 import { useProjects } from "./db-client";
 import { Link } from "react-router-dom";
+import LoadingContainer from "./LoadingContainer";
 
 const ProjectsView: React.FC = () => {
   const [projects, isLoading] = useProjects();
@@ -11,7 +12,11 @@ const ProjectsView: React.FC = () => {
       <Link to={`/projects/${project.id}`}>{project.name}</Link>
     </li>
   ));
-  return <ul>{projectElements}</ul>;
+  return (
+    <LoadingContainer isLoading={isLoading}>
+      <ul>{projectElements}</ul>
+    </LoadingContainer>
+  );
 };
 
 export default ProjectsView;
