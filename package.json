@@ -1,4 +1,5 @@
 {
+  "name": "todoapp",
   "scripts": {
     "api:start": "(cd api && npm run start)",
     "api:build": "(cd api && npm run build)",
