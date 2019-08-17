@@ -1,5 +1,5 @@
 export default {
   Query: {
-    number: () => 1
+    hello: (): string => "world"
   }
 };
