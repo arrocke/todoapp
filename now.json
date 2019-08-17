@@ -17,10 +17,10 @@
   ],
   "routes": [
     { "src": "^/api", "dest": "api/src/server.ts" },
-    { "src": "^/static/(.*)", "dest": "web/build/dstatic/$1" },
-    { "src": "^/favicon.ico", "dest": "web/build/favicon.ico" },
-    { "src": "^/manifest.json", "dest": "web/build/manifest.json" },
-    { "src": "^/(.*)", "dest": "web/build/index.html" }
+    { "src": "^/static/(.*)", "dest": "web/static/$1" },
+    { "src": "^/favicon.ico", "dest": "web/favicon.ico" },
+    { "src": "^/manifest.json", "dest": "web/manifest.json" },
+    { "src": "^/(.*)", "dest": "web/index.html" }
   ],
   "build": {
     "env": {
