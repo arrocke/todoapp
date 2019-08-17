@@ -68,7 +68,9 @@ export function useProject(id: string) {
     let isCancelled = false;
     (async () => {
       setLoading(true);
-      const project = await db.projects.find(id);
+      const project = ((await db.projects.find(id)) as unknown) as Airtable.Row<
+        ProjectRecord
+      >;
       if (project) {
         if ((project.fields.tasks || []).length > 0) {
           const tasks = await db.tasks
@@ -100,10 +102,10 @@ export function useProject(id: string) {
 
   async function create({ id, ...task }: TaskRecord) {
     if (project) {
-      const record = await db.tasks.create({
+      const record = ((await db.tasks.create({
         ...task,
         project: [project.id]
-      } as TaskRecord);
+      } as TaskRecord)) as unknown) as Airtable.Row<TaskRecord>;
       setTasks(tasks => [...tasks, record.fields]);
     }
   }
@@ -147,7 +149,9 @@ export function useTasks() {
   }, []);
 
   async function create({ id, ...task }: TaskRecord) {
-    const record = await db.tasks.create(task as TaskRecord);
+    const record = ((await db.tasks.create(
+      task as TaskRecord
+    )) as unknown) as Airtable.Row<TaskRecord>;
     setTasks(tasks => [...tasks, record.fields]);
   }
 
@@ -201,7 +205,9 @@ export function useSprint(id: string) {
     let isCancelled = false;
     (async () => {
       setLoading(true);
-      const sprint = await db.sprints.find(id);
+      const sprint = ((await db.sprints.find(id)) as unknown) as Airtable.Row<
+        SprintRecord
+      >;
       if (sprint) {
         if ((sprint.fields.tasks || []).length > 0) {
           const tasks = await db.tasks
@@ -233,10 +239,10 @@ export function useSprint(id: string) {
 
   async function create({ id, ...task }: TaskRecord) {
     if (sprint) {
-      const record = await db.tasks.create({
+      const record = ((await db.tasks.create({
         ...task,
         project: [sprint.id]
-      } as TaskRecord);
+      } as TaskRecord)) as unknown) as Airtable.Row<TaskRecord>;
       setTasks(tasks => [...tasks, record.fields]);
     }
   }

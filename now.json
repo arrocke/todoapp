@@ -1,0 +1,28 @@
+{
+  "name": "todoapp",
+  "version": 2,
+  "alias": ["todo.adrianrocke.com"],
+  "builds": [
+    {
+      "src": "web/package.json",
+      "use": "@now/static-build"
+    },
+    {
+      "src": "api/src/server.ts",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    { "src": "^/api", "dest": "api/src/server.ts" },
+    { "src": "^/static/(.*)", "dest": "web/build/dstatic/$1" },
+    { "src": "^/favicon.ico", "dest": "web/build/favicon.ico" },
+    { "src": "^/manifest.json", "dest": "web/build/manifest.json" },
+    { "src": "^/(.*)", "dest": "web/build/index.html" }
+  ],
+  "build": {
+    "env": {
+      "REACT_APP_AIRTABLE_API_KEY": "@airtable-api-key",
+      "REACT_APP_AIRTABLE_BASE": "@airtable-base"
+    }
+  }
+}

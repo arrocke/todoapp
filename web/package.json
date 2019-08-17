@@ -4,23 +4,16 @@
   "private": true,
   "dependencies": {
     "@emotion/core": "^10.0.15",
-    "@testing-library/cypress": "^4.1.0",
-    "@testing-library/jest-dom": "^4.0.0",
     "@testing-library/react": "^9.0.2",
-    "@types/airtable": "^0.5.5",
-    "@types/jest": "24.0.17",
+    "@types/airtable": "^0.5.6",
     "@types/node": "12.7.1",
     "@types/react": "16.9.1",
     "@types/react-dom": "16.8.5",
     "@types/react-router-dom": "^4.3.4",
     "airtable": "^0.7.1",
     "babel-plugin-emotion": "^10.0.15",
-    "cypress": "^3.4.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.1.0",
-    "husky": "^3.0.3",
-    "jest-watch-typeahead": "^0.3.1",
-    "lint-staged": "^9.2.1",
     "prettier": "^1.18.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -28,9 +21,16 @@
     "react-scripts": "3.0.1",
     "typescript": "3.5.3"
   },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.0.0",
+    "@types/jest": "24.0.17",
+    "husky": "^3.0.3",
+    "jest-watch-typeahead": "^0.3.1",
+    "lint-staged": "^9.2.1"
+  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "echo $REACT_APP_AIRTABLE_API_KEY && react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject"
@@ -38,15 +38,27 @@
   "babel": {
     "env": {
       "production": {
-        "plugins": ["emotion"]
+        "plugins": [
+          "emotion"
+        ]
       },
       "development": {
-        "plugins": [["emotion", { "sourceMap": true }]]
+        "plugins": [
+          [
+            "emotion",
+            {
+              "sourceMap": true
+            }
+          ]
+        ]
       }
     }
   },
   "eslintConfig": {
-    "extends": ["plugin:prettier/recommended", "react-app"]
+    "extends": [
+      "plugin:prettier/recommended",
+      "react-app"
+    ]
   },
   "browserslist": {
     "production": [

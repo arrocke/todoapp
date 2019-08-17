@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { TaskRecord, ProjectRecord } from "./db-client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 interface KanbanBoardProps {
   tasks: TaskRecord[];
