@@ -1,5 +1,15 @@
+import {
+  Project,
+  queries as projectQueries,
+  mutations as projectMutations
+} from "./project";
+
 export default {
+  Project,
   Query: {
-    hello: (): string => "world"
+    ...projectQueries
+  },
+  Mutation: {
+    ...projectMutations
   }
 };
