@@ -1,5 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql';
+import { ProjectModel } from '../models/project';
 export type Maybe<T> = T | null;
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -9,9 +11,46 @@ export type Scalars = {
   Float: number,
 };
 
+export type CreateProjectInput = {
+  name?: Maybe<Scalars['String']>,
+};
+
+export type Mutation = {
+  __typename?: 'Mutation',
+  createProject?: Maybe<Project>,
+  updateProject?: Maybe<Project>,
+};
+
+
+export type MutationCreateProjectArgs = {
+  input: CreateProjectInput
+};
+
+
+export type MutationUpdateProjectArgs = {
+  input: UpdateProjectInput
+};
+
+export type Project = {
+  __typename?: 'Project',
+  projectId: Scalars['ID'],
+  name?: Maybe<Scalars['String']>,
+};
+
 export type Query = {
   __typename?: 'Query',
-  hello: Scalars['String'],
+  projects?: Maybe<Array<Maybe<Project>>>,
+  project?: Maybe<Project>,
+};
+
+
+export type QueryProjectArgs = {
+  id: Scalars['ID']
+};
+
+export type UpdateProjectInput = {
+  projectId: Scalars['ID'],
+  name?: Maybe<Scalars['String']>,
 };
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -86,22 +125,45 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>,
+  Project: ResolverTypeWrapper<ProjectModel>,
+  ID: ResolverTypeWrapper<Scalars['ID']>,
   String: ResolverTypeWrapper<Scalars['String']>,
+  Mutation: ResolverTypeWrapper<{}>,
+  CreateProjectInput: CreateProjectInput,
+  UpdateProjectInput: UpdateProjectInput,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Query: {},
+  Project: ProjectModel,
+  ID: Scalars['ID'],
   String: Scalars['String'],
+  Mutation: {},
+  CreateProjectInput: CreateProjectInput,
+  UpdateProjectInput: UpdateProjectInput,
   Boolean: Scalars['Boolean'],
 }>;
 
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'input'>>,
+  updateProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'input'>>,
+}>;
+
+export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = ResolversObject<{
+  projectId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  hello?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  projects?: Resolver<Maybe<Array<Maybe<ResolversTypes['Project']>>>, ParentType, ContextType>,
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'id'>>,
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Mutation?: MutationResolvers<ContextType>,
+  Project?: ProjectResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
 }>;
 

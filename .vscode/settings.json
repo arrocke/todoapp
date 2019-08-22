@@ -9,5 +9,6 @@
     "api",
     "e2e",
     "web"
-  ]
+  ],
+  "eslint.autoFixOnSave": true
 }

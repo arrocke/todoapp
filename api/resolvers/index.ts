@@ -1,6 +1,10 @@
 import { Resolvers } from "generated/resolver-types";
-import Query from "./query";
+import Project, { ProjectQuery, ProjectMutation } from "./project";
 
-const resolvers: Resolvers = { Query };
+const resolvers: Resolvers = {
+  Query: { ...ProjectQuery },
+  Mutation: { ...ProjectMutation },
+  Project
+};
 
 export default resolvers;

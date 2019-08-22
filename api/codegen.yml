@@ -8,3 +8,5 @@ generates:
       - "typescript-resolvers"
     config:
       useIndexSignature: true
+      mappers:
+        Project: ../models/project#ProjectModel
