@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 dotenv.config();
 
 const typeDefs = fs.readFileSync(
-  path.resolve(__dirname, "schema.graphql"),
+  path.join(__dirname, "schema.graphql"),
   "utf8"
 );
 
@@ -26,4 +26,6 @@ const server = new GraphQLServer({
   resolvers
 });
 
-server.start(() => console.log("Server is running on http://localhost:4000"));
+server.start({ port: process.env.PORT || 4000 }, () =>
+  console.log("Server is running on http://localhost:4000")
+);
