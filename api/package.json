@@ -17,27 +17,30 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.6.1",
+    "@graphql-codegen/introspection": "1.6.1",
+    "@graphql-codegen/typescript": "1.6.1",
+    "@graphql-codegen/typescript-operations": "1.6.1",
+    "@graphql-codegen/typescript-resolvers": "1.6.1",
     "@types/jest": "24.0.17",
-    "husky": "^3.0.3",
     "jest": "24.9.0",
     "jest-watch-typeahead": "^0.3.1",
     "lint-staged": "^9.2.1",
     "nodemon": "1.19.1",
     "ts-jest": "24.0.2",
     "ts-node": "^8.3.0",
-    "ts-node-dev": "^1.0.0-pre.41",
-    "@graphql-codegen/typescript": "1.6.1",
-    "@graphql-codegen/typescript-operations": "1.6.1",
-    "@graphql-codegen/typescript-resolvers": "1.6.1",
-    "@graphql-codegen/introspection": "1.6.1"
+    "ts-node-dev": "^1.0.0-pre.41"
   },
   "scripts": {
     "start": "ts-node-dev --no-notify --respawn --transpileOnly ./",
-    "lint": "eslint src/**",
+    "lint": "eslint **/*.ts",
     "test": "jest --watch",
     "test:coverage": "jest --coverage",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml",
+    "precommit": "lint-staged"
   },
+  "eslintIgnore": [
+    "generated/"
+  ],
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "extends": [
@@ -54,13 +57,8 @@
     "preset": "ts-jest",
     "testEnvironment": "node"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+    "**/*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "git add"
     ]

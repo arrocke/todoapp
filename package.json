@@ -9,7 +9,18 @@
     "web:build": "(cd web && npm run build)",
     "web:test": "(cd web && npm run test)",
     "web:test:coverage": "(cd web && npm run test:coverage)",
-    "e2e:start": "(cd e2e && npm run start)"
+    "e2e:start": "(cd e2e && npm run start)",
+    "postinstall": "(cd web && npm install) && (cd e2e && npm install) && (cd api ** npm install)",
+    "precommit": "(cd web && npm run precommit) && (cd e2e && npm run precommit) && (cd api && npm run precommit)"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "husky": "^3.0.4",
+    "lint-staged": "^9.2.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  }
 }

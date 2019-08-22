@@ -1,9 +1,9 @@
-import { QueryResolvers } from 'generated/resolver-types';
+import { QueryResolvers } from "generated/resolver-types";
 
 const Query: QueryResolvers = {
   hello(root, args, ctx) {
-    return 'world';
+    return "world";
   }
-}
+};
 
 export default Query;

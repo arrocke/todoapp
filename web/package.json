@@ -24,7 +24,6 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^4.0.0",
     "@types/jest": "24.0.17",
-    "husky": "^3.0.3",
     "jest-watch-typeahead": "^0.3.1",
     "lint-staged": "^9.2.1"
   },
@@ -33,7 +32,8 @@
     "build": "echo $REACT_APP_AIRTABLE_API_KEY && react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged"
   },
   "babel": {
     "env": {
@@ -71,11 +71,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
