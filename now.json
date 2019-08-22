@@ -11,12 +11,12 @@
       }
     },
     {
-      "src": "api/src/server.ts",
+      "src": "api/index.ts",
       "use": "@now/node"
     }
   ],
   "routes": [
-    { "src": "^/api", "dest": "api/src/server.ts" },
+    { "src": "^/api", "dest": "api/index.ts" },
     { "src": "^/static/(.*)", "dest": "web/static/$1" },
     { "src": "^/favicon.ico", "dest": "web/favicon.ico" },
     { "src": "^/manifest.json", "dest": "web/manifest.json" },

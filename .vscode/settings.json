@@ -5,5 +5,10 @@
     "javascriptreact",
     { "language": "typescript", "autoFix": true },
     { "language": "typescriptreact", "autoFix": true }
+  ],
+  "eslint.workingDirectories": [
+    "api",
+    "e2e",
+    "web"
   ]
 }
