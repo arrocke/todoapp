@@ -1,4 +1,4 @@
-import { Resolvers } from "generated/resolver-types";
+import { Resolvers } from "./types";
 import Project, { ProjectQuery, ProjectMutation } from "./project";
 
 const resolvers: Resolvers = {

@@ -1,19 +1,21 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useProjects } from "./db-client";
 import { Link } from "react-router-dom";
 import LoadingContainer from "./LoadingContainer";
+import { useProjectsQuery } from "./graphql/types";
 
 const ProjectsView: React.FC = () => {
-  const { projects, isLoading } = useProjects();
+  const { loading, data } = useProjectsQuery();
 
-  const projectElements = projects.map(project => (
-    <li key={project.id}>
-      <Link to={`/projects/${project.id}`}>{project.name}</Link>
-    </li>
-  ));
+  const projectElements =
+    data &&
+    data.projects.map(project => (
+      <li key={project.projectId}>
+        <Link to={`/projects/${project.projectId}`}>{project.name}</Link>
+      </li>
+    ));
   return (
-    <LoadingContainer isLoading={isLoading}>
+    <LoadingContainer isLoading={loading}>
       <h1>Projects</h1>
       <ul>{projectElements}</ul>
     </LoadingContainer>

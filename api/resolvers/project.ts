@@ -1,8 +1,4 @@
-import {
-  MutationResolvers,
-  ProjectResolvers,
-  QueryResolvers
-} from "../generated/resolver-types";
+import { MutationResolvers, ProjectResolvers, QueryResolvers } from "./types";
 import ProjectModel from "../models/project";
 
 export const ProjectMutation: MutationResolvers = {

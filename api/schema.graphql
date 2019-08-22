@@ -13,11 +13,11 @@ input UpdateProjectInput {
 }
 
 type Query {
-  projects: [Project]
+  projects: [Project!]!
   project(id: ID!): Project
 }
 
 type Mutation {
-  createProject(input: CreateProjectInput!): Project
+  createProject(input: CreateProjectInput!): Project!
   updateProject(input: UpdateProjectInput!): Project
 }

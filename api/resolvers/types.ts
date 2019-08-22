@@ -17,7 +17,7 @@ export type CreateProjectInput = {
 
 export type Mutation = {
   __typename?: 'Mutation',
-  createProject?: Maybe<Project>,
+  createProject: Project,
   updateProject?: Maybe<Project>,
 };
 
@@ -39,7 +39,7 @@ export type Project = {
 
 export type Query = {
   __typename?: 'Query',
-  projects?: Maybe<Array<Maybe<Project>>>,
+  projects: Array<Project>,
   project?: Maybe<Project>,
 };
 
@@ -147,7 +147,7 @@ export type ResolversParentTypes = ResolversObject<{
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  createProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'input'>>,
+  createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'input'>>,
   updateProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'input'>>,
 }>;
 
@@ -157,7 +157,7 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  projects?: Resolver<Maybe<Array<Maybe<ResolversTypes['Project']>>>, ParentType, ContextType>,
+  projects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>,
   project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'id'>>,
 }>;
 
