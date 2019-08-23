@@ -1,11 +1,10 @@
 import { MutationResolvers, ProjectResolvers, QueryResolvers } from "./types";
 import ProjectModel from "../models/project";
+import TaskModel from "../models/task";
 
 export const ProjectMutation: MutationResolvers = {
   async createProject(_, { input }) {
-    return await ProjectModel.create({
-      name: input.name
-    });
+    return await ProjectModel.create(input);
   },
   async updateProject(_, { input: { projectId, ...fields } }) {
     const project = await ProjectModel.findById(projectId);
@@ -24,7 +23,10 @@ export const ProjectQuery: QueryResolvers = {
 };
 
 const Project: ProjectResolvers = {
-  projectId: project => project._id.toHexString()
+  projectId: project => project._id.toHexString(),
+  async tasks(project) {
+    return await TaskModel.find({ project: project._id });
+  }
 };
 
 export default Project;

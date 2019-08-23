@@ -10,3 +10,4 @@ generates:
       useIndexSignature: true
       mappers:
         Project: ../models/project#ProjectModel
+        Task: ../models/task#TaskModel

@@ -1,6 +1,7 @@
 type Project {
   projectId: ID!
   name: String
+  tasks: [Task!]!
 }
 
 input CreateProjectInput {
@@ -12,12 +13,43 @@ input UpdateProjectInput {
   name: String
 }
 
+enum TaskState {
+  backlog,
+  todo,
+  progress,
+  complete
+}
+
+type Task {
+  taskId: ID!
+  name: String
+  status: TaskState!
+  project: Project
+}
+
+input CreateTaskInput {
+  name: String
+  status: TaskState!
+  project: ID
+}
+
+input UpdateTaskInput {
+  taskId: ID!
+  name: String
+  status: TaskState!
+  project: ID
+}
+
 type Query {
   projects: [Project!]!
   project(id: ID!): Project
+  tasks: [Task!]!
+  task(id: ID!): Task
 }
 
 type Mutation {
   createProject(input: CreateProjectInput!): Project!
   updateProject(input: UpdateProjectInput!): Project
+  createTask(input: CreateTaskInput!): Task!
+  updateTask(input: UpdateTaskInput!): Task
 }
