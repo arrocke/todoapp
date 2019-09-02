@@ -10,8 +10,8 @@ const ProjectsView: React.FC = () => {
   const projectElements =
     data &&
     data.projects.map(project => (
-      <li key={project.projectId}>
-        <Link to={`/projects/${project.projectId}`}>{project.name}</Link>
+      <li key={project.id}>
+        <Link to={`/projects/${project.id}`}>{project.name}</Link>
       </li>
     ));
   return (

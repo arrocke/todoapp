@@ -52,7 +52,7 @@ export type MutationUpdateTaskArgs = {
 
 export type Project = {
   __typename?: 'Project',
-  projectId: Scalars['ID'],
+  id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
   tasks: Array<Task>,
 };
@@ -77,7 +77,7 @@ export type QueryTaskArgs = {
 
 export type Task = {
   __typename?: 'Task',
-  taskId: Scalars['ID'],
+  id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
   status: TaskState,
   project?: Maybe<Project>,
@@ -91,16 +91,67 @@ export enum TaskState {
 }
 
 export type UpdateProjectInput = {
-  projectId: Scalars['ID'],
+  id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
 };
 
 export type UpdateTaskInput = {
-  taskId: Scalars['ID'],
+  id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
   status: TaskState,
   project?: Maybe<Scalars['ID']>,
 };
+export type CreateTaskMutationVariables = {
+  input: CreateTaskInput
+};
+
+
+export type CreateTaskMutation = (
+  { __typename?: 'Mutation' }
+  & { createTask: (
+    { __typename?: 'Task' }
+    & Pick<Task, 'id' | 'name' | 'status'>
+    & { project: Maybe<(
+      { __typename?: 'Project' }
+      & Pick<Project, 'id' | 'name'>
+    )> }
+  ) }
+);
+
+export type UpdateTaskMutationVariables = {
+  input: UpdateTaskInput
+};
+
+
+export type UpdateTaskMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTask: Maybe<(
+    { __typename?: 'Task' }
+    & Pick<Task, 'id' | 'name' | 'status'>
+    & { project: Maybe<(
+      { __typename?: 'Project' }
+      & Pick<Project, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+export type ProjectQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type ProjectQuery = (
+  { __typename?: 'Query' }
+  & { project: Maybe<(
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name'>
+    & { tasks: Array<(
+      { __typename?: 'Task' }
+      & Pick<Task, 'id' | 'name' | 'status'>
+    )> }
+  )> }
+);
+
 export type ProjectsQueryVariables = {};
 
 
@@ -108,14 +159,94 @@ export type ProjectsQuery = (
   { __typename?: 'Query' }
   & { projects: Array<(
     { __typename?: 'Project' }
-    & Pick<Project, 'projectId' | 'name'>
+    & Pick<Project, 'id' | 'name'>
   )> }
 );
 
+export type TasksQueryVariables = {};
+
+
+export type TasksQuery = (
+  { __typename?: 'Query' }
+  & { tasks: Array<(
+    { __typename?: 'Task' }
+    & Pick<Task, 'id' | 'name' | 'status'>
+    & { project: Maybe<(
+      { __typename?: 'Project' }
+      & Pick<Project, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+export const CreateTaskDocument = gql`
+    mutation CreateTask($input: CreateTaskInput!) {
+  createTask(input: $input) {
+    id
+    name
+    status
+    project {
+      id
+      name
+    }
+  }
+}
+    `;
+export type CreateTaskMutationFn = ApolloReactCommon.MutationFunction<CreateTaskMutation, CreateTaskMutationVariables>;
+
+    export function useCreateTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
+      return ApolloReactHooks.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, baseOptions);
+    };
+export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
+export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
+export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const UpdateTaskDocument = gql`
+    mutation UpdateTask($input: UpdateTaskInput!) {
+  updateTask(input: $input) {
+    id
+    name
+    status
+    project {
+      id
+      name
+    }
+  }
+}
+    `;
+export type UpdateTaskMutationFn = ApolloReactCommon.MutationFunction<UpdateTaskMutation, UpdateTaskMutationVariables>;
+
+    export function useUpdateTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTaskMutation, UpdateTaskMutationVariables>) {
+      return ApolloReactHooks.useMutation<UpdateTaskMutation, UpdateTaskMutationVariables>(UpdateTaskDocument, baseOptions);
+    };
+export type UpdateTaskMutationHookResult = ReturnType<typeof useUpdateTaskMutation>;
+export type UpdateTaskMutationResult = ApolloReactCommon.MutationResult<UpdateTaskMutation>;
+export type UpdateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTaskMutation, UpdateTaskMutationVariables>;
+export const ProjectDocument = gql`
+    query Project($id: ID!) {
+  project(id: $id) {
+    id
+    name
+    tasks {
+      id
+      name
+      status
+    }
+  }
+}
+    `;
+
+    export function useProjectQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ProjectQuery, ProjectQueryVariables>) {
+      return ApolloReactHooks.useQuery<ProjectQuery, ProjectQueryVariables>(ProjectDocument, baseOptions);
+    };
+      export function useProjectLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProjectQuery, ProjectQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<ProjectQuery, ProjectQueryVariables>(ProjectDocument, baseOptions);
+      };
+      
+export type ProjectQueryHookResult = ReturnType<typeof useProjectQuery>;
+export type ProjectQueryResult = ApolloReactCommon.QueryResult<ProjectQuery, ProjectQueryVariables>;
 export const ProjectsDocument = gql`
     query Projects {
   projects {
-    projectId
+    id
     name
   }
 }
@@ -130,3 +261,26 @@ export const ProjectsDocument = gql`
       
 export type ProjectsQueryHookResult = ReturnType<typeof useProjectsQuery>;
 export type ProjectsQueryResult = ApolloReactCommon.QueryResult<ProjectsQuery, ProjectsQueryVariables>;
+export const TasksDocument = gql`
+    query Tasks {
+  tasks {
+    id
+    name
+    status
+    project {
+      id
+      name
+    }
+  }
+}
+    `;
+
+    export function useTasksQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TasksQuery, TasksQueryVariables>) {
+      return ApolloReactHooks.useQuery<TasksQuery, TasksQueryVariables>(TasksDocument, baseOptions);
+    };
+      export function useTasksLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TasksQuery, TasksQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<TasksQuery, TasksQueryVariables>(TasksDocument, baseOptions);
+      };
+      
+export type TasksQueryHookResult = ReturnType<typeof useTasksQuery>;
+export type TasksQueryResult = ApolloReactCommon.QueryResult<TasksQuery, TasksQueryVariables>;

@@ -1,38 +1,45 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { TaskRecord, ProjectRecord } from "./db-client";
 import { useState, useEffect } from "react";
+import { TaskState } from "./graphql/types";
+
+interface KanbanTask {
+  id: string;
+  name?: string | null;
+  status: TaskState;
+  project?: {
+    id: string;
+    name?: string | null;
+  };
+}
 
 interface KanbanBoardProps {
-  tasks: TaskRecord[];
-  projects?: ProjectRecord[];
-  onTaskAdd?: (task: TaskRecord) => void;
-  onTaskChange?: (task: TaskRecord) => void;
+  tasks: KanbanTask[];
+  onTaskAdd?: (task: KanbanTask) => void;
+  onTaskChange?: (task: KanbanTask) => void;
 }
 
 interface SortedTasks {
-  backlog: TaskRecord[];
-  todo: TaskRecord[];
-  progress: TaskRecord[];
-  complete: TaskRecord[];
+  [status: string]: KanbanTask[];
+  backlog: KanbanTask[];
+  todo: KanbanTask[];
+  progress: KanbanTask[];
+  complete: KanbanTask[];
 }
 
 interface KanbanListProps {
   title: string;
-  tasks: TaskRecord[];
-  projects: ProjectRecord[];
+  tasks: KanbanTask[];
   onTaskAdd?: () => void;
-  onTaskChange?: (task: TaskRecord) => void;
+  onTaskChange?: (task: KanbanTask) => void;
 }
 
-interface KanbanTaskProps {
-  task: TaskRecord;
-  projects: ProjectRecord[];
-  onTaskChange?: (task: TaskRecord) => void;
+interface TaskCardProps {
+  task: KanbanTask;
+  onTaskChange?: (task: KanbanTask) => void;
 }
 
-const KanbanTask: React.FC<KanbanTaskProps> = ({
-  projects,
+const TaskCard: React.FC<TaskCardProps> = ({
   task,
   onTaskChange = () => {}
 }) => {
@@ -45,37 +52,43 @@ const KanbanTask: React.FC<KanbanTaskProps> = ({
     setName({ name: task.name || "", isDirty: false });
   }, [task.name]);
 
-  const project =
-    task.project && task.project[0]
-      ? projects.find(project => project.id === task.project[0])
-      : undefined;
-
   return (
     <li>
       <p css={{ marginBottom: 0 }}>
         <input
-          value={name}
+          type="text"
+          value={name || undefined}
           onChange={e => setName({ name: e.target.value, isDirty: true })}
           onBlur={() => isDirty && onTaskChange({ ...task, name })}
         />
-        <span>{project && project.name}</span>
+        <span>{task.project && task.project.name}</span>
       </p>
       <p css={{ marginTop: 0 }}>
         <button
-          onClick={() => onTaskChange({ ...task, name, status: "backlog" })}
+          onClick={() =>
+            onTaskChange({ ...task, name, status: TaskState.Backlog })
+          }
         >
           B
         </button>
-        <button onClick={() => onTaskChange({ ...task, name, status: "todo" })}>
+        <button
+          onClick={() =>
+            onTaskChange({ ...task, name, status: TaskState.Todo })
+          }
+        >
           T
         </button>
         <button
-          onClick={() => onTaskChange({ ...task, name, status: "progress" })}
+          onClick={() =>
+            onTaskChange({ ...task, name, status: TaskState.Progress })
+          }
         >
           P
         </button>
         <button
-          onClick={() => onTaskChange({ ...task, name, status: "complete" })}
+          onClick={() =>
+            onTaskChange({ ...task, name, status: TaskState.Complete })
+          }
         >
           C
         </button>
@@ -87,17 +100,11 @@ const KanbanTask: React.FC<KanbanTaskProps> = ({
 const KanbanList: React.FC<KanbanListProps> = ({
   title,
   tasks,
-  projects,
   onTaskAdd = () => {},
   onTaskChange = () => {}
 }) => {
   const listElements = tasks.map(task => (
-    <KanbanTask
-      key={task.id}
-      task={task}
-      projects={projects}
-      onTaskChange={onTaskChange}
-    />
+    <TaskCard key={task.id} task={task} onTaskChange={onTaskChange} />
   ));
   return (
     <div>
@@ -119,7 +126,6 @@ const KanbanList: React.FC<KanbanListProps> = ({
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({
   tasks,
-  projects = [],
   onTaskAdd = () => {},
   onTaskChange = () => {}
 }) => {
@@ -146,36 +152,32 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       <KanbanList
         title="Backlog"
         tasks={lists.backlog}
-        projects={projects}
         onTaskAdd={() =>
-          onTaskAdd({ id: "", name: "", status: "backlog", project: [] })
+          onTaskAdd({ id: "", name: "", status: TaskState.Backlog })
         }
         onTaskChange={onTaskChange}
       />
       <KanbanList
         title="To Do"
         tasks={lists.todo}
-        projects={projects}
         onTaskAdd={() =>
-          onTaskAdd({ id: "", name: "", status: "todo", project: [] })
+          onTaskAdd({ id: "", name: "", status: TaskState.Todo })
         }
         onTaskChange={onTaskChange}
       />
       <KanbanList
         title="In Progress"
         tasks={lists.progress}
-        projects={projects}
         onTaskAdd={() =>
-          onTaskAdd({ id: "", name: "", status: "progress", project: [] })
+          onTaskAdd({ id: "", name: "", status: TaskState.Progress })
         }
         onTaskChange={onTaskChange}
       />
       <KanbanList
         title="Complete"
         tasks={lists.complete}
-        projects={projects}
         onTaskAdd={() =>
-          onTaskAdd({ id: "", name: "", status: "complete", project: [] })
+          onTaskAdd({ id: "", name: "", status: TaskState.Complete })
         }
         onTaskChange={onTaskChange}
       />

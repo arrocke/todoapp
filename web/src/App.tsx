@@ -7,12 +7,8 @@ import TasksView from "./TasksView";
 import Navigation from "./Navigation";
 import SprintsView from "./SprintsView";
 import SprintView from "./SprintView";
-import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
-
-const client = new ApolloClient({
-  uri: "/api"
-});
+import client from "./graphql/client";
 
 const App: React.FC = () => {
   return (

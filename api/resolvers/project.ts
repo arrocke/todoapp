@@ -6,8 +6,8 @@ export const ProjectMutation: MutationResolvers = {
   async createProject(_, { input }) {
     return await ProjectModel.create(input);
   },
-  async updateProject(_, { input: { projectId, ...fields } }) {
-    const project = await ProjectModel.findById(projectId);
+  async updateProject(_, { input: { id, ...fields } }) {
+    const project = await ProjectModel.findById(id);
     project.set(fields);
     return await project.save();
   }
@@ -23,7 +23,7 @@ export const ProjectQuery: QueryResolvers = {
 };
 
 const Project: ProjectResolvers = {
-  projectId: project => project._id.toHexString(),
+  id: project => project._id.toHexString(),
   async tasks(project) {
     return await TaskModel.find({ project: project._id });
   }

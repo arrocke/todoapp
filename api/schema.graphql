@@ -1,5 +1,5 @@
 type Project {
-  projectId: ID!
+  id: ID!
   name: String
   tasks: [Task!]!
 }
@@ -9,7 +9,7 @@ input CreateProjectInput {
 }
 
 input UpdateProjectInput {
-  projectId: ID!
+  id: ID!
   name: String
 }
 
@@ -21,7 +21,7 @@ enum TaskState {
 }
 
 type Task {
-  taskId: ID!
+  id: ID!
   name: String
   status: TaskState!
   project: Project
@@ -34,7 +34,7 @@ input CreateTaskInput {
 }
 
 input UpdateTaskInput {
-  taskId: ID!
+  id: ID!
   name: String
   status: TaskState!
   project: ID

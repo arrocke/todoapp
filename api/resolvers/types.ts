@@ -51,7 +51,7 @@ export type MutationUpdateTaskArgs = {
 
 export type Project = {
   __typename?: "Project";
-  projectId: Scalars["ID"];
+  id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
   tasks: Array<Task>;
 };
@@ -74,7 +74,7 @@ export type QueryTaskArgs = {
 
 export type Task = {
   __typename?: "Task";
-  taskId: Scalars["ID"];
+  id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
   status: TaskState;
   project?: Maybe<Project>;
@@ -88,12 +88,12 @@ export enum TaskState {
 }
 
 export type UpdateProjectInput = {
-  projectId: Scalars["ID"];
+  id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
 };
 
 export type UpdateTaskInput = {
-  taskId: Scalars["ID"];
+  id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
   status: TaskState;
   project?: Maybe<Scalars["ID"]>;
@@ -268,7 +268,7 @@ export type ProjectResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Project"] = ResolversParentTypes["Project"]
 > = ResolversObject<{
-  projectId?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   tasks?: Resolver<Array<ResolversTypes["Task"]>, ParentType, ContextType>;
 }>;
@@ -301,7 +301,7 @@ export type TaskResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Task"] = ResolversParentTypes["Task"]
 > = ResolversObject<{
-  taskId?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes["TaskState"], ParentType, ContextType>;
   project?: Resolver<Maybe<ResolversTypes["Project"]>, ParentType, ContextType>;

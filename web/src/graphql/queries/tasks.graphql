@@ -1,0 +1,11 @@
+query Tasks {
+  tasks {
+    id
+    name
+    status
+    project {
+      id
+      name
+    }
+  }
+}

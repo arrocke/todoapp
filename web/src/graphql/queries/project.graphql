@@ -1,0 +1,11 @@
+query Project($id: ID!) {
+  project(id: $id) {
+    id
+    name
+    tasks {
+      id
+      name
+      status
+    }
+  }
+}
