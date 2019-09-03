@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { useState, useEffect } from "react";
-import { TaskState } from "./graphql/types";
+import { TaskState } from "../graphql/types";
 
 interface KanbanTask {
   id: string;

@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import ProjectsView from "./ProjectsView";
-import ProjectView from "./ProjectView";
-import TasksView from "./TasksView";
-import Navigation from "./Navigation";
-import SprintsView from "./SprintsView";
-import SprintView from "./SprintView";
+import ProjectsView from "./views/ProjectsView";
+import ProjectView from "./views/ProjectView";
+import TasksView from "./views/TasksView";
+import Navigation from "./components/Navigation";
+import SprintsView from "./views/SprintsView";
+import SprintView from "./views/SprintView";
 import { ApolloProvider } from "@apollo/react-hooks";
 import client from "./graphql/client";
 

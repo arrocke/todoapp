@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { RouteComponentProps } from "react-router";
-import LoadingContainer from "./LoadingContainer";
-import KanbanBoard from "./KanbanBoard";
+import LoadingContainer from "../components/LoadingContainer";
+import KanbanBoard from "../components/KanbanBoard";
 
 interface SprintViewProps extends RouteComponentProps<{ id: string }> {}
 

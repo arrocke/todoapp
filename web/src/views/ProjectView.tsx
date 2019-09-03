@@ -7,10 +7,10 @@ import {
   ProjectDocument,
   ProjectQuery,
   ProjectQueryVariables
-} from "./graphql/types";
+} from "../graphql/types";
 import { RouteComponentProps } from "react-router";
-import LoadingContainer from "./LoadingContainer";
-import KanbanBoard from "./KanbanBoard";
+import LoadingContainer from "../components/LoadingContainer";
+import KanbanBoard from "../components/KanbanBoard";
 
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
 

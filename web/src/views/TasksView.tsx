@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import LoadingContainer from "./LoadingContainer";
-import KanbanBoard from "./KanbanBoard";
+import LoadingContainer from "../components/LoadingContainer";
+import KanbanBoard from "../components/KanbanBoard";
 import {
   useTasksQuery,
   useCreateTaskMutation,
   useUpdateTaskMutation
-} from "./graphql/types";
+} from "../graphql/types";
 
 const TasksView: React.FC = () => {
   const { data, loading } = useTasksQuery();
