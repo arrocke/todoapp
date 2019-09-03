@@ -1,6 +1,8 @@
 import { MutationResolvers, TaskResolvers, QueryResolvers } from "./types";
 import TaskModel from "../models/task";
-import ProjectModel from "../models/project";
+import { asDocuments, asDocument } from "../utils";
+import { SprintDocument } from "../models/sprint";
+import { ProjectDocument } from "../models/project";
 
 export const TaskMutation: MutationResolvers = {
   async createTask(_, { input }) {
@@ -25,9 +27,12 @@ export const TaskQuery: QueryResolvers = {
 const Task: TaskResolvers = {
   id: task => task._id.toHexString(),
   async project(task) {
-    if (task.project) {
-      return await ProjectModel.findById(task.project);
-    }
+    await task.populate("task").execPopulate();
+    return asDocument<ProjectDocument>(task.project);
+  },
+  async sprints(task) {
+    await task.populate("sprints").execPopulate();
+    return asDocuments<SprintDocument>(task.sprints);
   }
 };
 

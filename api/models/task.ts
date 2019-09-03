@@ -1,8 +1,9 @@
 import { Schema, Document, model, Types } from "mongoose";
 
-export interface TaskModel extends Document {
+export interface TaskDocument extends Document {
   name?: string;
   project?: Types.ObjectId;
+  sprints: Types.ObjectId[];
 }
 
 const TaskSchema = new Schema(
@@ -23,4 +24,4 @@ const TaskSchema = new Schema(
   }
 );
 
-export default model<TaskModel>("Task", TaskSchema);
+export default model<TaskDocument>("Task", TaskSchema);

@@ -1,3 +1,5 @@
+scalar Date
+
 type Project {
   id: ID!
   name: String
@@ -25,6 +27,7 @@ type Task {
   name: String
   status: TaskState!
   project: Project
+  sprints: [Sprint!]!
 }
 
 input CreateTaskInput {
@@ -40,11 +43,41 @@ input UpdateTaskInput {
   project: ID
 }
 
+type Sprint {
+  id: ID!
+  startDate: Date!
+  endDate: Date!
+  tasks: [Task!]!
+}
+
+input CreateSprintInput {
+  startDate: Date!
+  endDate: Date!
+}
+
+input UpdateSprintInput {
+  id: ID!
+  startDate: Date
+  endDate: Date
+}
+
+input AddToSprintInput {
+  sprint: ID!
+  task: ID!
+}
+
+input RemoveFromSprintInput {
+  sprint: ID!
+  task: ID!
+}
+
 type Query {
   projects: [Project!]!
   project(id: ID!): Project
   tasks: [Task!]!
   task(id: ID!): Task
+  sprints: [Sprint!]!
+  sprint(id: ID!): Sprint
 }
 
 type Mutation {
@@ -52,4 +85,8 @@ type Mutation {
   updateProject(input: UpdateProjectInput!): Project
   createTask(input: CreateTaskInput!): Task!
   updateTask(input: UpdateTaskInput!): Task
+  createSprint(input: CreateSprintInput!): Sprint!
+  updateSprint(input: UpdateSprintInput!): Sprint
+  addToSprint(input: AddToSprintInput!): Sprint
+  removeFromSprint(input: RemoveFromSprintInput!): Sprint
 }

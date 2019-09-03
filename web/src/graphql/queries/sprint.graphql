@@ -1,0 +1,16 @@
+query Sprint($id: ID!) {
+  sprint(id: $id) {
+    id
+    startDate
+    endDate
+    tasks {
+      id
+      name
+      status
+      project {
+        id
+        name
+      }
+    }
+  }
+}

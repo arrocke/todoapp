@@ -1,6 +1,11 @@
-import { GraphQLResolveInfo } from "graphql";
-import { ProjectModel } from "../models/project";
-import { TaskModel } from "../models/task";
+import {
+  GraphQLResolveInfo,
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig
+} from "graphql";
+import { ProjectDocument } from "../models/project";
+import { TaskDocument } from "../models/task";
+import { SprintDocument } from "../models/sprint";
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
   [X in Exclude<keyof T, K>]?: T[X];
@@ -13,10 +18,21 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: Date;
+};
+
+export type AddToSprintInput = {
+  sprint: Scalars["ID"];
+  task: Scalars["ID"];
 };
 
 export type CreateProjectInput = {
   name?: Maybe<Scalars["String"]>;
+};
+
+export type CreateSprintInput = {
+  startDate: Scalars["Date"];
+  endDate: Scalars["Date"];
 };
 
 export type CreateTaskInput = {
@@ -31,6 +47,10 @@ export type Mutation = {
   updateProject?: Maybe<Project>;
   createTask: Task;
   updateTask?: Maybe<Task>;
+  createSprint: Sprint;
+  updateSprint?: Maybe<Sprint>;
+  addToSprint?: Maybe<Sprint>;
+  removeFromSprint?: Maybe<Sprint>;
 };
 
 export type MutationCreateProjectArgs = {
@@ -49,6 +69,22 @@ export type MutationUpdateTaskArgs = {
   input: UpdateTaskInput;
 };
 
+export type MutationCreateSprintArgs = {
+  input: CreateSprintInput;
+};
+
+export type MutationUpdateSprintArgs = {
+  input: UpdateSprintInput;
+};
+
+export type MutationAddToSprintArgs = {
+  input: AddToSprintInput;
+};
+
+export type MutationRemoveFromSprintArgs = {
+  input: RemoveFromSprintInput;
+};
+
 export type Project = {
   __typename?: "Project";
   id: Scalars["ID"];
@@ -62,6 +98,8 @@ export type Query = {
   project?: Maybe<Project>;
   tasks: Array<Task>;
   task?: Maybe<Task>;
+  sprints: Array<Sprint>;
+  sprint?: Maybe<Sprint>;
 };
 
 export type QueryProjectArgs = {
@@ -72,12 +110,30 @@ export type QueryTaskArgs = {
   id: Scalars["ID"];
 };
 
+export type QuerySprintArgs = {
+  id: Scalars["ID"];
+};
+
+export type RemoveFromSprintInput = {
+  sprint: Scalars["ID"];
+  task: Scalars["ID"];
+};
+
+export type Sprint = {
+  __typename?: "Sprint";
+  id: Scalars["ID"];
+  startDate: Scalars["Date"];
+  endDate: Scalars["Date"];
+  tasks: Array<Task>;
+};
+
 export type Task = {
   __typename?: "Task";
   id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
   status: TaskState;
   project?: Maybe<Project>;
+  sprints: Array<Sprint>;
 };
 
 export enum TaskState {
@@ -90,6 +146,12 @@ export enum TaskState {
 export type UpdateProjectInput = {
   id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
+};
+
+export type UpdateSprintInput = {
+  id: Scalars["ID"];
+  startDate?: Maybe<Scalars["Date"]>;
+  endDate?: Maybe<Scalars["Date"]>;
 };
 
 export type UpdateTaskInput = {
@@ -205,34 +267,51 @@ export type DirectiveResolverFn<
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
-  Project: ResolverTypeWrapper<ProjectModel>;
+  Project: ResolverTypeWrapper<ProjectDocument>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   String: ResolverTypeWrapper<Scalars["String"]>;
-  Task: ResolverTypeWrapper<TaskModel>;
+  Task: ResolverTypeWrapper<TaskDocument>;
   TaskState: TaskState;
+  Sprint: ResolverTypeWrapper<SprintDocument>;
+  Date: ResolverTypeWrapper<Scalars["Date"]>;
   Mutation: ResolverTypeWrapper<{}>;
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
   CreateTaskInput: CreateTaskInput;
   UpdateTaskInput: UpdateTaskInput;
+  CreateSprintInput: CreateSprintInput;
+  UpdateSprintInput: UpdateSprintInput;
+  AddToSprintInput: AddToSprintInput;
+  RemoveFromSprintInput: RemoveFromSprintInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Query: {};
-  Project: ProjectModel;
+  Project: ProjectDocument;
   ID: Scalars["ID"];
   String: Scalars["String"];
-  Task: TaskModel;
+  Task: TaskDocument;
   TaskState: TaskState;
+  Sprint: SprintDocument;
+  Date: Scalars["Date"];
   Mutation: {};
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
   CreateTaskInput: CreateTaskInput;
   UpdateTaskInput: UpdateTaskInput;
+  CreateSprintInput: CreateSprintInput;
+  UpdateSprintInput: UpdateSprintInput;
+  AddToSprintInput: AddToSprintInput;
+  RemoveFromSprintInput: RemoveFromSprintInput;
   Boolean: Scalars["Boolean"];
 }>;
+
+export interface DateScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["Date"], any> {
+  name: "Date";
+}
 
 export type MutationResolvers<
   ContextType = any,
@@ -261,6 +340,30 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUpdateTaskArgs, "input">
+  >;
+  createSprint?: Resolver<
+    ResolversTypes["Sprint"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateSprintArgs, "input">
+  >;
+  updateSprint?: Resolver<
+    Maybe<ResolversTypes["Sprint"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateSprintArgs, "input">
+  >;
+  addToSprint?: Resolver<
+    Maybe<ResolversTypes["Sprint"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddToSprintArgs, "input">
+  >;
+  removeFromSprint?: Resolver<
+    Maybe<ResolversTypes["Sprint"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationRemoveFromSprintArgs, "input">
   >;
 }>;
 
@@ -295,6 +398,23 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryTaskArgs, "id">
   >;
+  sprints?: Resolver<Array<ResolversTypes["Sprint"]>, ParentType, ContextType>;
+  sprint?: Resolver<
+    Maybe<ResolversTypes["Sprint"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySprintArgs, "id">
+  >;
+}>;
+
+export type SprintResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Sprint"] = ResolversParentTypes["Sprint"]
+> = ResolversObject<{
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  startDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
+  endDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
+  tasks?: Resolver<Array<ResolversTypes["Task"]>, ParentType, ContextType>;
 }>;
 
 export type TaskResolvers<
@@ -305,12 +425,15 @@ export type TaskResolvers<
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes["TaskState"], ParentType, ContextType>;
   project?: Resolver<Maybe<ResolversTypes["Project"]>, ParentType, ContextType>;
+  sprints?: Resolver<Array<ResolversTypes["Sprint"]>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Date?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Sprint?: SprintResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
 }>;
 

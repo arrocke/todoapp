@@ -10,10 +10,21 @@ export type Scalars = {
   Boolean: boolean,
   Int: number,
   Float: number,
+  Date: any,
+};
+
+export type AddToSprintInput = {
+  sprint: Scalars['ID'],
+  task: Scalars['ID'],
 };
 
 export type CreateProjectInput = {
   name?: Maybe<Scalars['String']>,
+};
+
+export type CreateSprintInput = {
+  startDate: Scalars['Date'],
+  endDate: Scalars['Date'],
 };
 
 export type CreateTaskInput = {
@@ -22,12 +33,17 @@ export type CreateTaskInput = {
   project?: Maybe<Scalars['ID']>,
 };
 
+
 export type Mutation = {
   __typename?: 'Mutation',
   createProject: Project,
   updateProject?: Maybe<Project>,
   createTask: Task,
   updateTask?: Maybe<Task>,
+  createSprint: Sprint,
+  updateSprint?: Maybe<Sprint>,
+  addToSprint?: Maybe<Sprint>,
+  removeFromSprint?: Maybe<Sprint>,
 };
 
 
@@ -50,6 +66,26 @@ export type MutationUpdateTaskArgs = {
   input: UpdateTaskInput
 };
 
+
+export type MutationCreateSprintArgs = {
+  input: CreateSprintInput
+};
+
+
+export type MutationUpdateSprintArgs = {
+  input: UpdateSprintInput
+};
+
+
+export type MutationAddToSprintArgs = {
+  input: AddToSprintInput
+};
+
+
+export type MutationRemoveFromSprintArgs = {
+  input: RemoveFromSprintInput
+};
+
 export type Project = {
   __typename?: 'Project',
   id: Scalars['ID'],
@@ -63,6 +99,8 @@ export type Query = {
   project?: Maybe<Project>,
   tasks: Array<Task>,
   task?: Maybe<Task>,
+  sprints: Array<Sprint>,
+  sprint?: Maybe<Sprint>,
 };
 
 
@@ -75,12 +113,31 @@ export type QueryTaskArgs = {
   id: Scalars['ID']
 };
 
+
+export type QuerySprintArgs = {
+  id: Scalars['ID']
+};
+
+export type RemoveFromSprintInput = {
+  sprint: Scalars['ID'],
+  task: Scalars['ID'],
+};
+
+export type Sprint = {
+  __typename?: 'Sprint',
+  id: Scalars['ID'],
+  startDate: Scalars['Date'],
+  endDate: Scalars['Date'],
+  tasks: Array<Task>,
+};
+
 export type Task = {
   __typename?: 'Task',
   id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
   status: TaskState,
   project?: Maybe<Project>,
+  sprints: Array<Sprint>,
 };
 
 export enum TaskState {
@@ -93,6 +150,12 @@ export enum TaskState {
 export type UpdateProjectInput = {
   id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
+};
+
+export type UpdateSprintInput = {
+  id: Scalars['ID'],
+  startDate?: Maybe<Scalars['Date']>,
+  endDate?: Maybe<Scalars['Date']>,
 };
 
 export type UpdateTaskInput = {
@@ -160,6 +223,38 @@ export type ProjectsQuery = (
   & { projects: Array<(
     { __typename?: 'Project' }
     & Pick<Project, 'id' | 'name'>
+  )> }
+);
+
+export type SprintQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type SprintQuery = (
+  { __typename?: 'Query' }
+  & { sprint: Maybe<(
+    { __typename?: 'Sprint' }
+    & Pick<Sprint, 'id' | 'startDate' | 'endDate'>
+    & { tasks: Array<(
+      { __typename?: 'Task' }
+      & Pick<Task, 'id' | 'name' | 'status'>
+      & { project: Maybe<(
+        { __typename?: 'Project' }
+        & Pick<Project, 'id' | 'name'>
+      )> }
+    )> }
+  )> }
+);
+
+export type SprintsQueryVariables = {};
+
+
+export type SprintsQuery = (
+  { __typename?: 'Query' }
+  & { sprints: Array<(
+    { __typename?: 'Sprint' }
+    & Pick<Sprint, 'id' | 'startDate' | 'endDate'>
   )> }
 );
 
@@ -261,6 +356,53 @@ export const ProjectsDocument = gql`
       
 export type ProjectsQueryHookResult = ReturnType<typeof useProjectsQuery>;
 export type ProjectsQueryResult = ApolloReactCommon.QueryResult<ProjectsQuery, ProjectsQueryVariables>;
+export const SprintDocument = gql`
+    query Sprint($id: ID!) {
+  sprint(id: $id) {
+    id
+    startDate
+    endDate
+    tasks {
+      id
+      name
+      status
+      project {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+    export function useSprintQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SprintQuery, SprintQueryVariables>) {
+      return ApolloReactHooks.useQuery<SprintQuery, SprintQueryVariables>(SprintDocument, baseOptions);
+    };
+      export function useSprintLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SprintQuery, SprintQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<SprintQuery, SprintQueryVariables>(SprintDocument, baseOptions);
+      };
+      
+export type SprintQueryHookResult = ReturnType<typeof useSprintQuery>;
+export type SprintQueryResult = ApolloReactCommon.QueryResult<SprintQuery, SprintQueryVariables>;
+export const SprintsDocument = gql`
+    query Sprints {
+  sprints {
+    id
+    startDate
+    endDate
+  }
+}
+    `;
+
+    export function useSprintsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SprintsQuery, SprintsQueryVariables>) {
+      return ApolloReactHooks.useQuery<SprintsQuery, SprintsQueryVariables>(SprintsDocument, baseOptions);
+    };
+      export function useSprintsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SprintsQuery, SprintsQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<SprintsQuery, SprintsQueryVariables>(SprintsDocument, baseOptions);
+      };
+      
+export type SprintsQueryHookResult = ReturnType<typeof useSprintsQuery>;
+export type SprintsQueryResult = ApolloReactCommon.QueryResult<SprintsQuery, SprintsQueryVariables>;
 export const TasksDocument = gql`
     query Tasks {
   tasks {

@@ -1,6 +1,6 @@
 import { Schema, Document, model } from "mongoose";
 
-export interface ProjectModel extends Document {
+export interface ProjectDocument extends Document {
   name?: string;
 }
 
@@ -13,4 +13,4 @@ const ProjectSchema = new Schema(
   }
 );
 
-export default model<ProjectModel>("Project", ProjectSchema);
+export default model<ProjectDocument>("Project", ProjectSchema);

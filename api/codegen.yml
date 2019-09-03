@@ -8,6 +8,9 @@ generates:
       - "typescript-resolvers"
     config:
       useIndexSignature: true
+      scalars:
+        Date: Date
       mappers:
-        Project: ../models/project#ProjectModel
-        Task: ../models/task#TaskModel
+        Project: ../models/project#ProjectDocument
+        Task: ../models/task#TaskDocument
+        Sprint: ../models/sprint#SprintDocument

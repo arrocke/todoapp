@@ -2,24 +2,26 @@
 import { jsx } from "@emotion/core";
 import { Link } from "react-router-dom";
 import LoadingContainer from "../components/LoadingContainer";
+import { useSprintsQuery } from "../graphql/types";
 
 const SprintsView: React.FC = () => {
-  return null;
-  // const { sprints, isLoading } = useSprints();
+  const { data, loading } = useSprintsQuery();
 
-  // const sprintElements = sprints.map(sprint => (
-  //   <li key={sprint.id}>
-  //     <Link to={`/sprints/${sprint.id}`}>
-  //       Sprint {sprint.number} ({sprint.startDate} - {sprint.endDate})
-  //     </Link>
-  //   </li>
-  // ));
-  // return (
-  //   <LoadingContainer isLoading={isLoading}>
-  //     <h1>Sprints</h1>
-  //     <ul>{sprintElements}</ul>
-  //   </LoadingContainer>
-  // );
+  return (
+    <LoadingContainer isLoading={loading}>
+      <h1>Sprints</h1>
+      <ul>
+        {data &&
+          data.sprints.map(sprint => (
+            <li key={sprint.id}>
+              <Link to={`/sprints/${sprint.id}`}>
+                Sprint ({sprint.startDate} - {sprint.endDate})
+              </Link>
+            </li>
+          ))}
+      </ul>
+    </LoadingContainer>
+  );
 };
 
 export default SprintsView;
