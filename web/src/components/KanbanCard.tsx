@@ -40,6 +40,7 @@ const KanbanCard: React.FC<KanbanCardProps> = ({
       css={css`
         border-radius: 4px;
         box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.2);
+        background-color: white;
 
         &:hover input:not(:focus) + .hover-icon {
           visibility: visible;

@@ -14,10 +14,21 @@ const TasksView: React.FC = () => {
   const [updateTask] = useUpdateTaskMutation();
 
   return (
-    <LoadingContainer isLoading={loading}>
+    <LoadingContainer
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%"
+      }}
+      isLoading={loading}
+    >
       <h1>Tasks</h1>
       {data && (
         <KanbanBoard
+          css={{
+            minHeight: 0,
+            flexGrow: 1
+          }}
           tasks={data.tasks}
           onTaskAdd={({ name, status }) =>
             createTask({

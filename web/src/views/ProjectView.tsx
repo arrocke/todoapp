@@ -11,6 +11,7 @@ import {
 import { RouteComponentProps } from "react-router";
 import LoadingContainer from "../components/LoadingContainer";
 import KanbanBoard from "../components/KanbanBoard";
+import { Fragment } from "react";
 
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
 
@@ -49,11 +50,22 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
   const [updateTask] = useUpdateTaskMutation();
 
   return (
-    <LoadingContainer isLoading={loading}>
+    <LoadingContainer
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%"
+      }}
+      isLoading={loading}
+    >
       {data && data.project ? (
-        <div>
+        <Fragment>
           <h1>{data.project.name}</h1>
           <KanbanBoard
+            css={{
+              minHeight: 0,
+              flexGrow: 1
+            }}
             tasks={data.project.tasks}
             onTaskAdd={({ name, status }) =>
               createTask({
@@ -68,7 +80,7 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
               })
             }
           />
-        </div>
+        </Fragment>
       ) : (
         <div>Project not found</div>
       )}
