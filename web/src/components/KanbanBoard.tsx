@@ -1,17 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useState, useEffect } from "react";
 import { TaskState } from "../graphql/types";
-
-interface KanbanTask {
-  id: string;
-  name?: string | null;
-  status: TaskState;
-  project?: {
-    id: string;
-    name?: string | null;
-  };
-}
+import KanbanCard, { KanbanTask } from "./KanbanCard";
 
 interface KanbanBoardProps {
   tasks: KanbanTask[];
@@ -34,69 +24,6 @@ interface KanbanListProps {
   onTaskChange?: (task: KanbanTask) => void;
 }
 
-interface TaskCardProps {
-  task: KanbanTask;
-  onTaskChange?: (task: KanbanTask) => void;
-}
-
-const TaskCard: React.FC<TaskCardProps> = ({
-  task,
-  onTaskChange = () => {}
-}) => {
-  const [{ name, isDirty }, setName] = useState({
-    name: task.name,
-    isDirty: false
-  });
-
-  useEffect(() => {
-    setName({ name: task.name || "", isDirty: false });
-  }, [task.name]);
-
-  return (
-    <li>
-      <p css={{ marginBottom: 0 }}>
-        <input
-          type="text"
-          value={name || undefined}
-          onChange={e => setName({ name: e.target.value, isDirty: true })}
-          onBlur={() => isDirty && onTaskChange({ ...task, name })}
-        />
-        <span>{task.project && task.project.name}</span>
-      </p>
-      <p css={{ marginTop: 0 }}>
-        <button
-          onClick={() =>
-            onTaskChange({ ...task, name, status: TaskState.Backlog })
-          }
-        >
-          B
-        </button>
-        <button
-          onClick={() =>
-            onTaskChange({ ...task, name, status: TaskState.Todo })
-          }
-        >
-          T
-        </button>
-        <button
-          onClick={() =>
-            onTaskChange({ ...task, name, status: TaskState.Progress })
-          }
-        >
-          P
-        </button>
-        <button
-          onClick={() =>
-            onTaskChange({ ...task, name, status: TaskState.Complete })
-          }
-        >
-          C
-        </button>
-      </p>
-    </li>
-  );
-};
-
 const KanbanList: React.FC<KanbanListProps> = ({
   title,
   tasks,
@@ -104,7 +31,12 @@ const KanbanList: React.FC<KanbanListProps> = ({
   onTaskChange = () => {}
 }) => {
   const listElements = tasks.map(task => (
-    <TaskCard key={task.id} task={task} onTaskChange={onTaskChange} />
+    <KanbanCard
+      css={{ margin: 8 }}
+      key={task.id}
+      task={task}
+      onTaskChange={onTaskChange}
+    />
   ));
   return (
     <div>

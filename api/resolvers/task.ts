@@ -27,7 +27,7 @@ export const TaskQuery: QueryResolvers = {
 const Task: TaskResolvers = {
   id: task => task._id.toHexString(),
   async project(task) {
-    await task.populate("task").execPopulate();
+    await task.populate("project").execPopulate();
     return asDocument<ProjectDocument>(task.project);
   },
   async sprints(task) {

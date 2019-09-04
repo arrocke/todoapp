@@ -14,12 +14,18 @@ const App: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <Router>
-        <Navigation />
-        <Route exact path="/projects" component={ProjectsView} />
-        <Route exact path="/projects/:id" component={ProjectView} />
-        <Route exact path="/tasks" component={TasksView} />
-        <Route exact path="/sprints" component={SprintsView} />
-        <Route exact path="/sprints/:id" component={SprintView} />
+        <div
+          css={{
+            fontFamily: "sans-serif"
+          }}
+        >
+          <Navigation />
+          <Route exact path="/projects" component={ProjectsView} />
+          <Route exact path="/projects/:id" component={ProjectView} />
+          <Route exact path="/tasks" component={TasksView} />
+          <Route exact path="/sprints" component={SprintsView} />
+          <Route exact path="/sprints/:id" component={SprintView} />
+        </div>
       </Router>
     </ApolloProvider>
   );
