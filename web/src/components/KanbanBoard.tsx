@@ -3,7 +3,6 @@ import { jsx, css } from "@emotion/core";
 import { TaskState } from "../graphql/types";
 import KanbanList from "./KanbanList";
 import { KanbanTask } from "./KanbanCard";
-import { useState } from "react";
 
 interface KanbanBoardProps {
   className?: string;
@@ -11,8 +10,6 @@ interface KanbanBoardProps {
   onTaskAdd?: (task: KanbanTask) => void;
   onTaskChange?: (task: KanbanTask) => void;
 }
-
-type OpenState = [boolean, boolean, boolean, boolean];
 
 const titleMap = new Map<TaskState, string>([
   [TaskState.Backlog, "Backlog"],
@@ -27,35 +24,40 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   onTaskAdd = () => {},
   onTaskChange = () => {}
 }) => {
-  const [isOpen, setIsOpen] = useState<OpenState>([false, false, true, false]);
   return (
     <div
       className={className}
       css={css`
         margin: 16px;
-        display: flex;
-        flex-direction: column;
-        justify-content: stretch;
+        overflow-x: auto;
         @media (min-width: 768px) {
           display: flex;
-          flex-direction: row;
           justify-content: center;
         }
       `}
     >
-      {Object.values(TaskState).map((status, i) => (
+      {Object.values(TaskState).map(status => (
         <KanbanList
+          css={[
+            css`
+              margin: 8px 0;
+              @media (min-width: 768px) {
+                margin: 0 8px;
+                width: 240px;
+                &:first-of-type: {
+                  margin-left: 0;
+                }
+                &:last-of-type: {
+                  margin-right: 0;
+                }
+              }
+            `
+          ]}
           key={status}
           title={titleMap.get(status) || ""}
           tasks={tasks.filter(task => task.status === status)}
-          isOpen={isOpen[i]}
           onTaskAdd={() => onTaskAdd({ id: "", name: "", status })}
           onTaskChange={onTaskChange}
-          onToggle={() => {
-            const newIsOpen: OpenState = [false, false, false, false];
-            newIsOpen[i] = !isOpen[i];
-            setIsOpen(newIsOpen);
-          }}
         />
       ))}
     </div>
