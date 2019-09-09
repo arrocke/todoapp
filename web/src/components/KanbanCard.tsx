@@ -55,7 +55,9 @@ const KanbanCard: React.FC<KanbanCardProps> = ({
             padding: 8,
             margin: 0,
             border: 0,
-            fontSize: 14
+            fontSize: 14,
+            width: "100%",
+            boxSizing: "border-box"
           }}
           value={name}
           aria-label="Task Name"
