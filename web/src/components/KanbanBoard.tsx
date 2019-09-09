@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx, css } from "@emotion/core";
+import { jsx } from "@emotion/core";
 import { TaskState } from "../graphql/types";
 import KanbanList from "./KanbanList";
 import { KanbanTask } from "./KanbanCard";
@@ -27,32 +27,17 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   return (
     <div
       className={className}
-      css={css`
-        margin: 16px;
-        overflow-x: auto;
-        @media (min-width: 768px) {
-          display: flex;
-          justify-content: center;
-        }
-      `}
+      css={{
+        display: "flex"
+      }}
     >
       {Object.values(TaskState).map(status => (
         <KanbanList
-          css={[
-            css`
-              margin: 8px 0;
-              @media (min-width: 768px) {
-                margin: 0 8px;
-                width: 240px;
-                &:first-of-type: {
-                  margin-left: 0;
-                }
-                &:last-of-type: {
-                  margin-right: 0;
-                }
-              }
-            `
-          ]}
+          css={{
+            margin: 8,
+            width: 240,
+            flexShrink: 0
+          }}
           key={status}
           title={titleMap.get(status) || ""}
           tasks={tasks.filter(task => task.status === status)}
