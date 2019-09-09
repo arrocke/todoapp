@@ -7,43 +7,47 @@ interface KanbanListProps {
   className?: string;
   title: string;
   tasks: KanbanTask[];
+  isOpen: boolean;
   onTaskAdd?: () => void;
   onTaskChange?: (task: KanbanTask) => void;
+  onToggle?: () => void;
 }
 
 const KanbanList: React.FC<KanbanListProps> = ({
   className,
   title,
   tasks,
+  isOpen,
   onTaskAdd = () => {},
-  onTaskChange = () => {}
+  onTaskChange = () => {},
+  onToggle
 }) => {
-  const listElement = useRef<HTMLUListElement>(null);
-  const [isClosed, setClosed] = useState<boolean>(true);
-  const [listHeight, setListHeight] = useState<string>("0");
-
-  useLayoutEffect(() => {
-    if (listElement.current) {
-      setListHeight(`${listElement.current.clientHeight}px`);
-      if (isClosed) {
-        const timeout = setTimeout(() => {
-          setListHeight("0");
-        });
-        return () => clearTimeout(timeout);
-      }
-    }
-  }, [isClosed]);
-
   return (
     <div
       className={className}
       css={css`
+        flex-basis: 42px;
+        flex-shrink: ${isOpen ? "1" : "0"};
+        flex-grow: ${isOpen ? "1" : "0"};
         display: flex;
         flex-direction: column;
-        margin: 0;
+        margin: 8px 0;
         padding: 8px 0;
+        min-height: 0;
         background-color: #e8e8e8;
         border-radius: 8px;
+        transition: flex-grow 1s;
+        @media (min-width: 768px) {
+          flex: 1 1 auto;
+          margin: 0 8px;
+          width: 240px;
+          &:first-of-type: {
+            margin-left: 0;
+          }
+          &:last-of-type: {
+            margin-right: 0;
+          }
+        }
       `}
     >
       <h2
@@ -58,7 +62,7 @@ const KanbanList: React.FC<KanbanListProps> = ({
             border-bottom: 6px solid transparent;
             display: inline-block;
             transition: transform 0.8s;
-            ${isClosed ? "" : "transform: rotate(90deg)"}
+            ${isOpen ? "transform: rotate(90deg)" : ""}
           }
           @media (min-width: 768px) {
             &::before {
@@ -66,54 +70,38 @@ const KanbanList: React.FC<KanbanListProps> = ({
             }
           }
         `}
-        onClick={() => setClosed(closed => !closed)}
+        onClick={onToggle}
       >
         {title} ({tasks.length})
       </h2>
-      <div
+      <ul
         css={css`
-          height: ${listHeight};
-          transition: height 0.8s;
-          overflow: hidden;
-          @media (min-width: 768px) {
-            height: auto;
-          }
+          height: ${isOpen ? "100%" : "0"};
+          overflow: auto;
+          list-style-type: none;
+          flex-grow: 1;
+          margin: 0;
+          padding: 0;
+          min-height: 0;
         `}
-        onTransitionEnd={() =>
-          listElement.current &&
-          !isClosed &&
-          setListHeight(`${listElement.current.clientHeight}px`)
-        }
       >
-        <ul
-          ref={listElement}
-          css={{
-            listStyleType: "none",
-            flexGrow: 1,
-            margin: 0,
-            padding: 0,
-            minHeight: 0,
-            overflowY: "auto"
-          }}
-        >
-          {tasks.map(task => (
-            <KanbanCard
-              css={css`
-                margin: 8px;
-                &:first-of-type {
-                  margin-top: 0;
-                }
-                &:last-of-type {
-                  margin-bottom: 0;
-                }
-              `}
-              key={task.id}
-              task={task}
-              onTaskChange={onTaskChange}
-            />
-          ))}
-        </ul>
-      </div>
+        {tasks.map(task => (
+          <KanbanCard
+            css={css`
+              margin: 8px;
+              &:first-of-type {
+                margin-top: 0;
+              }
+              &:last-of-type {
+                margin-bottom: 0;
+              }
+            `}
+            key={task.id}
+            task={task}
+            onTaskChange={onTaskChange}
+          />
+        ))}
+      </ul>
     </div>
   );
 };
