@@ -258,6 +258,26 @@ export type SprintsQuery = (
   )> }
 );
 
+export type TaskQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type TaskQuery = (
+  { __typename?: 'Query' }
+  & { task: Maybe<(
+    { __typename?: 'Task' }
+    & Pick<Task, 'id' | 'name' | 'status'>
+    & { project: Maybe<(
+      { __typename?: 'Project' }
+      & Pick<Project, 'id' | 'name'>
+    )> }
+  )>, projects: Array<(
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name'>
+  )> }
+);
+
 export type TasksQueryVariables = {};
 
 
@@ -403,6 +423,33 @@ export const SprintsDocument = gql`
       
 export type SprintsQueryHookResult = ReturnType<typeof useSprintsQuery>;
 export type SprintsQueryResult = ApolloReactCommon.QueryResult<SprintsQuery, SprintsQueryVariables>;
+export const TaskDocument = gql`
+    query Task($id: ID!) {
+  task(id: $id) {
+    id
+    name
+    status
+    project {
+      id
+      name
+    }
+  }
+  projects {
+    id
+    name
+  }
+}
+    `;
+
+    export function useTaskQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TaskQuery, TaskQueryVariables>) {
+      return ApolloReactHooks.useQuery<TaskQuery, TaskQueryVariables>(TaskDocument, baseOptions);
+    };
+      export function useTaskLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TaskQuery, TaskQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<TaskQuery, TaskQueryVariables>(TaskDocument, baseOptions);
+      };
+      
+export type TaskQueryHookResult = ReturnType<typeof useTaskQuery>;
+export type TaskQueryResult = ApolloReactCommon.QueryResult<TaskQuery, TaskQueryVariables>;
 export const TasksDocument = gql`
     query Tasks {
   tasks {

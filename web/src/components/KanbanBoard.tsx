@@ -24,10 +24,10 @@ const listConfig: {
     prev: TaskState.Complete
   },
   {
-    status: TaskState.Complete,
-    title: "Complete",
-    next: TaskState.Todo,
-    prev: TaskState.Progress
+    status: TaskState.Todo,
+    title: "To Do",
+    next: TaskState.Progress,
+    prev: TaskState.Backlog
   },
   {
     status: TaskState.Progress,
@@ -36,10 +36,10 @@ const listConfig: {
     prev: TaskState.Todo
   },
   {
-    status: TaskState.Todo,
-    title: "To Do",
-    next: TaskState.Progress,
-    prev: TaskState.Backlog
+    status: TaskState.Complete,
+    title: "Complete",
+    next: TaskState.Todo,
+    prev: TaskState.Progress
   }
 ];
 
@@ -57,7 +57,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
         display: flex;
         justify-content: center;
         margin: 16px;
-        overflow-x: auto;
       `}
     >
       {listConfig.map(({ status, title, next, prev }) => (
