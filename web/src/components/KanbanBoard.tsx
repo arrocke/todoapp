@@ -82,6 +82,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           ]}
           key={status}
           title={title}
+          status={status}
           tasks={tasks.filter(task => task.status === status)}
           isVisible={visibleList === status}
           onTaskAdd={() => onTaskAdd({ id: "", name: "", status })}

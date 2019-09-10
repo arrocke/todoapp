@@ -37,6 +37,7 @@ const KanbanCard: React.FC<KanbanCardProps> = ({
   return (
     <li
       className={className}
+      draggable
       css={css`
         border-radius: 4px;
         box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.2);
@@ -46,6 +47,10 @@ const KanbanCard: React.FC<KanbanCardProps> = ({
           visibility: visible;
         }
       `}
+      onDragStart={e => {
+        e.dataTransfer.setData("task", JSON.stringify(task));
+        e.dataTransfer.dropEffect = "move";
+      }}
     >
       <div css={{ position: "relative" }}>
         <input

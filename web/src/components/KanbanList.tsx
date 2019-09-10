@@ -1,10 +1,12 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
 import KanbanCard, { KanbanTask } from "./KanbanCard";
+import { TaskState } from "../graphql/types";
 
 interface KanbanListProps {
   className?: string;
   title: string;
+  status: TaskState;
   tasks: KanbanTask[];
   isVisible: boolean;
   onTaskAdd?: () => void;
@@ -37,6 +39,7 @@ const KanbanList: React.FC<KanbanListProps> = ({
   className,
   title,
   tasks,
+  status,
   isVisible,
   onTaskAdd = () => {},
   onTaskChange = () => {},
@@ -57,6 +60,22 @@ const KanbanList: React.FC<KanbanListProps> = ({
           display: flex;
         }
       `}
+      onDragOver={e => {
+        if (e.dataTransfer.types.includes("task")) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        }
+      }}
+      onDrop={e => {
+        if (e.dataTransfer.types.includes("task")) {
+          e.preventDefault();
+          const task = JSON.parse(e.dataTransfer.getData("task")) as KanbanTask;
+          onTaskChange({
+            ...task,
+            status
+          });
+        }
+      }}
     >
       <div
         css={css`
