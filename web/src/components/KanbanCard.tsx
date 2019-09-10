@@ -29,6 +29,7 @@ const KanbanCard: React.FC<KanbanCardProps> = ({
     name: task.name || "",
     isDirty: false
   });
+  const [isDragging, setDragging] = useState<boolean>(false);
 
   useEffect(() => {
     setName({ name: task.name || "", isDirty: false });
@@ -50,18 +51,29 @@ const KanbanCard: React.FC<KanbanCardProps> = ({
       onDragStart={e => {
         e.dataTransfer.setData("task", JSON.stringify(task));
         e.dataTransfer.dropEffect = "move";
+        setDragging(true);
+      }}
+      onDragEnd={e => {
+        setDragging(false);
       }}
     >
-      <div css={{ position: "relative" }}>
+      <div
+        css={css`
+          position: relative;
+        `}
+      >
         <input
           type="text"
-          css={{
-            borderRadius: 6,
-            padding: 8,
-            margin: 0,
-            border: 0,
-            fontSize: 14
-          }}
+          css={css`
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 6px;
+            padding: 8px;
+            margin: 0;
+            border: 0;
+            font-size: 14px;
+            ${isDragging && "outline: none;"}
+          `}
           value={name}
           aria-label="Task Name"
           onChange={e => setName({ name: e.target.value, isDirty: true })}
@@ -70,6 +82,7 @@ const KanbanCard: React.FC<KanbanCardProps> = ({
         <IconEdit
           className="hover-icon"
           css={{
+            zIndex: 1,
             position: "absolute",
             width: 12,
             height: 12,
@@ -92,36 +105,6 @@ const KanbanCard: React.FC<KanbanCardProps> = ({
           </div>
         </div>
       )}
-      {/* <p css={{ marginTop: 0 }}>
-        <button
-          onClick={() =>
-            onTaskChange({ ...task, name, status: TaskState.Backlog })
-          }
-        >
-          B
-        </button>
-        <button
-          onClick={() =>
-            onTaskChange({ ...task, name, status: TaskState.Todo })
-          }
-        >
-          T
-        </button>
-        <button
-          onClick={() =>
-            onTaskChange({ ...task, name, status: TaskState.Progress })
-          }
-        >
-          P
-        </button>
-        <button
-          onClick={() =>
-            onTaskChange({ ...task, name, status: TaskState.Complete })
-          }
-        >
-          C
-        </button>
-      </p> */}
     </li>
   );
 };

@@ -2,6 +2,7 @@
 import { jsx, css } from "@emotion/core";
 import KanbanCard, { KanbanTask } from "./KanbanCard";
 import { TaskState } from "../graphql/types";
+import { useState } from "react";
 
 interface KanbanListProps {
   className?: string;
@@ -46,6 +47,11 @@ const KanbanList: React.FC<KanbanListProps> = ({
   onNextListClick,
   onPrevListClick
 }) => {
+  const [dragCount, setDragCount] = useState<number>(0);
+  const isDraggedOver = !!dragCount;
+
+  const filteredTasks = tasks.filter(task => task.status === status);
+
   return (
     <div
       className={className}
@@ -56,6 +62,8 @@ const KanbanList: React.FC<KanbanListProps> = ({
         padding: 0 0 8px 0;
         background-color: #e8e8e8;
         border-radius: 8px;
+        border: 2px solid transparent;
+        ${isDraggedOver && "border-color: black;"}
         @media (min-width: 768px) {
           display: flex;
         }
@@ -66,10 +74,21 @@ const KanbanList: React.FC<KanbanListProps> = ({
           e.dataTransfer.dropEffect = "move";
         }
       }}
+      onDragEnter={e => {
+        if (e.dataTransfer.types.includes("task")) {
+          setDragCount(dragCount + 1);
+        }
+      }}
+      onDragLeave={e => {
+        if (e.dataTransfer.types.includes("task")) {
+          setDragCount(dragCount - 1);
+        }
+      }}
       onDrop={e => {
         if (e.dataTransfer.types.includes("task")) {
           e.preventDefault();
           const task = JSON.parse(e.dataTransfer.getData("task")) as KanbanTask;
+          setDragCount(0);
           onTaskChange({
             ...task,
             status
@@ -122,24 +141,22 @@ const KanbanList: React.FC<KanbanListProps> = ({
         />
       </div>
       <ul
-        css={{
-          listStyleType: "none",
-          flexGrow: 1,
-          margin: 0,
-          padding: 0,
-          minHeight: 0,
-          overflowY: "auto"
-        }}
+        css={css`
+          list-style-type: none;
+          flex-grow: 1;
+          margin: 0;
+          padding: 0;
+          min-height: 0;
+          overflow-y: auto;
+        `}
       >
-        {tasks.map(task => (
+        {filteredTasks.map(task => (
           <KanbanCard
             css={css`
               margin: 8px;
-
               &:first-of-type {
                 margin-top: 0;
               }
-
               &:last-of-type {
                 margin-bottom: 0;
               }

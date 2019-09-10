@@ -70,7 +70,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
               width: 100%;
               @media (min-width: 768px) {
                 margin: 0 8px;
-                width: 240px;
+                width: 360px;
                 &:first-of-type: {
                   margin-left: 0;
                 }
@@ -83,7 +83,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           key={status}
           title={title}
           status={status}
-          tasks={tasks.filter(task => task.status === status)}
+          tasks={tasks}
           isVisible={visibleList === status}
           onTaskAdd={() => onTaskAdd({ id: "", name: "", status })}
           onTaskChange={onTaskChange}
