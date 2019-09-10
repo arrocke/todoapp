@@ -2,15 +2,10 @@
 import { jsx } from "@emotion/core";
 import LoadingContainer from "../components/LoadingContainer";
 import KanbanBoard from "../components/KanbanBoard";
-import {
-  useTasksQuery,
-  useCreateTaskMutation,
-  useUpdateTaskMutation
-} from "../graphql/types";
+import { useTasksQuery, useUpdateTaskMutation } from "../graphql/types";
 
 const TasksView: React.FC = () => {
   const { data, loading } = useTasksQuery();
-  const [createTask] = useCreateTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
 
   return (
@@ -30,11 +25,6 @@ const TasksView: React.FC = () => {
             flexGrow: 1
           }}
           tasks={data.tasks}
-          onTaskAdd={({ name, status }) =>
-            createTask({
-              variables: { input: { name, status } }
-            })
-          }
           onTaskChange={({ id, name, status }) =>
             updateTask({
               variables: {

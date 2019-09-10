@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import ProjectsView from "./views/ProjectsView";
 import ProjectView from "./views/ProjectView";
 import TasksView from "./views/TasksView";
+import TaskView from "./views/TaskView";
 import Navigation from "./components/Navigation";
 import SprintsView from "./views/SprintsView";
 import SprintView from "./views/SprintView";
@@ -18,6 +19,7 @@ const App: React.FC = () => {
         <Route exact path="/projects" component={ProjectsView} />
         <Route exact path="/projects/:id" component={ProjectView} />
         <Route exact path="/tasks" component={TasksView} />
+        <Route exact path="/tasks/:id" component={TaskView} />
         <Route exact path="/sprints" component={SprintsView} />
         <Route exact path="/sprints/:id" component={SprintView} />
       </Router>

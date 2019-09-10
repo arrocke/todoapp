@@ -8,7 +8,6 @@ import { useState } from "react";
 interface KanbanBoardProps {
   className?: string;
   tasks: KanbanTask[];
-  onTaskAdd?: (task: KanbanTask) => void;
   onTaskChange?: (task: KanbanTask) => void;
 }
 
@@ -47,7 +46,6 @@ const listConfig: {
 const KanbanBoard: React.FC<KanbanBoardProps> = ({
   className,
   tasks,
-  onTaskAdd = () => {},
   onTaskChange = () => {}
 }) => {
   const [visibleList, setVisibleList] = useState<string>("progress");
@@ -85,7 +83,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           status={status}
           tasks={tasks}
           isVisible={visibleList === status}
-          onTaskAdd={() => onTaskAdd({ id: "", name: "", status })}
           onTaskChange={onTaskChange}
           onNextListClick={() => setVisibleList(next)}
           onPrevListClick={() => setVisibleList(prev)}

@@ -10,7 +10,6 @@ interface KanbanListProps {
   status: TaskState;
   tasks: KanbanTask[];
   isVisible: boolean;
-  onTaskAdd?: () => void;
   onTaskChange?: (task: KanbanTask) => void;
   onPrevListClick?: () => void;
   onNextListClick?: () => void;
@@ -42,7 +41,6 @@ const KanbanList: React.FC<KanbanListProps> = ({
   tasks,
   status,
   isVisible,
-  onTaskAdd = () => {},
   onTaskChange = () => {},
   onNextListClick,
   onPrevListClick
@@ -163,7 +161,6 @@ const KanbanList: React.FC<KanbanListProps> = ({
             `}
             key={task.id}
             task={task}
-            onTaskChange={onTaskChange}
           />
         ))}
       </ul>
