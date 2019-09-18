@@ -10,7 +10,7 @@ const ViewTitle: React.FC = ({ children }) => {
         fontSize: "2em",
         fontWeight: "bold",
         [breakpoints.medium]: {
-          margin: "16px 36px"
+          margin: "16px 32px"
         }
       }}
     >

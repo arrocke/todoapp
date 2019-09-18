@@ -4,6 +4,7 @@ import { TaskState } from "../graphql/types";
 import KanbanList from "./KanbanList";
 import { KanbanTask } from "./KanbanCard";
 import { useState } from "react";
+import { breakpoints } from "../styles";
 
 interface KanbanBoardProps {
   className?: string;
@@ -61,22 +62,19 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
     >
       {listConfig.map(({ status, title, next, prev }) => (
         <KanbanList
-          css={[
-            css`
-              margin: 8px 0;
-              width: 100%;
-              @media (min-width: 768px) {
-                margin: 0 8px;
-                width: 360px;
-                &:first-of-type: {
-                  margin-left: 0;
-                }
-                &:last-of-type: {
-                  margin-right: 0;
-                }
+          css={{
+            margin: "8px 0",
+            width: "100%",
+            [breakpoints.medium]: {
+              margin: "0 8px",
+              "&:first-of-type": {
+                marginLeft: 0
+              },
+              "&:last-of-type": {
+                marginRight: 0
               }
-            `
-          ]}
+            }
+          }}
           key={status}
           title={title}
           status={status}
