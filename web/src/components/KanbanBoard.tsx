@@ -56,7 +56,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       css={css`
         display: flex;
         justify-content: center;
-        margin: 16px;
+        margin: 0 16px 16px 16px;
       `}
     >
       {listConfig.map(({ status, title, next, prev }) => (
