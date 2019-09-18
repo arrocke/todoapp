@@ -1,27 +1,50 @@
 /** @jsx jsx */
-import { jsx, css } from "@emotion/core";
-import { Link } from "react-router-dom";
+import { jsx } from "@emotion/core";
+import { Link, LinkProps } from "react-router-dom";
+import { breakpoints } from "../styles";
 
-const linkStyles = css({
-  margin: 8
-});
+interface NavigationLinkProps extends LinkProps {
+  children: string;
+}
+
+const NavigationLink: React.FC<NavigationLinkProps> = ({
+  children,
+  ...props
+}) => {
+  return (
+    <Link
+      {...props}
+      css={{
+        margin: "0 8px",
+        textDecoration: "none",
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "black",
+        height: 44,
+        lineHeight: "44px"
+      }}
+    >
+      {children.toUpperCase()}
+    </Link>
+  );
+};
 
 const Navigation: React.FC = () => {
   return (
     <nav
       css={{
-        display: "flex"
+        display: "flex",
+        justifyContent: "center",
+        borderTop: "1px solid black",
+        [breakpoints.medium]: {
+          borderTop: 0,
+          borderBottom: "1px solid black"
+        }
       }}
     >
-      <Link css={linkStyles} to="/projects">
-        Projects
-      </Link>
-      <Link css={linkStyles} to="/tasks">
-        Tasks
-      </Link>
-      <Link css={linkStyles} to="/sprints">
-        Sprints
-      </Link>
+      <NavigationLink to="/projects">Projects</NavigationLink>
+      <NavigationLink to="/tasks">Tasks</NavigationLink>
+      <NavigationLink to="/sprints">Sprints</NavigationLink>
     </nav>
   );
 };

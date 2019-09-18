@@ -10,18 +10,33 @@ import SprintsView from "./views/SprintsView";
 import SprintView from "./views/SprintView";
 import { ApolloProvider } from "@apollo/react-hooks";
 import client from "./graphql/client";
+import { breakpoints } from "./styles";
 
 const App: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <Router>
-        <Navigation />
-        <Route exact path="/projects" component={ProjectsView} />
-        <Route exact path="/projects/:id" component={ProjectView} />
-        <Route exact path="/tasks" component={TasksView} />
-        <Route exact path="/tasks/:id" component={TaskView} />
-        <Route exact path="/sprints" component={SprintsView} />
-        <Route exact path="/sprints/:id" component={SprintView} />
+        <div
+          css={{
+            display: "flex",
+            flexDirection: "column-reverse",
+            height: "100%",
+            "& > div": {
+              minHeight: 0
+            },
+            [breakpoints.medium]: {
+              flexDirection: "column"
+            }
+          }}
+        >
+          <Navigation />
+          <Route exact path="/projects" component={ProjectsView} />
+          <Route exact path="/projects/:id" component={ProjectView} />
+          <Route exact path="/tasks" component={TasksView} />
+          <Route exact path="/tasks/:id" component={TaskView} />
+          <Route exact path="/sprints" component={SprintsView} />
+          <Route exact path="/sprints/:id" component={SprintView} />
+        </div>
       </Router>
     </ApolloProvider>
   );
