@@ -1,7 +1,8 @@
 import { Interpolation } from "@emotion/css";
 
 export const breakpoints = {
-  medium: "@media (min-width: 768px)"
+  medium: "@media (min-width: 768px)",
+  large: "@media (min-width: 1280px)"
 };
 
 export const readerOnly: Interpolation = {

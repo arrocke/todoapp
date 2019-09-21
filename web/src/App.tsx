@@ -30,12 +30,25 @@ const App: React.FC = () => {
           }}
         >
           <Navigation />
-          <Route exact path="/projects" component={ProjectsView} />
-          <Route exact path="/projects/:id" component={ProjectView} />
-          <Route exact path="/tasks" component={TasksView} />
-          <Route exact path="/tasks/:id" component={TaskView} />
-          <Route exact path="/sprints" component={SprintsView} />
-          <Route exact path="/sprints/:id" component={SprintView} />
+          <div
+            css={{
+              flexGrow: 1,
+              [breakpoints.large]: {
+                display: "flex",
+                justifyContent: "center",
+                "& > div": {
+                  width: 1280
+                }
+              }
+            }}
+          >
+            <Route exact path="/projects" component={ProjectsView} />
+            <Route exact path="/projects/:id" component={ProjectView} />
+            <Route exact path="/tasks" component={TasksView} />
+            <Route exact path="/tasks/:id" component={TaskView} />
+            <Route exact path="/sprints" component={SprintsView} />
+            <Route exact path="/sprints/:id" component={SprintView} />
+          </div>
         </div>
       </Router>
     </ApolloProvider>
