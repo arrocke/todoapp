@@ -68,7 +68,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ className, sprint }) => {
             css={{
               fontSize: 12,
               fontWeight: "bold",
-              margin: "2px 0 2px 16px"
+              margin: "0 0 0 16px"
             }}
           >
             {sprintDateInfo(

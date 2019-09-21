@@ -63,7 +63,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       {listConfig.map(({ status, title, next, prev }) => (
         <KanbanList
           css={{
-            margin: "8px 0",
             width: "100%",
             [breakpoints.medium]: {
               margin: "0 8px",
