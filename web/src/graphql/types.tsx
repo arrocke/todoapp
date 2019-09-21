@@ -10,7 +10,7 @@ export type Scalars = {
   Boolean: boolean,
   Int: number,
   Float: number,
-  Date: any,
+  Date: string,
 };
 
 export type AddToSprintInput = {
@@ -293,6 +293,7 @@ export type SprintsQuery = (
   & { sprints: Array<(
     { __typename?: 'Sprint' }
     & Pick<Sprint, 'id' | 'startDate' | 'endDate'>
+    & { backlogCount: Sprint['taskCount'], todoCount: Sprint['taskCount'], progressCount: Sprint['taskCount'], completeCount: Sprint['taskCount'] }
   )> }
 );
 
@@ -452,6 +453,10 @@ export const SprintsDocument = gql`
     id
     startDate
     endDate
+    backlogCount: taskCount(input: {status: backlog})
+    todoCount: taskCount(input: {status: todo})
+    progressCount: taskCount(input: {status: progress})
+    completeCount: taskCount(input: {status: complete})
   }
 }
     `;

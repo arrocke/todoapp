@@ -3,5 +3,9 @@ query Sprints {
     id
     startDate
     endDate
+    backlogCount: taskCount(input: { status: backlog })
+    todoCount: taskCount(input: { status: todo })
+    progressCount: taskCount(input: { status: progress })
+    completeCount: taskCount(input: { status: complete })
   }
 }
