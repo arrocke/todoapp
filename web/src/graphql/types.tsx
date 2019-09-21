@@ -91,6 +91,17 @@ export type Project = {
   id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
   tasks: Array<Task>,
+  taskCount: Scalars['Int'],
+};
+
+
+export type ProjectTasksArgs = {
+  input?: Maybe<SearchTasksInput>
+};
+
+
+export type ProjectTaskCountArgs = {
+  input?: Maybe<SearchTasksInput>
 };
 
 export type Query = {
@@ -98,6 +109,7 @@ export type Query = {
   projects: Array<Project>,
   project?: Maybe<Project>,
   tasks: Array<Task>,
+  taskCount: Scalars['Int'],
   task?: Maybe<Task>,
   sprints: Array<Sprint>,
   sprint?: Maybe<Sprint>,
@@ -106,6 +118,16 @@ export type Query = {
 
 export type QueryProjectArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryTasksArgs = {
+  input?: Maybe<SearchTasksInput>
+};
+
+
+export type QueryTaskCountArgs = {
+  input?: Maybe<SearchTasksInput>
 };
 
 
@@ -123,12 +145,27 @@ export type RemoveFromSprintInput = {
   task: Scalars['ID'],
 };
 
+export type SearchTasksInput = {
+  status?: Maybe<Array<TaskState>>,
+};
+
 export type Sprint = {
   __typename?: 'Sprint',
   id: Scalars['ID'],
   startDate: Scalars['Date'],
   endDate: Scalars['Date'],
   tasks: Array<Task>,
+  taskCount: Scalars['Int'],
+};
+
+
+export type SprintTasksArgs = {
+  input?: Maybe<SearchTasksInput>
+};
+
+
+export type SprintTaskCountArgs = {
+  input?: Maybe<SearchTasksInput>
 };
 
 export type Task = {
@@ -223,6 +260,7 @@ export type ProjectsQuery = (
   & { projects: Array<(
     { __typename?: 'Project' }
     & Pick<Project, 'id' | 'name'>
+    & { backlogCount: Project['taskCount'], todoCount: Project['taskCount'], progressCount: Project['taskCount'], completeCount: Project['taskCount'] }
   )> }
 );
 
@@ -363,6 +401,10 @@ export const ProjectsDocument = gql`
   projects {
     id
     name
+    backlogCount: taskCount(input: {status: backlog})
+    todoCount: taskCount(input: {status: todo})
+    progressCount: taskCount(input: {status: progress})
+    completeCount: taskCount(input: {status: complete})
   }
 }
     `;

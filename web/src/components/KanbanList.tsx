@@ -20,7 +20,7 @@ const listButtonStyle = css`
   height: 50px;
   flex-shrink: 0;
   padding: 0;
-  margin: 0;
+  margin: -8px 0 0 0;
   border: none;
   background: inherit;
   &::before {
@@ -57,11 +57,14 @@ const KanbanList: React.FC<KanbanListProps> = ({
         display: ${isVisible ? "flex" : "none"};
         flex-direction: column;
         margin: 0;
-        padding: 0 0 8px 0;
+        padding: 8px 8px 16px 8px;
         background-color: #e8e8e8;
         border-radius: 8px;
-        border: 2px solid transparent;
-        ${isDraggedOver && "border-color: black;"}
+        ${isDraggedOver &&
+          `
+          border: 2px solid black;
+          padding: 6px 6px 14px 6px;
+        `}
         @media (min-width: 768px) {
           display: flex;
         }
@@ -103,6 +106,7 @@ const KanbanList: React.FC<KanbanListProps> = ({
           css={[
             listButtonStyle,
             css`
+              margin-left: -8px;
               &::before {
                 border-right: 8px solid black;
               }
@@ -113,13 +117,13 @@ const KanbanList: React.FC<KanbanListProps> = ({
         />
         <h2
           css={css`
-            margin: 16px 16px 16px 0;
+            margin: 8px 8px 16px 0;
             width: 100%;
             font-size: 16px;
             text-align: center;
             @media (min-width: 768px) {
               text-align: left;
-              margin: 16px;
+              margin: 8px 8px 16px 8px;
             }
           `}
         >
@@ -129,6 +133,7 @@ const KanbanList: React.FC<KanbanListProps> = ({
           css={[
             listButtonStyle,
             css`
+              margin-right: -8px;
               &::before {
                 border-left: 8px solid black;
               }
@@ -151,7 +156,7 @@ const KanbanList: React.FC<KanbanListProps> = ({
         {filteredTasks.map(task => (
           <KanbanCard
             css={css`
-              margin: 8px;
+              margin: 8px 0;
               &:first-of-type {
                 margin-top: 0;
               }

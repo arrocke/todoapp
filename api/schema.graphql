@@ -3,7 +3,8 @@ scalar Date
 type Project {
   id: ID!
   name: String
-  tasks: [Task!]!
+  tasks(input: SearchTasksInput): [Task!]!
+  taskCount(input: SearchTasksInput): Int!
 }
 
 input CreateProjectInput {
@@ -13,6 +14,10 @@ input CreateProjectInput {
 input UpdateProjectInput {
   id: ID!
   name: String
+}
+
+input SearchTasksInput {
+  status: [TaskState!]
 }
 
 enum TaskState {
@@ -47,7 +52,8 @@ type Sprint {
   id: ID!
   startDate: Date!
   endDate: Date!
-  tasks: [Task!]!
+  tasks(input: SearchTasksInput): [Task!]!
+  taskCount(input: SearchTasksInput): Int!
 }
 
 input CreateSprintInput {
@@ -74,7 +80,8 @@ input RemoveFromSprintInput {
 type Query {
   projects: [Project!]!
   project(id: ID!): Project
-  tasks: [Task!]!
+  tasks(input: SearchTasksInput): [Task!]!
+  taskCount(input: SearchTasksInput): Int!
   task(id: ID!): Task
   sprints: [Sprint!]!
   sprint(id: ID!): Sprint

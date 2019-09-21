@@ -24,8 +24,17 @@ export const ProjectQuery: QueryResolvers = {
 
 const Project: ProjectResolvers = {
   id: project => project._id.toHexString(),
-  async tasks(project) {
-    return await TaskModel.find({ project: project._id });
+  async tasks(project, { input: { status } = {} }) {
+    return await TaskModel.find({
+      project: project._id,
+      ...(status && { status: { $in: status } })
+    });
+  },
+  async taskCount(project, { input: { status } = {} }) {
+    return await TaskModel.find({
+      project: project._id,
+      ...(status && { status: { $in: status } })
+    }).countDocuments();
   }
 };
 

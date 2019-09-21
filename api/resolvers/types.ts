@@ -90,6 +90,15 @@ export type Project = {
   id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
   tasks: Array<Task>;
+  taskCount: Scalars["Int"];
+};
+
+export type ProjectTasksArgs = {
+  input?: Maybe<SearchTasksInput>;
+};
+
+export type ProjectTaskCountArgs = {
+  input?: Maybe<SearchTasksInput>;
 };
 
 export type Query = {
@@ -97,6 +106,7 @@ export type Query = {
   projects: Array<Project>;
   project?: Maybe<Project>;
   tasks: Array<Task>;
+  taskCount: Scalars["Int"];
   task?: Maybe<Task>;
   sprints: Array<Sprint>;
   sprint?: Maybe<Sprint>;
@@ -104,6 +114,14 @@ export type Query = {
 
 export type QueryProjectArgs = {
   id: Scalars["ID"];
+};
+
+export type QueryTasksArgs = {
+  input?: Maybe<SearchTasksInput>;
+};
+
+export type QueryTaskCountArgs = {
+  input?: Maybe<SearchTasksInput>;
 };
 
 export type QueryTaskArgs = {
@@ -119,12 +137,25 @@ export type RemoveFromSprintInput = {
   task: Scalars["ID"];
 };
 
+export type SearchTasksInput = {
+  status?: Maybe<Array<TaskState>>;
+};
+
 export type Sprint = {
   __typename?: "Sprint";
   id: Scalars["ID"];
   startDate: Scalars["Date"];
   endDate: Scalars["Date"];
   tasks: Array<Task>;
+  taskCount: Scalars["Int"];
+};
+
+export type SprintTasksArgs = {
+  input?: Maybe<SearchTasksInput>;
+};
+
+export type SprintTaskCountArgs = {
+  input?: Maybe<SearchTasksInput>;
 };
 
 export type Task = {
@@ -270,10 +301,12 @@ export type ResolversTypes = ResolversObject<{
   Project: ResolverTypeWrapper<ProjectDocument>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   String: ResolverTypeWrapper<Scalars["String"]>;
-  Task: ResolverTypeWrapper<TaskDocument>;
+  SearchTasksInput: SearchTasksInput;
   TaskState: TaskState;
+  Task: ResolverTypeWrapper<TaskDocument>;
   Sprint: ResolverTypeWrapper<SprintDocument>;
   Date: ResolverTypeWrapper<Scalars["Date"]>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Mutation: ResolverTypeWrapper<{}>;
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
@@ -292,10 +325,12 @@ export type ResolversParentTypes = ResolversObject<{
   Project: ProjectDocument;
   ID: Scalars["ID"];
   String: Scalars["String"];
-  Task: TaskDocument;
+  SearchTasksInput: SearchTasksInput;
   TaskState: TaskState;
+  Task: TaskDocument;
   Sprint: SprintDocument;
   Date: Scalars["Date"];
+  Int: Scalars["Int"];
   Mutation: {};
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
@@ -373,7 +408,18 @@ export type ProjectResolvers<
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  tasks?: Resolver<Array<ResolversTypes["Task"]>, ParentType, ContextType>;
+  tasks?: Resolver<
+    Array<ResolversTypes["Task"]>,
+    ParentType,
+    ContextType,
+    ProjectTasksArgs
+  >;
+  taskCount?: Resolver<
+    ResolversTypes["Int"],
+    ParentType,
+    ContextType,
+    ProjectTaskCountArgs
+  >;
 }>;
 
 export type QueryResolvers<
@@ -391,7 +437,18 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryProjectArgs, "id">
   >;
-  tasks?: Resolver<Array<ResolversTypes["Task"]>, ParentType, ContextType>;
+  tasks?: Resolver<
+    Array<ResolversTypes["Task"]>,
+    ParentType,
+    ContextType,
+    QueryTasksArgs
+  >;
+  taskCount?: Resolver<
+    ResolversTypes["Int"],
+    ParentType,
+    ContextType,
+    QueryTaskCountArgs
+  >;
   task?: Resolver<
     Maybe<ResolversTypes["Task"]>,
     ParentType,
@@ -414,7 +471,18 @@ export type SprintResolvers<
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes["Date"], ParentType, ContextType>;
-  tasks?: Resolver<Array<ResolversTypes["Task"]>, ParentType, ContextType>;
+  tasks?: Resolver<
+    Array<ResolversTypes["Task"]>,
+    ParentType,
+    ContextType,
+    SprintTasksArgs
+  >;
+  taskCount?: Resolver<
+    ResolversTypes["Int"],
+    ParentType,
+    ContextType,
+    SprintTaskCountArgs
+  >;
 }>;
 
 export type TaskResolvers<

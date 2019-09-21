@@ -16,8 +16,15 @@ export const TaskMutation: MutationResolvers = {
 };
 
 export const TaskQuery: QueryResolvers = {
-  async tasks() {
-    return await TaskModel.find({});
+  async tasks(_, { input: { status } = {} }) {
+    return await TaskModel.find({
+      ...(status && { status: { $in: status } })
+    });
+  },
+  async taskCount(_, { input: { status } = {} }) {
+    return await TaskModel.find({
+      ...(status && { status: { $in: status } })
+    }).countDocuments();
   },
   async task(_, { id }) {
     return await TaskModel.findById(id);

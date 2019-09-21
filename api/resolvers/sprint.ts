@@ -65,9 +65,20 @@ export const SprintQuery: QueryResolvers = {
 
 const Sprint: SprintResolvers = {
   id: sprint => sprint._id.toHexString(),
-  async tasks(sprint) {
-    await sprint.populate("tasks").execPopulate();
+  async tasks(sprint, { input: { status } = {} }) {
+    await sprint
+      .populate({
+        path: "tasks",
+        ...(status && { status: { $in: status } })
+      })
+      .execPopulate();
     return asDocuments<TaskDocument>(sprint.tasks);
+  },
+  async taskCount(sprint, { input: { status } = {} }) {
+    return await TaskModel.find({
+      sprint: sprint._id,
+      ...(status && { status: { $in: status } })
+    }).countDocuments();
   }
 };
 
