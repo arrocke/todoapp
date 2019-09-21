@@ -88,11 +88,11 @@ type Query {
 }
 
 type Mutation {
-  createProject(input: CreateProjectInput!): Project!
+  createProject(input: CreateProjectInput): Project!
   updateProject(input: UpdateProjectInput!): Project
-  createTask(input: CreateTaskInput!): Task!
+  createTask(input: CreateTaskInput): Task!
   updateTask(input: UpdateTaskInput!): Task
-  createSprint(input: CreateSprintInput!): Sprint!
+  createSprint(input: CreateSprintInput): Sprint!
   updateSprint(input: UpdateSprintInput!): Sprint
   addToSprint(input: AddToSprintInput!): Sprint
   removeFromSprint(input: RemoveFromSprintInput!): Sprint

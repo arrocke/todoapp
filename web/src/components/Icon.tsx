@@ -1,7 +1,7 @@
 import React from "react";
 
 interface IconProps {
-  type: "cross" | "check" | "pencil";
+  type: "cross" | "check" | "pencil" | "plus";
   className?: string;
 }
 
@@ -48,6 +48,22 @@ const Icon: React.FC<IconProps> = ({ className, type }) => {
           <g>
             <g id="create">
               <path d="M0,362.1V459h96.9l280.5-283.05l-96.9-96.9L0,362.1z M451.35,102c10.2-10.2,10.2-25.5,0-35.7L392.7,7.649    c-10.2-10.2-25.5-10.2-35.7,0l-45.9,45.9l96.9,96.9L451.35,102z" />
+            </g>
+          </g>
+        </svg>
+      );
+    case "plus":
+      return (
+        <svg
+          className={className}
+          width="357px"
+          height="357px"
+          viewBox="0 0 357 357"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g>
+            <g>
+              <path d="M357,204H204v153h-51V204H0v-51h153V0h51v153h153V204z" />
             </g>
           </g>
         </svg>

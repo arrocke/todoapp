@@ -48,7 +48,7 @@ export type Mutation = {
 
 
 export type MutationCreateProjectArgs = {
-  input: CreateProjectInput
+  input?: Maybe<CreateProjectInput>
 };
 
 
@@ -58,7 +58,7 @@ export type MutationUpdateProjectArgs = {
 
 
 export type MutationCreateTaskArgs = {
-  input: CreateTaskInput
+  input?: Maybe<CreateTaskInput>
 };
 
 
@@ -68,7 +68,7 @@ export type MutationUpdateTaskArgs = {
 
 
 export type MutationCreateSprintArgs = {
-  input: CreateSprintInput
+  input?: Maybe<CreateSprintInput>
 };
 
 
@@ -201,6 +201,19 @@ export type UpdateTaskInput = {
   status: TaskState,
   project?: Maybe<Scalars['ID']>,
 };
+export type CreateProjectMutationVariables = {
+  input?: Maybe<CreateProjectInput>
+};
+
+
+export type CreateProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { createProject: (
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name'>
+  ) }
+);
+
 export type CreateTaskMutationVariables = {
   input: CreateTaskInput
 };
@@ -345,6 +358,22 @@ export type TasksQuery = (
   )> }
 );
 
+export const CreateProjectDocument = gql`
+    mutation CreateProject($input: CreateProjectInput) {
+  createProject(input: $input) {
+    id
+    name
+  }
+}
+    `;
+export type CreateProjectMutationFn = ApolloReactCommon.MutationFunction<CreateProjectMutation, CreateProjectMutationVariables>;
+
+    export function useCreateProjectMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateProjectMutation, CreateProjectMutationVariables>) {
+      return ApolloReactHooks.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument, baseOptions);
+    };
+export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
+export type CreateProjectMutationResult = ApolloReactCommon.MutationResult<CreateProjectMutation>;
+export type CreateProjectMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
 export const CreateTaskDocument = gql`
     mutation CreateTask($input: CreateTaskInput!) {
   createTask(input: $input) {

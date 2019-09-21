@@ -54,7 +54,7 @@ export type Mutation = {
 };
 
 export type MutationCreateProjectArgs = {
-  input: CreateProjectInput;
+  input?: Maybe<CreateProjectInput>;
 };
 
 export type MutationUpdateProjectArgs = {
@@ -62,7 +62,7 @@ export type MutationUpdateProjectArgs = {
 };
 
 export type MutationCreateTaskArgs = {
-  input: CreateTaskInput;
+  input?: Maybe<CreateTaskInput>;
 };
 
 export type MutationUpdateTaskArgs = {
@@ -70,7 +70,7 @@ export type MutationUpdateTaskArgs = {
 };
 
 export type MutationCreateSprintArgs = {
-  input: CreateSprintInput;
+  input?: Maybe<CreateSprintInput>;
 };
 
 export type MutationUpdateSprintArgs = {
@@ -356,7 +356,7 @@ export type MutationResolvers<
     ResolversTypes["Project"],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateProjectArgs, "input">
+    MutationCreateProjectArgs
   >;
   updateProject?: Resolver<
     Maybe<ResolversTypes["Project"]>,
@@ -368,7 +368,7 @@ export type MutationResolvers<
     ResolversTypes["Task"],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateTaskArgs, "input">
+    MutationCreateTaskArgs
   >;
   updateTask?: Resolver<
     Maybe<ResolversTypes["Task"]>,
@@ -380,7 +380,7 @@ export type MutationResolvers<
     ResolversTypes["Sprint"],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateSprintArgs, "input">
+    MutationCreateSprintArgs
   >;
   updateSprint?: Resolver<
     Maybe<ResolversTypes["Sprint"]>,

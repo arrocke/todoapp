@@ -5,7 +5,7 @@ import { SprintDocument } from "../models/sprint";
 import { ProjectDocument } from "../models/project";
 
 export const TaskMutation: MutationResolvers = {
-  async createTask(_, { input }) {
+  async createTask(_, { input = {} }) {
     return await TaskModel.create(input);
   },
   async updateTask(_, { input: { id, ...fields } }) {

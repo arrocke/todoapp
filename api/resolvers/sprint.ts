@@ -4,7 +4,7 @@ import SprintModel from "../models/sprint";
 import { asDocuments } from "../utils";
 
 export const SprintMutation: MutationResolvers = {
-  async createSprint(_, { input }) {
+  async createSprint(_, { input = {} }) {
     return await SprintModel.create(input);
   },
   async updateSprint(_, { input: { id, ...fields } }) {

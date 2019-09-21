@@ -6,6 +6,7 @@ import LoadingSpinner from "./LoadingSpinner";
 
 interface ViewTitleProps {
   title?: string;
+  placeholder?: string;
   saving?: boolean;
   onChange?(title?: string): void;
 }
@@ -14,7 +15,7 @@ const ViewTitle: React.FC<ViewTitleProps> = ({
   title,
   saving,
   onChange,
-  children
+  placeholder
 }) => {
   const input = useRef<HTMLInputElement>(null);
   const timeout = useRef<number>();
@@ -72,6 +73,7 @@ const ViewTitle: React.FC<ViewTitleProps> = ({
       >
         <input
           name="title"
+          placeholder={placeholder || "Enter title..."}
           ref={input}
           css={{
             boxSizing: "border-box",
@@ -89,7 +91,8 @@ const ViewTitle: React.FC<ViewTitleProps> = ({
               position: "relative"
             },
             "&:disabled": {
-              color: "inherit"
+              color: "inherit",
+              backgroundColor: "inherit"
             }
           }}
           disabled={!canEdit}

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { readerOnly } from "../styles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
 interface LoadingContainerProps {
@@ -18,11 +18,19 @@ const LoadingContainer: React.FC<LoadingContainerProps> = ({
   loadingText = "Content Loading",
   loadedText = "Content Loaded"
 }) => {
-  const [stall, setStall] = useState<boolean>(true);
+  const [stall, setStall] = useState<boolean>(false);
+  const [defer, setDefer] = useState<boolean>(true);
 
   useEffect(() => {
-    setStall(false);
+    setDefer(false);
   }, []);
+
+  useLayoutEffect(() => {
+    if (isLoading) {
+      setStall(true);
+      setTimeout(() => setStall(false), 500);
+    }
+  }, [isLoading]);
 
   const loader = (
     <div
@@ -40,9 +48,9 @@ const LoadingContainer: React.FC<LoadingContainerProps> = ({
   return (
     <div className={className}>
       <div css={readerOnly} role="alert" aria-live="assertive">
-        {!stall && <p>{isLoading ? loadingText : loadedText}</p>}
+        {!defer && <p>{isLoading || stall ? loadingText : loadedText}</p>}
       </div>
-      {isLoading ? loader : children}
+      {isLoading || stall ? loader : children}
     </div>
   );
 };

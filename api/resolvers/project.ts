@@ -3,7 +3,7 @@ import ProjectModel from "../models/project";
 import TaskModel from "../models/task";
 
 export const ProjectMutation: MutationResolvers = {
-  async createProject(_, { input }) {
+  async createProject(_, { input = {} }) {
     return await ProjectModel.create(input);
   },
   async updateProject(_, { input: { id, ...fields } }) {
