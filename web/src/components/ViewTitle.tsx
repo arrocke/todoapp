@@ -1,16 +1,20 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 
-const ViewTitle: React.FC = ({ children }) => {
+interface ViewTitleProps {
+  title?: string;
+}
+
+const ViewTitle: React.FC<ViewTitleProps> = ({ title, children }) => {
   return (
     <h1
       css={{
-        margin: "16px 32px",
+        margin: 0,
         fontSize: "2em",
         fontWeight: "bold"
       }}
     >
-      {children}
+      {title}
     </h1>
   );
 };

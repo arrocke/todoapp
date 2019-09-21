@@ -2,8 +2,9 @@
 import { jsx } from "@emotion/core";
 import LoadingContainer from "../components/LoadingContainer";
 import { useSprintsQuery } from "../graphql/types";
-import ViewTitle from "../components/ViewTitle";
+import ViewHeader from "../components/ViewHeader";
 import SprintCard from "../components/SprintCard";
+import ViewTitle from "../components/ViewTitle";
 
 const SprintsView: React.FC = () => {
   const { data, loading } = useSprintsQuery();
@@ -17,7 +18,9 @@ const SprintsView: React.FC = () => {
       }}
       isLoading={loading}
     >
-      <ViewTitle>Sprints</ViewTitle>
+      <ViewHeader>
+        <ViewTitle title="Sprints" />
+      </ViewHeader>
       <ul
         css={{
           padding: "8px 0",

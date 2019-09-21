@@ -5,6 +5,7 @@ import { RouteComponentProps } from "react-router";
 import LoadingContainer from "../components/LoadingContainer";
 import KanbanBoard from "../components/KanbanBoard";
 import { Fragment } from "react";
+import ViewHeader from "../components/ViewHeader";
 import ViewTitle from "../components/ViewTitle";
 
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
@@ -28,7 +29,9 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
     >
       {data && data.project ? (
         <Fragment>
-          <ViewTitle>{data.project.name}</ViewTitle>
+          <ViewHeader>
+            <ViewTitle title={data.project.name || ""} />
+          </ViewHeader>
           <KanbanBoard
             css={{
               minHeight: 0,

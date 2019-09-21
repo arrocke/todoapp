@@ -2,8 +2,9 @@
 import { jsx } from "@emotion/core";
 import LoadingContainer from "../components/LoadingContainer";
 import KanbanBoard from "../components/KanbanBoard";
-import ViewTitle from "../components/ViewTitle";
+import ViewHeader from "../components/ViewHeader";
 import { useTasksQuery, useUpdateTaskMutation } from "../graphql/types";
+import ViewTitle from "../components/ViewTitle";
 
 const TasksView: React.FC = () => {
   const { data, loading } = useTasksQuery();
@@ -18,7 +19,9 @@ const TasksView: React.FC = () => {
       }}
       isLoading={loading}
     >
-      <ViewTitle>Tasks</ViewTitle>
+      <ViewHeader>
+        <ViewTitle title="Tasks" />
+      </ViewHeader>
       {data && (
         <KanbanBoard
           css={{

@@ -2,7 +2,7 @@
 import { jsx } from "@emotion/core";
 import LoadingContainer from "../components/LoadingContainer";
 import { useProjectsQuery } from "../graphql/types";
-import ViewTitle from "../components/ViewTitle";
+import ViewHeader from "../components/ViewHeader";
 import ProjectCard from "../components/ProjectCard";
 
 const ProjectsView: React.FC = () => {
@@ -17,7 +17,7 @@ const ProjectsView: React.FC = () => {
       }}
       isLoading={loading}
     >
-      <ViewTitle>Projects</ViewTitle>
+      <ViewHeader>Projects</ViewHeader>
       <ul
         css={{
           padding: "8px 0",

@@ -5,8 +5,9 @@ import LoadingContainer from "../components/LoadingContainer";
 import KanbanBoard from "../components/KanbanBoard";
 import { useSprintQuery, useUpdateTaskMutation } from "../graphql/types";
 import { Fragment } from "react";
-import ViewTitle from "../components/ViewTitle";
+import ViewHeader from "../components/ViewHeader";
 import { sprintDateInfo } from "../utils";
+import ViewTitle from "../components/ViewTitle";
 
 interface SprintViewProps extends RouteComponentProps<{ id: string }> {}
 
@@ -27,18 +28,30 @@ const SprintView: React.FC<SprintViewProps> = ({ match }) => {
     >
       {data && data.sprint ? (
         <Fragment>
-          <ViewTitle>Sprint</ViewTitle>
-          <div
+          <ViewHeader
             css={{
-              fontSize: 16,
-              margin: "0 32px 16px 32px"
+              display: "flex",
+              alignItems: "baseline"
             }}
           >
-            {sprintDateInfo(
-              new Date(data.sprint.startDate),
-              new Date(data.sprint.endDate)
-            )}
-          </div>
+            <ViewTitle title="Sprint" />
+            <div
+              css={{
+                flexGrow: 1
+              }}
+            />
+            <div
+              css={{
+                fontSize: 16,
+                fontWeight: "bold"
+              }}
+            >
+              {sprintDateInfo(
+                new Date(data.sprint.startDate),
+                new Date(data.sprint.endDate)
+              )}
+            </div>
+          </ViewHeader>
           <KanbanBoard
             css={{
               minHeight: 0,
