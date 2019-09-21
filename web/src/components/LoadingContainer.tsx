@@ -1,26 +1,22 @@
 /** @jsx jsx */
-import { jsx, keyframes } from "@emotion/core";
+import { jsx } from "@emotion/core";
 import { readerOnly } from "../styles";
 import { useState, useEffect } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface LoadingContainerProps {
   className?: string;
   isLoading: boolean;
+  loadingText?: string;
+  loadedText?: string;
 }
-
-const spinner = keyframes({
-  "0%": {
-    transform: "rotate(0deg)"
-  },
-  "100%": {
-    transform: "rotate(360deg)"
-  }
-});
 
 const LoadingContainer: React.FC<LoadingContainerProps> = ({
   className,
   isLoading,
-  children
+  children,
+  loadingText = "Content Loading",
+  loadedText = "Content Loaded"
 }) => {
   const [stall, setStall] = useState<boolean>(true);
 
@@ -38,30 +34,13 @@ const LoadingContainer: React.FC<LoadingContainerProps> = ({
         alignItems: "center"
       }}
     >
-      <div
-        css={{
-          display: "inline-block",
-          width: 64,
-          height: 64,
-          "::after": {
-            content: "' '",
-            display: "block",
-            width: 46,
-            height: 46,
-            margin: 1,
-            borderRadius: "50%",
-            border: "5px solid black",
-            borderColor: "black transparent black transparent",
-            animation: `${spinner} 1.2s linear infinite`
-          }
-        }}
-      ></div>
+      <LoadingSpinner size="large" />
     </div>
   );
   return (
     <div className={className}>
       <div css={readerOnly} role="alert" aria-live="assertive">
-        {!stall && <p>{isLoading ? "Content Loading" : "Content Loaded"}</p>}
+        {!stall && <p>{isLoading ? loadingText : loadedText}</p>}
       </div>
       {isLoading ? loader : children}
     </div>

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
 import { TaskState } from "../graphql/types";
-import IconEdit from "./IconEdit";
+import Icon from "./Icon";
 import { Link } from "react-router-dom";
 
 export interface KanbanTask {
@@ -64,7 +64,8 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ className, task }) => {
           >
             {task.name}
           </div>
-          <IconEdit
+          <Icon
+            type="pencil"
             className="hover-icon"
             css={{
               width: 12,

@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
-import IconEdit from "./IconEdit";
+import Icon from "./Icon";
 import { Link } from "react-router-dom";
 
 interface ProjectCardProps {
@@ -67,7 +67,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ className, project }) => {
           >
             {project.name}
           </div>
-          <IconEdit
+          <Icon
+            type="pencil"
             className="hover-icon"
             css={{
               width: 12,

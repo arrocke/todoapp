@@ -4,6 +4,7 @@ import LoadingContainer from "../components/LoadingContainer";
 import { useProjectsQuery } from "../graphql/types";
 import ViewHeader from "../components/ViewHeader";
 import ProjectCard from "../components/ProjectCard";
+import ViewTitle from "../components/ViewTitle";
 
 const ProjectsView: React.FC = () => {
   const { loading, data } = useProjectsQuery();
@@ -17,7 +18,9 @@ const ProjectsView: React.FC = () => {
       }}
       isLoading={loading}
     >
-      <ViewHeader>Projects</ViewHeader>
+      <ViewHeader>
+        <ViewTitle title="Projects" />
+      </ViewHeader>
       <ul
         css={{
           padding: "8px 0",

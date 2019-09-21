@@ -1,6 +1,10 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import { useProjectQuery, useUpdateTaskMutation } from "../graphql/types";
+import {
+  useProjectQuery,
+  useUpdateTaskMutation,
+  useUpdateProjectMutation
+} from "../graphql/types";
 import { RouteComponentProps } from "react-router";
 import LoadingContainer from "../components/LoadingContainer";
 import KanbanBoard from "../components/KanbanBoard";
@@ -17,6 +21,19 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
     }
   });
   const [updateTask] = useUpdateTaskMutation();
+  const [
+    updateProject,
+    { loading: savingProjectName }
+  ] = useUpdateProjectMutation({
+    optimisticResponse({ input }) {
+      return {
+        updateProject: {
+          __typename: "Project",
+          ...input
+        }
+      };
+    }
+  });
 
   return (
     <LoadingContainer
@@ -30,7 +47,22 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
       {data && data.project ? (
         <Fragment>
           <ViewHeader>
-            <ViewTitle title={data.project.name || ""} />
+            <ViewTitle
+              title={data.project.name || ""}
+              onChange={name => {
+                if (data.project) {
+                  updateProject({
+                    variables: {
+                      input: {
+                        id: data.project.id,
+                        name
+                      }
+                    }
+                  });
+                }
+              }}
+              saving={savingProjectName}
+            />
           </ViewHeader>
           <KanbanBoard
             css={{

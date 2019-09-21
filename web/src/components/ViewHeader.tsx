@@ -10,7 +10,7 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({ className, children }) => {
     <div
       className={className}
       css={{
-        margin: "16px 32px"
+        margin: 16
       }}
     >
       {children}

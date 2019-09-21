@@ -218,6 +218,19 @@ export type CreateTaskMutation = (
   ) }
 );
 
+export type UpdateProjectMutationVariables = {
+  input: UpdateProjectInput
+};
+
+
+export type UpdateProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { updateProject: Maybe<(
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name'>
+  )> }
+);
+
 export type UpdateTaskMutationVariables = {
   input: UpdateTaskInput
 };
@@ -353,6 +366,22 @@ export type CreateTaskMutationFn = ApolloReactCommon.MutationFunction<CreateTask
 export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
 export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const UpdateProjectDocument = gql`
+    mutation UpdateProject($input: UpdateProjectInput!) {
+  updateProject(input: $input) {
+    id
+    name
+  }
+}
+    `;
+export type UpdateProjectMutationFn = ApolloReactCommon.MutationFunction<UpdateProjectMutation, UpdateProjectMutationVariables>;
+
+    export function useUpdateProjectMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateProjectMutation, UpdateProjectMutationVariables>) {
+      return ApolloReactHooks.useMutation<UpdateProjectMutation, UpdateProjectMutationVariables>(UpdateProjectDocument, baseOptions);
+    };
+export type UpdateProjectMutationHookResult = ReturnType<typeof useUpdateProjectMutation>;
+export type UpdateProjectMutationResult = ApolloReactCommon.MutationResult<UpdateProjectMutation>;
+export type UpdateProjectMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateProjectMutation, UpdateProjectMutationVariables>;
 export const UpdateTaskDocument = gql`
     mutation UpdateTask($input: UpdateTaskInput!) {
   updateTask(input: $input) {
