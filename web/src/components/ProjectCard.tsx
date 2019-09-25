@@ -22,7 +22,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ className, project }) => {
     project.progressCount +
     project.todoCount;
 
-  const completePercent = (project.backlogCount / totalCount) * 100;
+  const completePercent = (project.completeCount / totalCount) * 100;
   const progressPercent =
     completePercent + (project.progressCount / totalCount) * 100;
   const todoPercent = progressPercent + (project.todoCount / totalCount) * 100;

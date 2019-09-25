@@ -215,7 +215,7 @@ export type CreateProjectMutation = (
 );
 
 export type CreateTaskMutationVariables = {
-  input: CreateTaskInput
+  input?: Maybe<CreateTaskInput>
 };
 
 
@@ -375,7 +375,7 @@ export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProject
 export type CreateProjectMutationResult = ApolloReactCommon.MutationResult<CreateProjectMutation>;
 export type CreateProjectMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
 export const CreateTaskDocument = gql`
-    mutation CreateTask($input: CreateTaskInput!) {
+    mutation CreateTask($input: CreateTaskInput) {
   createTask(input: $input) {
     id
     name

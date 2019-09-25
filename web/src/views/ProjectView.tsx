@@ -3,7 +3,9 @@ import { jsx } from "@emotion/core";
 import {
   useProjectQuery,
   useUpdateTaskMutation,
-  useUpdateProjectMutation
+  useUpdateProjectMutation,
+  useCreateTaskMutation,
+  TaskState
 } from "../graphql/types";
 import { RouteComponentProps } from "react-router";
 import LoadingContainer from "../components/LoadingContainer";
@@ -11,16 +13,20 @@ import KanbanBoard from "../components/KanbanBoard";
 import { Fragment } from "react";
 import ViewHeader from "../components/ViewHeader";
 import ViewTitle from "../components/ViewTitle";
+import AddButton from "../components/AddButton";
+import {
+  updateProjectWithNewTask,
+  updateTasksWithNewTask
+} from "../graphql/cache";
 
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
 
-const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
+const ProjectView: React.FC<ProjectsViewProps> = ({ match, history }) => {
   const { data, loading } = useProjectQuery({
     variables: {
       id: match.params.id
     }
   });
-  const [updateTask] = useUpdateTaskMutation();
   const [
     updateProject,
     { loading: savingProjectName }
@@ -34,13 +40,21 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
       };
     }
   });
+  const [updateTask] = useUpdateTaskMutation();
+  const [createTask] = useCreateTaskMutation({
+    update(cache, result) {
+      updateProjectWithNewTask(cache, result, match.params.id);
+      updateTasksWithNewTask(cache, result);
+    }
+  });
 
   return (
     <LoadingContainer
       css={{
         display: "flex",
         flexDirection: "column",
-        height: "100%"
+        height: "100%",
+        position: "relative"
       }}
       isLoading={loading}
     >
@@ -64,6 +78,23 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match }) => {
               saving={savingProjectName}
             />
           </ViewHeader>
+          <AddButton
+            onClick={async () => {
+              if (data.project) {
+                const { data: response } = await createTask({
+                  variables: {
+                    input: {
+                      project: data.project.id,
+                      status: TaskState.Backlog
+                    }
+                  }
+                });
+                if (response && response.createTask) {
+                  history.push(`/tasks/${response.createTask.id}`);
+                }
+              }
+            }}
+          />
           <KanbanBoard
             css={{
               minHeight: 0,
