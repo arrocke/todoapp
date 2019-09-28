@@ -56,8 +56,8 @@ const KanbanList: React.FC<KanbanListProps> = ({
       css={css`
         display: ${isVisible ? "flex" : "none"};
         flex-direction: column;
-        margin: 0;
-        padding: 8px 8px 16px 8px;
+        margin: 0 0 -8px 0;
+        padding: 8px 0px 16px 0px;
         background-color: #e8e8e8;
         border-radius: 8px;
         ${isDraggedOver &&
@@ -117,13 +117,13 @@ const KanbanList: React.FC<KanbanListProps> = ({
         />
         <h2
           css={css`
-            margin: 8px 8px 16px 0;
+            margin: 8px 0;
             width: 100%;
             font-size: 16px;
             text-align: center;
             @media (min-width: 768px) {
               text-align: left;
-              margin: 8px 8px 16px 8px;
+              margin: 8px 16px;
             }
           `}
         >
@@ -148,7 +148,7 @@ const KanbanList: React.FC<KanbanListProps> = ({
           list-style-type: none;
           flex-grow: 1;
           margin: 0;
-          padding: 0;
+          padding: 8px 0 0 0;
           min-height: 0;
           overflow-y: auto;
         `}
@@ -156,7 +156,7 @@ const KanbanList: React.FC<KanbanListProps> = ({
         {filteredTasks.map(task => (
           <KanbanCard
             css={css`
-              margin: 8px 0;
+              margin: 8px 8px;
               &:first-of-type {
                 margin-top: 0;
               }
