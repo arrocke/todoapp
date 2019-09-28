@@ -2,6 +2,7 @@
 import { jsx, css } from "@emotion/core";
 import { sprintDateInfo } from "../utils";
 import Card from "./Card";
+import ProgressBar, { ProgressMarker } from "./ProgressBar";
 
 interface SprintCardProps {
   sprint: {
@@ -23,10 +24,9 @@ const SprintCard: React.FC<SprintCardProps> = ({ className, sprint }) => {
     sprint.progressCount +
     sprint.todoCount;
 
-  const completePercent = (sprint.backlogCount / totalCount) * 100;
-  const progressPercent =
-    completePercent + (sprint.progressCount / totalCount) * 100;
-  const todoPercent = progressPercent + (sprint.todoCount / totalCount) * 100;
+  const completePercent = sprint.backlogCount / totalCount;
+  const progressPercent = completePercent + sprint.progressCount / totalCount;
+  const todoPercent = progressPercent + sprint.todoCount / totalCount;
 
   return (
     <Card className={className} draggable to={`/sprints/${sprint.id}`} tag="li">
@@ -75,43 +75,11 @@ const SprintCard: React.FC<SprintCardProps> = ({ className, sprint }) => {
         >
           {totalCount} Tasks
         </div>
-        <div
-          css={{
-            height: 8,
-            borderRadius: 6,
-            position: "relative",
-            backgroundColor: "#e8e8e8",
-            flexGrow: 1
-          }}
-        >
-          <div
-            css={{
-              width: `${todoPercent}%`,
-              backgroundColor: "#81dafc",
-              position: "absolute",
-              borderRadius: 4,
-              height: 8
-            }}
-          />
-          <div
-            css={{
-              width: `${progressPercent}%`,
-              backgroundColor: "#f9c825",
-              position: "absolute",
-              borderRadius: 4,
-              height: 8
-            }}
-          />
-          <div
-            css={{
-              width: `${completePercent}%`,
-              backgroundColor: "#90c566",
-              position: "absolute",
-              borderRadius: 4,
-              height: 8
-            }}
-          />
-        </div>
+        <ProgressBar>
+          <ProgressMarker progress={todoPercent} color="#81dafc" />
+          <ProgressMarker progress={progressPercent} color="#f9c825" />
+          <ProgressMarker progress={completePercent} color="#90c566" />
+        </ProgressBar>
       </div>
     </Card>
   );
