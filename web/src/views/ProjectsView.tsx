@@ -15,7 +15,9 @@ import { RouteComponentProps } from "react-router";
 import { Fragment } from "react";
 
 const ProjectsView: React.FC<RouteComponentProps> = ({ history }) => {
-  const { loading, data: { projects = [] } = {} } = useProjectsQuery();
+  const { loading, data: { projects = null } = {} } = useProjectsQuery({
+    fetchPolicy: "cache-and-network"
+  });
   const [createProject] = useCreateProjectMutation({
     update(cache, { data }) {
       if (data) {
@@ -47,7 +49,7 @@ const ProjectsView: React.FC<RouteComponentProps> = ({ history }) => {
         height: "100%",
         position: "relative"
       }}
-      isLoading={loading}
+      isLoading={loading && !projects}
     >
       {() => (
         <Fragment>
@@ -74,21 +76,22 @@ const ProjectsView: React.FC<RouteComponentProps> = ({ history }) => {
               overflowY: "auto"
             }}
           >
-            {projects.map(project => (
-              <ProjectCard
-                css={{
-                  margin: 8,
-                  "&:first-of-type": {
-                    marginTop: 0
-                  },
-                  "&:last-of-type": {
-                    marginBottom: 0
-                  }
-                }}
-                key={project.id}
-                project={project}
-              />
-            ))}
+            {projects &&
+              projects.map(project => (
+                <ProjectCard
+                  css={{
+                    margin: 8,
+                    "&:first-of-type": {
+                      marginTop: 0
+                    },
+                    "&:last-of-type": {
+                      marginBottom: 0
+                    }
+                  }}
+                  key={project.id}
+                  project={project}
+                />
+              ))}
           </ul>
         </Fragment>
       )}

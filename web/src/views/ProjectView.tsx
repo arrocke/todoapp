@@ -14,10 +14,6 @@ import { Fragment } from "react";
 import ViewHeader from "../components/ViewHeader";
 import ViewTitle from "../components/ViewTitle";
 import AddButton from "../components/AddButton";
-import {
-  updateProjectWithNewTask,
-  updateTasksWithNewTask
-} from "../graphql/cache";
 import { KanbanTask } from "../components/KanbanCard";
 
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
@@ -42,12 +38,7 @@ const ProjectView: React.FC<ProjectsViewProps> = ({
     }
   });
   const [updateTask] = useUpdateTaskMutation();
-  const [createTask] = useCreateTaskMutation({
-    update(cache, result) {
-      updateProjectWithNewTask(cache, result, id);
-      updateTasksWithNewTask(cache, result);
-    }
-  });
+  const [createTask] = useCreateTaskMutation();
 
   return (
     <LoadingContainer
