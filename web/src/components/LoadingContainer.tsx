@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { readerOnly } from "../styles";
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect, ReactNode } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
 interface LoadingContainerProps {
@@ -9,6 +9,7 @@ interface LoadingContainerProps {
   isLoading: boolean;
   loadingText?: string;
   loadedText?: string;
+  children?: () => ReactNode;
 }
 
 const LoadingContainer: React.FC<LoadingContainerProps> = ({
@@ -45,12 +46,13 @@ const LoadingContainer: React.FC<LoadingContainerProps> = ({
       <LoadingSpinner size="large" />
     </div>
   );
+
   return (
     <div className={className}>
       <div css={readerOnly} role="alert" aria-live="assertive">
         {!defer && <p>{isLoading || stall ? loadingText : loadedText}</p>}
       </div>
-      {isLoading || stall ? loader : children}
+      {isLoading || stall ? loader : children && children()}
     </div>
   );
 };

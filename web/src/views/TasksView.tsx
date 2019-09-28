@@ -5,9 +5,10 @@ import KanbanBoard from "../components/KanbanBoard";
 import ViewHeader from "../components/ViewHeader";
 import { useTasksQuery, useUpdateTaskMutation } from "../graphql/types";
 import ViewTitle from "../components/ViewTitle";
+import { Fragment } from "react";
 
 const TasksView: React.FC = () => {
-  const { data, loading } = useTasksQuery();
+  const { data: { tasks = [] } = {}, loading } = useTasksQuery();
   const [updateTask] = useUpdateTaskMutation();
 
   return (
@@ -19,24 +20,26 @@ const TasksView: React.FC = () => {
       }}
       isLoading={loading}
     >
-      <ViewHeader>
-        <ViewTitle title="Tasks" />
-      </ViewHeader>
-      {data && (
-        <KanbanBoard
-          css={{
-            minHeight: 0,
-            flexGrow: 1
-          }}
-          tasks={data.tasks}
-          onTaskChange={({ id, name, status }) =>
-            updateTask({
-              variables: {
-                input: { id, name, status }
-              }
-            })
-          }
-        />
+      {() => (
+        <Fragment>
+          <ViewHeader>
+            <ViewTitle title="Tasks" />
+          </ViewHeader>
+          <KanbanBoard
+            css={{
+              minHeight: 0,
+              flexGrow: 1
+            }}
+            tasks={tasks}
+            onTaskChange={({ id, name, status }) =>
+              updateTask({
+                variables: {
+                  input: { id, name, status }
+                }
+              })
+            }
+          />
+        </Fragment>
       )}
     </LoadingContainer>
   );

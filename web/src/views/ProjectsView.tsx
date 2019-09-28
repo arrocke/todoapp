@@ -12,9 +12,10 @@ import ProjectCard from "../components/ProjectCard";
 import ViewTitle from "../components/ViewTitle";
 import AddButton from "../components/AddButton";
 import { RouteComponentProps } from "react-router";
+import { Fragment } from "react";
 
 const ProjectsView: React.FC<RouteComponentProps> = ({ history }) => {
-  const { loading, data } = useProjectsQuery();
+  const { loading, data: { projects = [] } = {} } = useProjectsQuery();
   const [createProject] = useCreateProjectMutation({
     update(cache, { data }) {
       if (data) {
@@ -48,46 +49,49 @@ const ProjectsView: React.FC<RouteComponentProps> = ({ history }) => {
       }}
       isLoading={loading}
     >
-      <ViewHeader>
-        <ViewTitle title="Projects" />
-      </ViewHeader>
-      <AddButton
-        onClick={async () => {
-          const { data } = await createProject();
-          if (data) {
-            history.push(`/projects/${data.createProject.id}`);
-          }
-        }}
-      />
-      <ul
-        css={{
-          padding: "8px 0",
-          backgroundColor: "#e8e8e8",
-          borderRadius: 8,
-          listStyleTtype: "none",
-          flexGrow: 1,
-          margin: " 0 16px 16px 16px",
-          minHeight: 0,
-          overflowY: "auto"
-        }}
-      >
-        {data &&
-          data.projects.map(project => (
-            <ProjectCard
-              css={{
-                margin: 8,
-                "&:first-of-type": {
-                  marginTop: 0
-                },
-                "&:last-of-type": {
-                  marginBottom: 0
-                }
-              }}
-              key={project.id}
-              project={project}
-            />
-          ))}
-      </ul>
+      {() => (
+        <Fragment>
+          <ViewHeader>
+            <ViewTitle title="Projects" />
+          </ViewHeader>
+          <AddButton
+            onClick={async () => {
+              const { data } = await createProject();
+              if (data) {
+                history.push(`/projects/${data.createProject.id}`);
+              }
+            }}
+          />
+          <ul
+            css={{
+              padding: "8px 0",
+              backgroundColor: "#e8e8e8",
+              borderRadius: 8,
+              listStyleTtype: "none",
+              flexGrow: 1,
+              margin: " 0 16px 16px 16px",
+              minHeight: 0,
+              overflowY: "auto"
+            }}
+          >
+            {projects.map(project => (
+              <ProjectCard
+                css={{
+                  margin: 8,
+                  "&:first-of-type": {
+                    marginTop: 0
+                  },
+                  "&:last-of-type": {
+                    marginBottom: 0
+                  }
+                }}
+                key={project.id}
+                project={project}
+              />
+            ))}
+          </ul>
+        </Fragment>
+      )}
     </LoadingContainer>
   );
 };

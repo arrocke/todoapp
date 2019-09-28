@@ -18,14 +18,18 @@ import {
   updateProjectWithNewTask,
   updateTasksWithNewTask
 } from "../graphql/cache";
+import { KanbanTask } from "../components/KanbanCard";
 
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
 
-const ProjectView: React.FC<ProjectsViewProps> = ({ match, history }) => {
-  const { data, loading } = useProjectQuery({
-    variables: {
-      id: match.params.id
-    }
+const ProjectView: React.FC<ProjectsViewProps> = ({
+  match: {
+    params: { id }
+  },
+  history
+}) => {
+  const { data: { project = null } = {}, loading } = useProjectQuery({
+    variables: { id }
   });
   const [
     updateProject,
@@ -33,17 +37,14 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match, history }) => {
   ] = useUpdateProjectMutation({
     optimisticResponse({ input }) {
       return {
-        updateProject: {
-          __typename: "Project",
-          ...input
-        }
+        updateProject: { __typename: "Project", ...input }
       };
     }
   });
   const [updateTask] = useUpdateTaskMutation();
   const [createTask] = useCreateTaskMutation({
     update(cache, result) {
-      updateProjectWithNewTask(cache, result, match.params.id);
+      updateProjectWithNewTask(cache, result, id);
       updateTasksWithNewTask(cache, result);
     }
   });
@@ -58,61 +59,63 @@ const ProjectView: React.FC<ProjectsViewProps> = ({ match, history }) => {
       }}
       isLoading={loading}
     >
-      {data && data.project ? (
-        <Fragment>
-          <ViewHeader>
-            <ViewTitle
-              title={data.project.name || ""}
-              onChange={name => {
-                if (data.project) {
-                  updateProject({
-                    variables: {
-                      input: {
-                        id: data.project.id,
-                        name
-                      }
-                    }
-                  });
-                }
-              }}
-              saving={savingProjectName}
-            />
-          </ViewHeader>
-          <AddButton
-            onClick={async () => {
-              if (data.project) {
-                const { data: response } = await createTask({
-                  variables: {
-                    input: {
-                      project: data.project.id,
-                      status: TaskState.Backlog
-                    }
-                  }
-                });
-                if (response && response.createTask) {
-                  history.push(`/tasks/${response.createTask.id}`);
+      {() => {
+        if (project) {
+          const onNameChange = (name: string) =>
+            updateProject({
+              variables: {
+                input: {
+                  id: project.id,
+                  name
                 }
               }
-            }}
-          />
-          <KanbanBoard
-            css={{
-              minHeight: 0,
-              flexGrow: 1
-            }}
-            tasks={data.project.tasks}
-            onTaskChange={({ id, name, status }) =>
-              updateTask({
-                variables: {
-                  input: { id, name, status }
+            });
+
+          const onAddTask = async () => {
+            const { data: response } = await createTask({
+              variables: {
+                input: {
+                  project: project.id,
+                  status: TaskState.Backlog
                 }
-              })
+              }
+            });
+            if (response && response.createTask) {
+              history.push(`/tasks/${response.createTask.id}`);
             }
-          />
-        </Fragment>
-      ) : (
-        <div>Project not found</div>
-      )}
+          };
+
+          const onTaskChange = ({ id, name, status }: KanbanTask) =>
+            updateTask({
+              variables: {
+                input: { id, name, status }
+              }
+            });
+
+          return (
+            <Fragment>
+              <ViewHeader>
+                <ViewTitle
+                  title={project.name || ""}
+                  onChange={onNameChange}
+                  saving={savingProjectName}
+                />
+              </ViewHeader>
+              <AddButton onClick={onAddTask} />
+              <KanbanBoard
+                css={{
+                  minHeight: 0,
+                  flexGrow: 1
+                }}
+                tasks={project.tasks}
+                onTaskChange={onTaskChange}
+              />
+            </Fragment>
+          );
+        } else {
+          return <div>Project not found</div>;
+        }
+      }}
     </LoadingContainer>
   );
 };

@@ -12,7 +12,7 @@ import ViewTitle from "../components/ViewTitle";
 interface SprintViewProps extends RouteComponentProps<{ id: string }> {}
 
 const SprintView: React.FC<SprintViewProps> = ({ match }) => {
-  const { data, loading } = useSprintQuery({
+  const { data: { sprint = null } = {}, loading } = useSprintQuery({
     variables: { id: match.params.id }
   });
   const [updateTask] = useUpdateTaskMutation();
@@ -26,50 +26,52 @@ const SprintView: React.FC<SprintViewProps> = ({ match }) => {
       }}
       isLoading={loading}
     >
-      {data && data.sprint ? (
-        <Fragment>
-          <ViewHeader
-            css={{
-              display: "flex",
-              alignItems: "baseline"
-            }}
-          >
-            <ViewTitle title="Sprint" />
-            <div
+      {() =>
+        sprint ? (
+          <Fragment>
+            <ViewHeader
               css={{
-                flexGrow: 1
-              }}
-            />
-            <div
-              css={{
-                fontSize: 16,
-                fontWeight: "bold"
+                display: "flex",
+                alignItems: "baseline"
               }}
             >
-              {sprintDateInfo(
-                new Date(data.sprint.startDate),
-                new Date(data.sprint.endDate)
-              )}
-            </div>
-          </ViewHeader>
-          <KanbanBoard
-            css={{
-              minHeight: 0,
-              flexGrow: 1
-            }}
-            tasks={data.sprint.tasks}
-            onTaskChange={({ id, name, status }) =>
-              updateTask({
-                variables: {
-                  input: { id, name, status }
-                }
-              })
-            }
-          />
-        </Fragment>
-      ) : (
-        <div>Sprint not found</div>
-      )}
+              <ViewTitle title="Sprint" />
+              <div
+                css={{
+                  flexGrow: 1
+                }}
+              />
+              <div
+                css={{
+                  fontSize: 16,
+                  fontWeight: "bold"
+                }}
+              >
+                {sprintDateInfo(
+                  new Date(sprint.startDate),
+                  new Date(sprint.endDate)
+                )}
+              </div>
+            </ViewHeader>
+            <KanbanBoard
+              css={{
+                minHeight: 0,
+                flexGrow: 1
+              }}
+              tasks={sprint.tasks}
+              onTaskChange={({ id, name, status }) =>
+                updateTask({
+                  variables: {
+                    input: { id, name, status }
+                  }
+                })
+              }
+            />
+          </Fragment>
+        ) : (
+          <div>Sprint not found</div>
+        )
+      }
     </LoadingContainer>
   );
 };
