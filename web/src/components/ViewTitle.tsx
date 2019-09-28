@@ -88,7 +88,9 @@ const ViewTitle: React.FC<ViewTitleProps> = ({
             }),
             "&:focus": {
               zIndex: 1,
-              position: "relative"
+              position: "relative",
+              boxShadow: "0 0 0 1px black",
+              outline: 0
             },
             "&:disabled": {
               color: "inherit",
