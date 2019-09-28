@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
-import { Link } from "react-router-dom";
 import { sprintDateInfo } from "../utils";
+import Card from "./Card";
 
 interface SprintCardProps {
   sprint: {
@@ -29,110 +29,91 @@ const SprintCard: React.FC<SprintCardProps> = ({ className, sprint }) => {
   const todoPercent = progressPercent + (sprint.todoCount / totalCount) * 100;
 
   return (
-    <li
-      className={className}
-      draggable
-      css={css`
-        border-radius: 4px;
-        box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.2);
-        background-color: white;
-      `}
-    >
-      <Link
+    <Card className={className} draggable to={`/sprints/${sprint.id}`} tag="li">
+      <div
         css={css`
-          color: inherit;
-          text-decoration: none;
-          padding: 8px;
-          display: block;
+          display: flex;
+          padding: 8px 8px 0 8px;
         `}
-        to={`/sprints/${sprint.id}`}
       >
         <div
           css={css`
-            display: flex;
+            box-sizing: border-box;
+            border-radius: 6px;
+            margin: 0;
+            border: 0;
+            font-size: 14px;
+            flex-grow: 1;
           `}
         >
-          <div
-            css={css`
-              box-sizing: border-box;
-              border-radius: 6px;
-              margin: 0;
-              border: 0;
-              font-size: 14px;
-              flex-grow: 1;
-            `}
-          >
-            Sprint{" "}
-          </div>
-          <div
-            css={{
-              fontSize: 12,
-              fontWeight: "bold",
-              margin: "0 0 0 16px"
-            }}
-          >
-            {sprintDateInfo(
-              new Date(sprint.startDate),
-              new Date(sprint.endDate)
-            )}
-          </div>
+          Sprint{" "}
         </div>
         <div
           css={{
-            display: "flex",
-            marginTop: 8,
-            alignItems: "center"
+            fontSize: 12,
+            fontWeight: "bold",
+            margin: "0 0 0 16px"
+          }}
+        >
+          {sprintDateInfo(new Date(sprint.startDate), new Date(sprint.endDate))}
+        </div>
+      </div>
+      <div
+        css={{
+          display: "flex",
+          marginTop: 8,
+          padding: "0 8px 8px 8px",
+          alignItems: "center"
+        }}
+      >
+        <div
+          css={{
+            fontSize: 12,
+            marginRight: 16,
+            fontWeight: "bold"
+          }}
+        >
+          {totalCount} Tasks
+        </div>
+        <div
+          css={{
+            height: 8,
+            borderRadius: 6,
+            position: "relative",
+            backgroundColor: "#e8e8e8",
+            flexGrow: 1
           }}
         >
           <div
             css={{
-              fontSize: 12,
-              marginRight: 16,
-              fontWeight: "bold"
+              width: `${todoPercent}%`,
+              backgroundColor: "#81dafc",
+              position: "absolute",
+              borderRadius: 4,
+              height: 8
             }}
-          >
-            {totalCount} Tasks
-          </div>
+          />
           <div
             css={{
-              height: 8,
-              borderRadius: 6,
-              position: "relative",
-              backgroundColor: "#e8e8e8",
-              flexGrow: 1
+              width: `${progressPercent}%`,
+              backgroundColor: "#f9c825",
+              position: "absolute",
+              borderRadius: 4,
+              height: 8
             }}
-          >
-            <div
-              css={{
-                width: `${todoPercent}%`,
-                backgroundColor: "#81dafc",
-                position: "absolute",
-                borderRadius: 4,
-                height: 8
-              }}
-            />
-            <div
-              css={{
-                width: `${progressPercent}%`,
-                backgroundColor: "#f9c825",
-                position: "absolute",
-                borderRadius: 4,
-                height: 8
-              }}
-            />
-            <div
-              css={{
-                width: `${completePercent}%`,
-                backgroundColor: "#90c566",
-                position: "absolute",
-                borderRadius: 4,
-                height: 8
-              }}
-            />
-          </div>
+          />
+          <div
+            css={{
+              width: `${completePercent}%`,
+              backgroundColor: "#90c566",
+              position: "absolute",
+              borderRadius: 4,
+              height: 8
+            }}
+          />
         </div>
-      </Link>
-    </li>
+      </div>
+    </Card>
   );
 };
 
