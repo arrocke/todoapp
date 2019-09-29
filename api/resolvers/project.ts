@@ -3,22 +3,24 @@ import ProjectModel from "../models/project";
 import TaskModel from "../models/task";
 
 export const ProjectMutation: MutationResolvers = {
-  async createProject(_, { input = {} }) {
-    return await ProjectModel.create(input);
+  async createProject(_, { input = {} }, { user }) {
+    return await ProjectModel.create({ ...input, owner: user.id });
   },
-  async updateProject(_, { input: { id, ...fields } }) {
-    const project = await ProjectModel.findById(id);
-    project.set(fields);
-    return await project.save();
+  async updateProject(_, { input: { id, ...fields } }, { user }) {
+    const project = await ProjectModel.findOne({ _id: id, owner: user.id });
+    if (project) {
+      project.set(fields);
+      return await project.save();
+    }
   }
 };
 
 export const ProjectQuery: QueryResolvers = {
-  async projects() {
-    return await ProjectModel.find({});
+  async projects(_, __, { user }) {
+    return await ProjectModel.find({ owner: user.id });
   },
-  async project(_, { id }) {
-    return await ProjectModel.findById(id);
+  async project(_, { id }, { user }) {
+    return await ProjectModel.findOne({ _id: id, owner: user.id });
   }
 };
 

@@ -6,7 +6,12 @@ export interface ProjectDocument extends Document {
 
 const ProjectSchema = new Schema(
   {
-    name: String
+    name: String,
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    }
   },
   {
     timestamps: true

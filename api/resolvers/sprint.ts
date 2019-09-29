@@ -4,17 +4,22 @@ import SprintModel from "../models/sprint";
 import { asDocuments } from "../utils";
 
 export const SprintMutation: MutationResolvers = {
-  async createSprint(_, { input = {} }) {
-    return await SprintModel.create(input);
+  async createSprint(_, { input = {} }, { user }) {
+    return await SprintModel.create({
+      ...input,
+      owner: user.id
+    });
   },
-  async updateSprint(_, { input: { id, ...fields } }) {
-    const sprint = await SprintModel.findById(id);
-    sprint.set(fields);
-    return await sprint.save();
+  async updateSprint(_, { input: { id, ...fields } }, { user }) {
+    const sprint = await SprintModel.findOne({ _id: id, owner: user.id });
+    if (sprint) {
+      sprint.set(fields);
+      return await sprint.save();
+    }
   },
-  async addToSprint(_, { input }) {
+  async addToSprint(_, { input }, { user }) {
     const [sprint, task] = await Promise.all([
-      SprintModel.findById(input.sprint),
+      SprintModel.findOne({ _id: input.sprint, owner: user.id }),
       TaskModel.findById(input.task)
     ]);
     if (!sprint) {
@@ -32,9 +37,9 @@ export const SprintMutation: MutationResolvers = {
     }
     return sprint;
   },
-  async removeFromSprint(_, { input }) {
+  async removeFromSprint(_, { input }, { user }) {
     const [sprint, task] = await Promise.all([
-      SprintModel.findById(input.sprint),
+      SprintModel.findOne({ _id: input.sprint, owner: user.id }),
       TaskModel.findById(input.task)
     ]);
     if (!sprint) {
@@ -55,11 +60,11 @@ export const SprintMutation: MutationResolvers = {
 };
 
 export const SprintQuery: QueryResolvers = {
-  async sprints() {
-    return await SprintModel.find({});
+  async sprints(_, __, { user }) {
+    return await SprintModel.find({ owner: user.id });
   },
-  async sprint(_, { id }) {
-    return await SprintModel.findById(id);
+  async sprint(_, { id }, { user }) {
+    return await SprintModel.findOne({ _id: id, owner: user.id });
   }
 };
 

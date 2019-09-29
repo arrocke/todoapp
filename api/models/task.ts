@@ -17,6 +17,11 @@ const TaskSchema = new Schema(
     project: {
       type: Schema.Types.ObjectId,
       ref: "Project"
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     }
   },
   {

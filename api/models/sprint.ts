@@ -24,6 +24,11 @@ const SprintSchema = new Schema(
     },
     tasks: {
       type: [{ type: Schema.Types.ObjectId, ref: "Task" }]
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     }
   },
   {
