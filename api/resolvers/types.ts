@@ -37,7 +37,7 @@ export type CreateSprintInput = {
 
 export type CreateTaskInput = {
   name?: Maybe<Scalars["String"]>;
-  status: TaskState;
+  status?: Maybe<TaskState>;
   project?: Maybe<Scalars["ID"]>;
 };
 
@@ -188,7 +188,7 @@ export type UpdateSprintInput = {
 export type UpdateTaskInput = {
   id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
-  status: TaskState;
+  status?: Maybe<TaskState>;
   project?: Maybe<Scalars["ID"]>;
 };
 export type WithIndex<TObject> = TObject & Record<string, any>;

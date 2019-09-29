@@ -1,12 +1,23 @@
-import { MutationResolvers, TaskResolvers, QueryResolvers } from "./types";
+import {
+  MutationResolvers,
+  TaskResolvers,
+  QueryResolvers,
+  TaskState
+} from "./types";
 import TaskModel from "../models/task";
 import { asDocuments, asDocument } from "../utils";
 import { SprintDocument } from "../models/sprint";
 import { ProjectDocument } from "../models/project";
 
 export const TaskMutation: MutationResolvers = {
-  async createTask(_, { input = {} }) {
-    return await TaskModel.create(input);
+  async createTask(
+    _,
+    { input: { status = TaskState.Backlog, ...input } = {} }
+  ) {
+    return await TaskModel.create({
+      ...input,
+      status
+    });
   },
   async updateTask(_, { input: { id, ...fields } }) {
     const project = await TaskModel.findById(id);

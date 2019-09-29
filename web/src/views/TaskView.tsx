@@ -3,7 +3,7 @@ import { jsx } from "@emotion/core";
 import {
   useTaskQuery,
   useUpdateTaskMutation,
-  TaskState
+  UpdateTaskInput
 } from "../graphql/types";
 import { RouteComponentProps } from "react-router";
 import LoadingContainer from "../components/LoadingContainer";
@@ -12,14 +12,15 @@ import ViewHeader from "../components/ViewHeader";
 import ViewTitle from "../components/ViewTitle";
 import TaskStatusSelector from "../components/TaskStatusSelector";
 import { breakpoints } from "../styles";
+import TypeaheadInput from "../components/TypeaheadInput";
 
 interface TaskViewProps extends RouteComponentProps<{ id: string }> {}
 
 const TaskView: React.FC<TaskViewProps> = ({ match }) => {
-  const { data: { task = null } = {}, loading } = useTaskQuery({
+  const { data: { task = null, projects = [] } = {}, loading } = useTaskQuery({
     variables: { id: match.params.id }
   });
-  const [updateTask, { loading: savingProject }] = useUpdateTaskMutation();
+  const [_updateTask, { loading: savingProject }] = useUpdateTaskMutation();
 
   return (
     <LoadingContainer
@@ -33,24 +34,21 @@ const TaskView: React.FC<TaskViewProps> = ({ match }) => {
     >
       {() => {
         if (task) {
-          const onNameChange = (name: string) =>
-            updateTask({
-              variables: {
-                input: {
-                  id: task.id,
-                  name,
-                  status: task.status
-                }
-              }
-            });
-
-          const onStatusChange = (status: TaskState) =>
-            updateTask({
-              variables: {
-                input: {
-                  id: task.id,
-                  status
-                }
+          const updateTask = (props: Partial<UpdateTaskInput>) =>
+            _updateTask({
+              variables: { input: { id: task.id, ...props } },
+              optimisticResponse() {
+                return {
+                  updateTask: {
+                    __typename: "Task",
+                    id: task.id,
+                    name: props.name || task.name,
+                    project:
+                      projects.find(project => project.id === props.project) ||
+                      task.project,
+                    status: props.status || task.status
+                  }
+                };
               }
             });
 
@@ -59,14 +57,12 @@ const TaskView: React.FC<TaskViewProps> = ({ match }) => {
               <ViewHeader>
                 <ViewTitle
                   title={task.name || ""}
-                  onChange={onNameChange}
+                  onChange={name => updateTask({ name })}
                   saving={savingProject}
                 />
               </ViewHeader>
               <div
                 css={{
-                  backgroundColor: "#e8e8e8",
-                  borderRadius: 8,
                   boxSizing: "border-box",
                   width: "calc(100% - 32px)",
                   padding: 16,
@@ -83,6 +79,21 @@ const TaskView: React.FC<TaskViewProps> = ({ match }) => {
                     }
                   }}
                 >
+                  <TypeaheadInput
+                    css={{
+                      margin: "0 0 16px 0",
+                      [breakpoints.medium]: {
+                        margin: "0 16px 0 0"
+                      }
+                    }}
+                    placeholder="Select project..."
+                    items={projects.map(project => ({
+                      value: project.id,
+                      name: project.name || "(unnamed)"
+                    }))}
+                    value={task.project ? task.project.id : null}
+                    onChange={project => updateTask({ project })}
+                  />
                   <TaskStatusSelector
                     css={{
                       display: "flex",
@@ -92,7 +103,7 @@ const TaskView: React.FC<TaskViewProps> = ({ match }) => {
                     }}
                     direction="vertical"
                     value={task.status}
-                    onChange={onStatusChange}
+                    onChange={status => updateTask({ status })}
                   />
                   <TaskStatusSelector
                     css={{
@@ -103,15 +114,8 @@ const TaskView: React.FC<TaskViewProps> = ({ match }) => {
                     }}
                     direction="horizontal"
                     value={task.status}
-                    onChange={onStatusChange}
+                    onChange={status => updateTask({ status })}
                   />
-                  <div
-                    css={{
-                      margin: "0 0 0 16px"
-                    }}
-                  >
-                    {task.project && task.project.name}
-                  </div>
                 </div>
               </div>
             </Fragment>

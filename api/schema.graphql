@@ -37,14 +37,14 @@ type Task {
 
 input CreateTaskInput {
   name: String
-  status: TaskState!
+  status: TaskState
   project: ID
 }
 
 input UpdateTaskInput {
   id: ID!
   name: String
-  status: TaskState!
+  status: TaskState
   project: ID
 }
 
