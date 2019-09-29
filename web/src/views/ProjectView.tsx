@@ -28,14 +28,31 @@ const ProjectView: React.FC<ProjectsViewProps> = ({
   const { data: { project = null } = {}, loading } = useProjectQuery({
     variables: { id }
   });
-  const [updateProject, { loading: saving }] = useUpdateProjectMutation({
+  const [updateProject, { loading: savingProject }] = useUpdateProjectMutation({
     optimisticResponse({ input }) {
       return {
         updateProject: { __typename: "Project", ...input }
       };
     }
   });
-  const [updateTask] = useUpdateTaskMutation();
+  const [updateTask, { loading: savingTask }] = useUpdateTaskMutation({
+    optimisticResponse({ input }) {
+      const task = project && project.tasks.find(task => task.id === input.id);
+      if (task && input.status) {
+        return {
+          updateTask: {
+            ...task,
+            status: input.status,
+            project: null
+          }
+        };
+      } else {
+        return {
+          updateTask: null
+        };
+      }
+    }
+  });
   const [createTask] = useCreateTaskMutation();
 
   return (
@@ -85,7 +102,7 @@ const ProjectView: React.FC<ProjectsViewProps> = ({
             <Fragment>
               <ViewHeader>
                 <ViewTitle title={project.name || ""} onChange={onNameChange} />
-                <SavingIndicator saving={saving} />
+                <SavingIndicator saving={savingProject || savingTask} />
               </ViewHeader>
               <AddButton
                 onClick={onAddTask}
