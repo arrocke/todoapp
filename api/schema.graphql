@@ -1,10 +1,52 @@
 scalar Date
 
+enum TaskState {
+  backlog,
+  todo,
+  progress,
+  complete
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
+
 type Project {
   id: ID!
   name: String
   tasks(input: SearchTasksInput): [Task!]!
   taskCount(input: SearchTasksInput): Int!
+}
+
+type Task {
+  id: ID!
+  name: String
+  status: TaskState!
+  project: Project
+  sprints: [Sprint!]!
+}
+
+type Sprint {
+  id: ID!
+  startDate: Date!
+  endDate: Date!
+  tasks(input: SearchTasksInput): [Task!]!
+  taskCount(input: SearchTasksInput): Int!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  firstName: String
+  lastName: String
+  email: String
+  password: String
 }
 
 input CreateProjectInput {
@@ -20,21 +62,6 @@ input SearchTasksInput {
   status: [TaskState!]
 }
 
-enum TaskState {
-  backlog,
-  todo,
-  progress,
-  complete
-}
-
-type Task {
-  id: ID!
-  name: String
-  status: TaskState!
-  project: Project
-  sprints: [Sprint!]!
-}
-
 input CreateTaskInput {
   name: String
   status: TaskState
@@ -46,14 +73,6 @@ input UpdateTaskInput {
   name: String
   status: TaskState
   project: ID
-}
-
-type Sprint {
-  id: ID!
-  startDate: Date!
-  endDate: Date!
-  tasks(input: SearchTasksInput): [Task!]!
-  taskCount(input: SearchTasksInput): Int!
 }
 
 input CreateSprintInput {
@@ -78,6 +97,7 @@ input RemoveFromSprintInput {
 }
 
 type Query {
+  user: User!
   projects: [Project!]!
   project(id: ID!): Project
   tasks(input: SearchTasksInput): [Task!]!
@@ -88,6 +108,8 @@ type Query {
 }
 
 type Mutation {
+  login(input: LoginInput!): User
+  updateUser(input: UpdateUserInput!): User
   createProject(input: CreateProjectInput): Project!
   updateProject(input: UpdateProjectInput!): Project
   createTask(input: CreateTaskInput): Task!

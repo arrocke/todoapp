@@ -10,7 +10,9 @@ generates:
       useIndexSignature: true
       scalars:
         Date: Date
+      contextType: ../context#GraphqlContext
       mappers:
+        User: ../models/user#UserDocument
         Project: ../models/project#ProjectDocument
         Task: ../models/task#TaskDocument
         Sprint: ../models/sprint#SprintDocument

@@ -3,9 +3,11 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig
 } from "graphql";
+import { UserDocument } from "../models/user";
 import { ProjectDocument } from "../models/project";
 import { TaskDocument } from "../models/task";
 import { SprintDocument } from "../models/sprint";
+import { GraphqlContext } from "../context";
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
   [X in Exclude<keyof T, K>]?: T[X];
@@ -41,8 +43,15 @@ export type CreateTaskInput = {
   project?: Maybe<Scalars["ID"]>;
 };
 
+export type LoginInput = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
+  login?: Maybe<User>;
+  updateUser?: Maybe<User>;
   createProject: Project;
   updateProject?: Maybe<Project>;
   createTask: Task;
@@ -51,6 +60,14 @@ export type Mutation = {
   updateSprint?: Maybe<Sprint>;
   addToSprint?: Maybe<Sprint>;
   removeFromSprint?: Maybe<Sprint>;
+};
+
+export type MutationLoginArgs = {
+  input: LoginInput;
+};
+
+export type MutationUpdateUserArgs = {
+  input: UpdateUserInput;
 };
 
 export type MutationCreateProjectArgs = {
@@ -103,6 +120,7 @@ export type ProjectTaskCountArgs = {
 
 export type Query = {
   __typename?: "Query";
+  user: User;
   projects: Array<Project>;
   project?: Maybe<Project>;
   tasks: Array<Task>;
@@ -190,6 +208,21 @@ export type UpdateTaskInput = {
   name?: Maybe<Scalars["String"]>;
   status?: Maybe<TaskState>;
   project?: Maybe<Scalars["ID"]>;
+};
+
+export type UpdateUserInput = {
+  firstName?: Maybe<Scalars["String"]>;
+  lastName?: Maybe<Scalars["String"]>;
+  email?: Maybe<Scalars["String"]>;
+  password?: Maybe<Scalars["String"]>;
+};
+
+export type User = {
+  __typename?: "User";
+  id: Scalars["ID"];
+  firstName: Scalars["String"];
+  lastName: Scalars["String"];
+  email: Scalars["String"];
 };
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -298,9 +331,10 @@ export type DirectiveResolverFn<
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
-  Project: ResolverTypeWrapper<ProjectDocument>;
+  User: ResolverTypeWrapper<UserDocument>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   String: ResolverTypeWrapper<Scalars["String"]>;
+  Project: ResolverTypeWrapper<ProjectDocument>;
   SearchTasksInput: SearchTasksInput;
   TaskState: TaskState;
   Task: ResolverTypeWrapper<TaskDocument>;
@@ -308,6 +342,8 @@ export type ResolversTypes = ResolversObject<{
   Date: ResolverTypeWrapper<Scalars["Date"]>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   Mutation: ResolverTypeWrapper<{}>;
+  LoginInput: LoginInput;
+  UpdateUserInput: UpdateUserInput;
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
   CreateTaskInput: CreateTaskInput;
@@ -322,9 +358,10 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Query: {};
-  Project: ProjectDocument;
+  User: UserDocument;
   ID: Scalars["ID"];
   String: Scalars["String"];
+  Project: ProjectDocument;
   SearchTasksInput: SearchTasksInput;
   TaskState: TaskState;
   Task: TaskDocument;
@@ -332,6 +369,8 @@ export type ResolversParentTypes = ResolversObject<{
   Date: Scalars["Date"];
   Int: Scalars["Int"];
   Mutation: {};
+  LoginInput: LoginInput;
+  UpdateUserInput: UpdateUserInput;
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
   CreateTaskInput: CreateTaskInput;
@@ -349,9 +388,21 @@ export interface DateScalarConfig
 }
 
 export type MutationResolvers<
-  ContextType = any,
+  ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
 > = ResolversObject<{
+  login?: Resolver<
+    Maybe<ResolversTypes["User"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationLoginArgs, "input">
+  >;
+  updateUser?: Resolver<
+    Maybe<ResolversTypes["User"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateUserArgs, "input">
+  >;
   createProject?: Resolver<
     ResolversTypes["Project"],
     ParentType,
@@ -403,7 +454,7 @@ export type MutationResolvers<
 }>;
 
 export type ProjectResolvers<
-  ContextType = any,
+  ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Project"] = ResolversParentTypes["Project"]
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
@@ -423,9 +474,10 @@ export type ProjectResolvers<
 }>;
 
 export type QueryResolvers<
-  ContextType = any,
+  ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
+  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
   projects?: Resolver<
     Array<ResolversTypes["Project"]>,
     ParentType,
@@ -465,7 +517,7 @@ export type QueryResolvers<
 }>;
 
 export type SprintResolvers<
-  ContextType = any,
+  ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Sprint"] = ResolversParentTypes["Sprint"]
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
@@ -486,7 +538,7 @@ export type SprintResolvers<
 }>;
 
 export type TaskResolvers<
-  ContextType = any,
+  ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Task"] = ResolversParentTypes["Task"]
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
@@ -496,17 +548,28 @@ export type TaskResolvers<
   sprints?: Resolver<Array<ResolversTypes["Sprint"]>, ParentType, ContextType>;
 }>;
 
-export type Resolvers<ContextType = any> = ResolversObject<{
+export type UserResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
+> = ResolversObject<{
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  firstName?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  lastName?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  email?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+}>;
+
+export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Date?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Sprint?: SprintResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 }>;
 
 /**
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
  */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
+export type IResolvers<ContextType = GraphqlContext> = Resolvers<ContextType>;

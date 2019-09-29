@@ -34,8 +34,15 @@ export type CreateTaskInput = {
 };
 
 
+export type LoginInput = {
+  email: Scalars['String'],
+  password: Scalars['String'],
+};
+
 export type Mutation = {
   __typename?: 'Mutation',
+  login?: Maybe<User>,
+  updateUser?: Maybe<User>,
   createProject: Project,
   updateProject?: Maybe<Project>,
   createTask: Task,
@@ -44,6 +51,16 @@ export type Mutation = {
   updateSprint?: Maybe<Sprint>,
   addToSprint?: Maybe<Sprint>,
   removeFromSprint?: Maybe<Sprint>,
+};
+
+
+export type MutationLoginArgs = {
+  input: LoginInput
+};
+
+
+export type MutationUpdateUserArgs = {
+  input: UpdateUserInput
 };
 
 
@@ -106,6 +123,7 @@ export type ProjectTaskCountArgs = {
 
 export type Query = {
   __typename?: 'Query',
+  user: User,
   projects: Array<Project>,
   project?: Maybe<Project>,
   tasks: Array<Task>,
@@ -200,6 +218,21 @@ export type UpdateTaskInput = {
   name?: Maybe<Scalars['String']>,
   status?: Maybe<TaskState>,
   project?: Maybe<Scalars['ID']>,
+};
+
+export type UpdateUserInput = {
+  firstName?: Maybe<Scalars['String']>,
+  lastName?: Maybe<Scalars['String']>,
+  email?: Maybe<Scalars['String']>,
+  password?: Maybe<Scalars['String']>,
+};
+
+export type User = {
+  __typename?: 'User',
+  id: Scalars['ID'],
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  email: Scalars['String'],
 };
 export type CreateProjectMutationVariables = {
   input?: Maybe<CreateProjectInput>
