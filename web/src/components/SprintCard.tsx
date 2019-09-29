@@ -2,7 +2,7 @@
 import { jsx, css } from "@emotion/core";
 import { sprintDateInfo } from "../utils";
 import Card from "./Card";
-import ProgressBar, { ProgressMarker } from "./ProgressBar";
+import TaskProgress from "./TaskProgress";
 
 interface SprintCardProps {
   sprint: {
@@ -23,10 +23,6 @@ const SprintCard: React.FC<SprintCardProps> = ({ className, sprint }) => {
     sprint.completeCount +
     sprint.progressCount +
     sprint.todoCount;
-
-  const completePercent = sprint.backlogCount / totalCount;
-  const progressPercent = completePercent + sprint.progressCount / totalCount;
-  const todoPercent = progressPercent + sprint.todoCount / totalCount;
 
   return (
     <Card className={className} draggable to={`/sprints/${sprint.id}`} tag="li">
@@ -75,11 +71,7 @@ const SprintCard: React.FC<SprintCardProps> = ({ className, sprint }) => {
         >
           {totalCount} Tasks
         </div>
-        <ProgressBar>
-          <ProgressMarker progress={todoPercent} color="#81dafc" />
-          <ProgressMarker progress={progressPercent} color="#f9c825" />
-          <ProgressMarker progress={completePercent} color="#90c566" />
-        </ProgressBar>
+        <TaskProgress {...sprint} />
       </div>
     </Card>
   );

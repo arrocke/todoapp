@@ -2,8 +2,8 @@
 import { jsx, css } from "@emotion/core";
 import Icon from "./Icon";
 import Card from "./Card";
-import ProgressBar, { ProgressMarker } from "./ProgressBar";
 import { readerOnly } from "../styles";
+import TaskProgress from "./TaskProgress";
 
 interface ProjectCardProps {
   project: {
@@ -23,10 +23,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ className, project }) => {
     project.completeCount +
     project.progressCount +
     project.todoCount;
-
-  const completePercent = project.completeCount / totalCount;
-  const progressPercent = completePercent + project.progressCount / totalCount;
-  const todoPercent = progressPercent + project.todoCount / totalCount;
 
   return (
     <Card
@@ -88,11 +84,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ className, project }) => {
           >
             {totalCount} Tasks
           </div>
-          <ProgressBar>
-            <ProgressMarker progress={todoPercent} color="#81dafc" />
-            <ProgressMarker progress={progressPercent} color="#f9c825" />
-            <ProgressMarker progress={completePercent} color="#90c566" />
-          </ProgressBar>
+          <TaskProgress {...project} />
         </div>
       </div>
     </Card>
