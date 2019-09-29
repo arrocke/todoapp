@@ -13,6 +13,7 @@ import ViewTitle from "../components/ViewTitle";
 import TaskStatusSelector from "../components/TaskStatusSelector";
 import { breakpoints } from "../styles";
 import TypeaheadInput from "../components/TypeaheadInput";
+import SavingIndicator from "../components/SavingIndicator";
 
 interface TaskViewProps extends RouteComponentProps<{ id: string }> {}
 
@@ -20,7 +21,7 @@ const TaskView: React.FC<TaskViewProps> = ({ match }) => {
   const { data: { task = null, projects = [] } = {}, loading } = useTaskQuery({
     variables: { id: match.params.id }
   });
-  const [_updateTask, { loading: savingProject }] = useUpdateTaskMutation();
+  const [_updateTask, { loading: saving }] = useUpdateTaskMutation();
 
   return (
     <LoadingContainer
@@ -58,8 +59,8 @@ const TaskView: React.FC<TaskViewProps> = ({ match }) => {
                 <ViewTitle
                   title={task.name || ""}
                   onChange={name => updateTask({ name })}
-                  saving={savingProject}
                 />
+                <SavingIndicator saving={saving} />
               </ViewHeader>
               <div
                 css={{

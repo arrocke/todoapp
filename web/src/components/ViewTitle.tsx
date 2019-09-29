@@ -2,18 +2,15 @@
 import { jsx } from "@emotion/core";
 import { useState, useRef, useEffect } from "react";
 import Icon from "./Icon";
-import LoadingSpinner from "./LoadingSpinner";
 
 interface ViewTitleProps {
   title?: string;
   placeholder?: string;
-  saving?: boolean;
   onChange?(title?: string): void;
 }
 
 const ViewTitle: React.FC<ViewTitleProps> = ({
   title,
-  saving,
   onChange,
   placeholder
 }) => {
@@ -42,6 +39,7 @@ const ViewTitle: React.FC<ViewTitleProps> = ({
   return (
     <form
       css={{
+        flexGrow: 1,
         display: "flex",
         alignItems: "center"
       }}
@@ -115,7 +113,7 @@ const ViewTitle: React.FC<ViewTitleProps> = ({
           width: 16,
           height: 16,
           margin: 8,
-          ...((isFocused || !canEdit || saving) && {
+          ...((isFocused || !canEdit) && {
             display: "none"
           })
         }}
@@ -179,14 +177,6 @@ const ViewTitle: React.FC<ViewTitleProps> = ({
           }}
         />
       </button>
-      <LoadingSpinner
-        css={{
-          flexShrink: 0,
-          display: saving ? "block" : "none",
-          margin: "0 8px"
-        }}
-        size="small"
-      />
     </form>
   );
 };

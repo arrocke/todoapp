@@ -15,6 +15,7 @@ import ViewHeader from "../components/ViewHeader";
 import ViewTitle from "../components/ViewTitle";
 import AddButton from "../components/AddButton";
 import { KanbanTask } from "../components/KanbanCard";
+import SavingIndicator from "../components/SavingIndicator";
 
 interface ProjectsViewProps extends RouteComponentProps<{ id: string }> {}
 
@@ -27,10 +28,7 @@ const ProjectView: React.FC<ProjectsViewProps> = ({
   const { data: { project = null } = {}, loading } = useProjectQuery({
     variables: { id }
   });
-  const [
-    updateProject,
-    { loading: savingProjectName }
-  ] = useUpdateProjectMutation({
+  const [updateProject, { loading: saving }] = useUpdateProjectMutation({
     optimisticResponse({ input }) {
       return {
         updateProject: { __typename: "Project", ...input }
@@ -86,11 +84,8 @@ const ProjectView: React.FC<ProjectsViewProps> = ({
           return (
             <Fragment>
               <ViewHeader>
-                <ViewTitle
-                  title={project.name || ""}
-                  onChange={onNameChange}
-                  saving={savingProjectName}
-                />
+                <ViewTitle title={project.name || ""} onChange={onNameChange} />
+                <SavingIndicator saving={saving} />
               </ViewHeader>
               <AddButton onClick={onAddTask} />
               <KanbanBoard
