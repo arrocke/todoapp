@@ -3,6 +3,7 @@ import { jsx, css } from "@emotion/core";
 import { TaskState } from "../graphql/types";
 import Icon from "./Icon";
 import Card from "./Card";
+import { readerOnly } from "../styles";
 
 export interface KanbanTask {
   id: string;
@@ -53,6 +54,7 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ className, task }) => {
             flex-grow: 1;
           `}
         >
+          {!task.name && <span css={readerOnly}>Unnamed Task</span>}
           {task.name}
         </div>
         <Icon

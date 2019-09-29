@@ -2,16 +2,11 @@
 import { jsx } from "@emotion/core";
 import Icon from "./Icon";
 
-interface AddButtonProps {
-  className?: string;
-  onClick?(): void;
-}
-
-const AddButton: React.FC<AddButtonProps> = ({ className, onClick }) => {
+const AddButton: React.FC<React.HTMLAttributes<HTMLButtonElement>> = props => {
   return (
     <button
+      {...props}
       type="button"
-      className={className}
       css={{
         zIndex: 10,
         position: "absolute",
@@ -29,7 +24,6 @@ const AddButton: React.FC<AddButtonProps> = ({ className, onClick }) => {
         bottom: 0,
         boxShadow: "1px 1px 3px 1px rgb(0, 0, 0, 0.5)"
       }}
-      onClick={onClick}
     >
       <Icon
         type="plus"

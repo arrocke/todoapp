@@ -87,7 +87,10 @@ const ProjectView: React.FC<ProjectsViewProps> = ({
                 <ViewTitle title={project.name || ""} onChange={onNameChange} />
                 <SavingIndicator saving={saving} />
               </ViewHeader>
-              <AddButton onClick={onAddTask} />
+              <AddButton
+                onClick={onAddTask}
+                aria-label={`Add Task to ${project.name}`}
+              />
               <KanbanBoard
                 css={{
                   minHeight: 0,

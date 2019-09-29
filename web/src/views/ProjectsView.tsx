@@ -63,6 +63,7 @@ const ProjectsView: React.FC<RouteComponentProps> = ({ history }) => {
                 history.push(`/projects/${data.createProject.id}`);
               }
             }}
+            aria-label="Add Project"
           />
           <ul
             css={{
