@@ -46,7 +46,7 @@ const TasksView: React.FC<RouteComponentProps> = ({ history }) => {
         height: "100%",
         position: "relative"
       }}
-      isLoading={loading}
+      isLoading={loading && tasks.length === 0}
     >
       {() => (
         <Fragment>
