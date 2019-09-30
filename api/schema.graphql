@@ -97,7 +97,7 @@ input RemoveFromSprintInput {
 }
 
 type Query {
-  user: User!
+  user: User
   projects: [Project!]!
   project(id: ID!): Project
   tasks(input: SearchTasksInput): [Task!]!

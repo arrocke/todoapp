@@ -120,7 +120,7 @@ export type ProjectTaskCountArgs = {
 
 export type Query = {
   __typename?: "Query";
-  user: User;
+  user?: Maybe<User>;
   projects: Array<Project>;
   project?: Maybe<Project>;
   tasks: Array<Task>;
@@ -477,7 +477,7 @@ export type QueryResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
-  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   projects?: Resolver<
     Array<ResolversTypes["Project"]>,
     ParentType,

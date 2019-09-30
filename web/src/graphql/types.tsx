@@ -123,7 +123,7 @@ export type ProjectTaskCountArgs = {
 
 export type Query = {
   __typename?: 'Query',
-  user: User,
+  user?: Maybe<User>,
   projects: Array<Project>,
   project?: Maybe<Project>,
   tasks: Array<Task>,
@@ -264,6 +264,19 @@ export type CreateTaskMutation = (
   ) }
 );
 
+export type LogInMutationVariables = {
+  input: LoginInput
+};
+
+
+export type LogInMutation = (
+  { __typename?: 'Mutation' }
+  & { login: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstName' | 'lastName' | 'email'>
+  )> }
+);
+
 export type UpdateProjectMutationVariables = {
   input: UpdateProjectInput
 };
@@ -391,6 +404,17 @@ export type TasksQuery = (
   )> }
 );
 
+export type UserQueryVariables = {};
+
+
+export type UserQuery = (
+  { __typename?: 'Query' }
+  & { user: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstName' | 'lastName' | 'email'>
+  )> }
+);
+
 export const CreateProjectDocument = gql`
     mutation CreateProject($input: CreateProjectInput) {
   createProject(input: $input) {
@@ -428,6 +452,24 @@ export type CreateTaskMutationFn = ApolloReactCommon.MutationFunction<CreateTask
 export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
 export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const LogInDocument = gql`
+    mutation LogIn($input: LoginInput!) {
+  login(input: $input) {
+    id
+    firstName
+    lastName
+    email
+  }
+}
+    `;
+export type LogInMutationFn = ApolloReactCommon.MutationFunction<LogInMutation, LogInMutationVariables>;
+
+    export function useLogInMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LogInMutation, LogInMutationVariables>) {
+      return ApolloReactHooks.useMutation<LogInMutation, LogInMutationVariables>(LogInDocument, baseOptions);
+    };
+export type LogInMutationHookResult = ReturnType<typeof useLogInMutation>;
+export type LogInMutationResult = ApolloReactCommon.MutationResult<LogInMutation>;
+export type LogInMutationOptions = ApolloReactCommon.BaseMutationOptions<LogInMutation, LogInMutationVariables>;
 export const UpdateProjectDocument = gql`
     mutation UpdateProject($input: UpdateProjectInput!) {
   updateProject(input: $input) {
@@ -611,3 +653,23 @@ export const TasksDocument = gql`
       
 export type TasksQueryHookResult = ReturnType<typeof useTasksQuery>;
 export type TasksQueryResult = ApolloReactCommon.QueryResult<TasksQuery, TasksQueryVariables>;
+export const UserDocument = gql`
+    query User {
+  user {
+    id
+    firstName
+    lastName
+    email
+  }
+}
+    `;
+
+    export function useUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>) {
+      return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+    };
+      export function useUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+      };
+      
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserQueryResult = ApolloReactCommon.QueryResult<UserQuery, UserQueryVariables>;
