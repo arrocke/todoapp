@@ -39,6 +39,8 @@ const Navigation: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         borderTop: "1px solid black",
+        zIndex: 1,
+        background: "white",
         [breakpoints.medium]: {
           borderTop: 0,
           borderBottom: "1px solid black"
@@ -48,6 +50,7 @@ const Navigation: React.FC = () => {
       <NavigationLink to="/projects">Projects</NavigationLink>
       <NavigationLink to="/tasks">Tasks</NavigationLink>
       {/* <NavigationLink to="/sprints">Sprints</NavigationLink> */}
+      <NavigationLink to="/account">Account</NavigationLink>
       <NavigationLink
         to="/logout"
         onClick={e => {

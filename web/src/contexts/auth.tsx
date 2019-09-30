@@ -5,7 +5,9 @@ import {
   User,
   UserQuery,
   UserDocument,
-  useLogOutMutation
+  useLogOutMutation,
+  useUpdateUserMutation,
+  UpdateUserInput
 } from "../graphql/types";
 
 interface AuthContextValue {
@@ -13,6 +15,7 @@ interface AuthContextValue {
   user: User | null;
   login(email: string, password: string): Promise<User | null>;
   logout(): Promise<void>;
+  update(input: UpdateUserInput): Promise<User | null>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -21,6 +24,7 @@ const AuthProvider: React.FC = ({ children }) => {
   const { data: { user = null } = {}, loading: loadingUser } = useUserQuery();
   const [_login] = useLogInMutation();
   const [_logout] = useLogOutMutation();
+  const [_update] = useUpdateUserMutation();
 
   async function login(email: string, password: string): Promise<User | null> {
     const { data: { login: user = null } = {} } = await _login({
@@ -50,13 +54,31 @@ const AuthProvider: React.FC = ({ children }) => {
     });
   }
 
+  async function update(input: UpdateUserInput): Promise<User | null> {
+    const { data: { updateUser: user = null } = {} } = await _update({
+      variables: {
+        input
+      },
+      update(cache, { data }) {
+        cache.writeQuery<UserQuery>({
+          query: UserDocument,
+          data: {
+            user: data && data.updateUser ? data.updateUser : null
+          }
+        });
+      }
+    });
+    return user;
+  }
+
   return loadingUser ? null : (
     <AuthContext.Provider
       value={{
         isAuthenticated: !!user,
         user,
         login,
-        logout
+        logout,
+        update
       }}
     >
       {children}

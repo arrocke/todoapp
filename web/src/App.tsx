@@ -13,6 +13,7 @@ import TaskView from "./views/TaskView";
 import Navigation from "./components/Navigation";
 import SprintsView from "./views/SprintsView";
 import SprintView from "./views/SprintView";
+import AccountView from "./views/AccountView";
 import { breakpoints } from "./styles";
 import LoginView from "./views/LoginView";
 import { useAuth } from "./contexts/auth";
@@ -52,6 +53,7 @@ const App: React.FC = () => {
               }}
             >
               <Switch>
+                <Route exact path="/account" component={AccountView} />
                 <Route exact path="/projects" component={ProjectsView} />
                 <Route exact path="/projects/:id" component={ProjectView} />
                 <Route exact path="/tasks" component={TasksView} />

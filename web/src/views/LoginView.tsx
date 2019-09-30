@@ -23,8 +23,7 @@ const LoginView: React.FC<RouteComponentProps> = ({ history }) => {
       css={{
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        [breakpoints.medium]: {}
+        flexDirection: "column"
       }}
     >
       <ViewHeader>
