@@ -14,6 +14,14 @@ export const UserMutation: MutationResolvers = {
     }
     return null;
   },
+  async logout(_, __, context) {
+    await new Promise((resolve, reject): void =>
+      context.session.destroy(err => {
+        err ? reject(err) : resolve();
+      })
+    );
+    return true;
+  },
   async updateUser(_, { input: { password, ...input } }, { user }) {
     const userData = await UserModel.findById(user.id);
     userData.set(input);

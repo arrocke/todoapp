@@ -42,6 +42,7 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation',
   login?: Maybe<User>,
+  logout?: Maybe<Scalars['Boolean']>,
   updateUser?: Maybe<User>,
   createProject: Project,
   updateProject?: Maybe<Project>,
@@ -277,6 +278,14 @@ export type LogInMutation = (
   )> }
 );
 
+export type LogOutMutationVariables = {};
+
+
+export type LogOutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
+);
+
 export type UpdateProjectMutationVariables = {
   input: UpdateProjectInput
 };
@@ -470,6 +479,19 @@ export type LogInMutationFn = ApolloReactCommon.MutationFunction<LogInMutation, 
 export type LogInMutationHookResult = ReturnType<typeof useLogInMutation>;
 export type LogInMutationResult = ApolloReactCommon.MutationResult<LogInMutation>;
 export type LogInMutationOptions = ApolloReactCommon.BaseMutationOptions<LogInMutation, LogInMutationVariables>;
+export const LogOutDocument = gql`
+    mutation LogOut {
+  logout
+}
+    `;
+export type LogOutMutationFn = ApolloReactCommon.MutationFunction<LogOutMutation, LogOutMutationVariables>;
+
+    export function useLogOutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LogOutMutation, LogOutMutationVariables>) {
+      return ApolloReactHooks.useMutation<LogOutMutation, LogOutMutationVariables>(LogOutDocument, baseOptions);
+    };
+export type LogOutMutationHookResult = ReturnType<typeof useLogOutMutation>;
+export type LogOutMutationResult = ApolloReactCommon.MutationResult<LogOutMutation>;
+export type LogOutMutationOptions = ApolloReactCommon.BaseMutationOptions<LogOutMutation, LogOutMutationVariables>;
 export const UpdateProjectDocument = gql`
     mutation UpdateProject($input: UpdateProjectInput!) {
   updateProject(input: $input) {

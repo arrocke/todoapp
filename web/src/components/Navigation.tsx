@@ -2,6 +2,7 @@
 import { jsx } from "@emotion/core";
 import { Link, LinkProps } from "react-router-dom";
 import { breakpoints } from "../styles";
+import { useAuth } from "../contexts/auth";
 
 interface NavigationLinkProps extends LinkProps {
   children: string;
@@ -30,6 +31,8 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
 };
 
 const Navigation: React.FC = () => {
+  const { logout } = useAuth();
+
   return (
     <nav
       css={{
@@ -44,7 +47,16 @@ const Navigation: React.FC = () => {
     >
       <NavigationLink to="/projects">Projects</NavigationLink>
       <NavigationLink to="/tasks">Tasks</NavigationLink>
-      <NavigationLink to="/sprints">Sprints</NavigationLink>
+      {/* <NavigationLink to="/sprints">Sprints</NavigationLink> */}
+      <NavigationLink
+        to="/logout"
+        onClick={e => {
+          e.preventDefault();
+          logout();
+        }}
+      >
+        Log Out
+      </NavigationLink>
     </nav>
   );
 };

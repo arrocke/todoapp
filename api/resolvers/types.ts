@@ -51,6 +51,7 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: "Mutation";
   login?: Maybe<User>;
+  logout?: Maybe<Scalars["Boolean"]>;
   updateUser?: Maybe<User>;
   createProject: Project;
   updateProject?: Maybe<Project>;
@@ -343,6 +344,7 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   UpdateUserInput: UpdateUserInput;
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
@@ -352,7 +354,6 @@ export type ResolversTypes = ResolversObject<{
   UpdateSprintInput: UpdateSprintInput;
   AddToSprintInput: AddToSprintInput;
   RemoveFromSprintInput: RemoveFromSprintInput;
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -370,6 +371,7 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars["Int"];
   Mutation: {};
   LoginInput: LoginInput;
+  Boolean: Scalars["Boolean"];
   UpdateUserInput: UpdateUserInput;
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
@@ -379,7 +381,6 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateSprintInput: UpdateSprintInput;
   AddToSprintInput: AddToSprintInput;
   RemoveFromSprintInput: RemoveFromSprintInput;
-  Boolean: Scalars["Boolean"];
 }>;
 
 export interface DateScalarConfig
@@ -397,6 +398,7 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationLoginArgs, "input">
   >;
+  logout?: Resolver<Maybe<ResolversTypes["Boolean"]>, ParentType, ContextType>;
   updateUser?: Resolver<
     Maybe<ResolversTypes["User"]>,
     ParentType,

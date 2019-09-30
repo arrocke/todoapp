@@ -109,6 +109,7 @@ type Query {
 
 type Mutation {
   login(input: LoginInput!): User
+  logout: Boolean
   updateUser(input: UpdateUserInput!): User
   createProject(input: CreateProjectInput): Project!
   updateProject(input: UpdateProjectInput!): Project
