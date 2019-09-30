@@ -27,13 +27,7 @@
     { "src": "^/manifest.json", "dest": "web/manifest.json" },
     { "src": "^/(.*)", "dest": "web/index.html" }
   ],
-  "build": {
-    "env": {
-      "REACT_APP_AIRTABLE_API_KEY": "@airtable-api-key",
-      "REACT_APP_AIRTABLE_BASE": "@airtable-base"
-    }
-  },
   "env": {
-    "MONGODB_URI": "@mongo-uri"
+    "MONGODB_URI": "@todo-mongodb-uri"
   }
 }
