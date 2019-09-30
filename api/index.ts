@@ -21,8 +21,7 @@ const typeDefs = fs.readFileSync(
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useFindAndModify: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true
+  useCreateIndex: true
 });
 mongoose.connection.on("connected", () => {
   console.log("Mongoose connected");
@@ -60,6 +59,11 @@ const server = new GraphQLServer({
       Mutation: authenticationMiddleware
     }
   ]
+});
+
+server.express.use((req, res, next) => {
+  req.url = "/";
+  next();
 });
 
 server.express.use(
