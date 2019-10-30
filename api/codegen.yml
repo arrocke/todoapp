@@ -13,6 +13,7 @@ generates:
       contextType: ../context#GraphqlContext
       mappers:
         User: ../models/user#UserDocument
+        Space: ../models/space#SpaceDocument
         Project: ../models/project#ProjectDocument
         Task: ../models/task#TaskDocument
         Sprint: ../models/sprint#SprintDocument

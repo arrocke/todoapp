@@ -14,9 +14,18 @@ type User {
   email: String!
 }
 
+type Space {
+  id: ID!
+  name: String
+  tasks(input: SearchTasksInput): [Task!]!
+  taskCount(input: SearchTasksInput): Int!
+  projects: [Project!]!
+}
+
 type Project {
   id: ID!
   name: String
+  space: Space
   tasks(input: SearchTasksInput): [Task!]!
   taskCount(input: SearchTasksInput): Int!
 }
@@ -25,6 +34,7 @@ type Task {
   id: ID!
   name: String
   status: TaskState!
+  space: Space
   project: Project
   sprints: [Sprint!]!
 }
@@ -49,13 +59,24 @@ input UpdateUserInput {
   password: String
 }
 
+input CreateSpaceInput {
+  name: String
+}
+
+input UpdateSpaceInput {
+  id: ID!
+  name: String
+}
+
 input CreateProjectInput {
   name: String
+  space: ID
 }
 
 input UpdateProjectInput {
   id: ID!
   name: String
+  space: ID
 }
 
 input SearchTasksInput {
@@ -66,6 +87,7 @@ input CreateTaskInput {
   name: String
   status: TaskState
   project: ID
+  space: ID
 }
 
 input UpdateTaskInput {
@@ -73,6 +95,7 @@ input UpdateTaskInput {
   name: String
   status: TaskState
   project: ID
+  space: ID
 }
 
 input CreateSprintInput {
@@ -98,6 +121,8 @@ input RemoveFromSprintInput {
 
 type Query {
   user: User
+  spaces: [Space!]!
+  space(id: ID!): Space
   projects: [Project!]!
   project(id: ID!): Project
   tasks(input: SearchTasksInput): [Task!]!
@@ -111,6 +136,8 @@ type Mutation {
   login(input: LoginInput!): User
   logout: Boolean
   updateUser(input: UpdateUserInput!): User
+  createSpace(input: CreateSpaceInput): Space!
+  updateSpace(input: UpdateSpaceInput!): Space
   createProject(input: CreateProjectInput): Project!
   updateProject(input: UpdateProjectInput!): Project
   createTask(input: CreateTaskInput): Task!

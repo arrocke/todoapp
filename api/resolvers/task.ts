@@ -8,6 +8,7 @@ import TaskModel from "../models/task";
 import { asDocuments, asDocument } from "../utils";
 import { SprintDocument } from "../models/sprint";
 import { ProjectDocument } from "../models/project";
+import { SpaceDocument } from "models/space";
 
 export const TaskMutation: MutationResolvers = {
   async createTask(
@@ -50,6 +51,10 @@ export const TaskQuery: QueryResolvers = {
 
 const Task: TaskResolvers = {
   id: task => task._id.toHexString(),
+  async space(task) {
+    await task.populate("space").execPopulate();
+    return asDocument<SpaceDocument>(task.space);
+  },
   async project(task) {
     await task.populate("project").execPopulate();
     return asDocument<ProjectDocument>(task.project);

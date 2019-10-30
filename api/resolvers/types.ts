@@ -4,6 +4,7 @@ import {
   GraphQLScalarTypeConfig
 } from "graphql";
 import { UserDocument } from "../models/user";
+import { SpaceDocument } from "../models/space";
 import { ProjectDocument } from "../models/project";
 import { TaskDocument } from "../models/task";
 import { SprintDocument } from "../models/sprint";
@@ -30,6 +31,11 @@ export type AddToSprintInput = {
 
 export type CreateProjectInput = {
   name?: Maybe<Scalars["String"]>;
+  space?: Maybe<Scalars["ID"]>;
+};
+
+export type CreateSpaceInput = {
+  name?: Maybe<Scalars["String"]>;
 };
 
 export type CreateSprintInput = {
@@ -41,6 +47,7 @@ export type CreateTaskInput = {
   name?: Maybe<Scalars["String"]>;
   status?: Maybe<TaskState>;
   project?: Maybe<Scalars["ID"]>;
+  space?: Maybe<Scalars["ID"]>;
 };
 
 export type LoginInput = {
@@ -53,6 +60,8 @@ export type Mutation = {
   login?: Maybe<User>;
   logout?: Maybe<Scalars["Boolean"]>;
   updateUser?: Maybe<User>;
+  createSpace: Space;
+  updateSpace?: Maybe<Space>;
   createProject: Project;
   updateProject?: Maybe<Project>;
   createTask: Task;
@@ -69,6 +78,14 @@ export type MutationLoginArgs = {
 
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
+};
+
+export type MutationCreateSpaceArgs = {
+  input?: Maybe<CreateSpaceInput>;
+};
+
+export type MutationUpdateSpaceArgs = {
+  input: UpdateSpaceInput;
 };
 
 export type MutationCreateProjectArgs = {
@@ -107,6 +124,7 @@ export type Project = {
   __typename?: "Project";
   id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
+  space?: Maybe<Space>;
   tasks: Array<Task>;
   taskCount: Scalars["Int"];
 };
@@ -122,6 +140,8 @@ export type ProjectTaskCountArgs = {
 export type Query = {
   __typename?: "Query";
   user?: Maybe<User>;
+  spaces: Array<Space>;
+  space?: Maybe<Space>;
   projects: Array<Project>;
   project?: Maybe<Project>;
   tasks: Array<Task>;
@@ -129,6 +149,10 @@ export type Query = {
   task?: Maybe<Task>;
   sprints: Array<Sprint>;
   sprint?: Maybe<Sprint>;
+};
+
+export type QuerySpaceArgs = {
+  id: Scalars["ID"];
 };
 
 export type QueryProjectArgs = {
@@ -160,6 +184,23 @@ export type SearchTasksInput = {
   status?: Maybe<Array<TaskState>>;
 };
 
+export type Space = {
+  __typename?: "Space";
+  id: Scalars["ID"];
+  name?: Maybe<Scalars["String"]>;
+  tasks: Array<Task>;
+  taskCount: Scalars["Int"];
+  projects: Array<Project>;
+};
+
+export type SpaceTasksArgs = {
+  input?: Maybe<SearchTasksInput>;
+};
+
+export type SpaceTaskCountArgs = {
+  input?: Maybe<SearchTasksInput>;
+};
+
 export type Sprint = {
   __typename?: "Sprint";
   id: Scalars["ID"];
@@ -182,6 +223,7 @@ export type Task = {
   id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
   status: TaskState;
+  space?: Maybe<Space>;
   project?: Maybe<Project>;
   sprints: Array<Sprint>;
 };
@@ -194,6 +236,12 @@ export enum TaskState {
 }
 
 export type UpdateProjectInput = {
+  id: Scalars["ID"];
+  name?: Maybe<Scalars["String"]>;
+  space?: Maybe<Scalars["ID"]>;
+};
+
+export type UpdateSpaceInput = {
   id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
 };
@@ -209,6 +257,7 @@ export type UpdateTaskInput = {
   name?: Maybe<Scalars["String"]>;
   status?: Maybe<TaskState>;
   project?: Maybe<Scalars["ID"]>;
+  space?: Maybe<Scalars["ID"]>;
 };
 
 export type UpdateUserInput = {
@@ -335,17 +384,20 @@ export type ResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<UserDocument>;
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   String: ResolverTypeWrapper<Scalars["String"]>;
-  Project: ResolverTypeWrapper<ProjectDocument>;
+  Space: ResolverTypeWrapper<SpaceDocument>;
   SearchTasksInput: SearchTasksInput;
   TaskState: TaskState;
   Task: ResolverTypeWrapper<TaskDocument>;
+  Project: ResolverTypeWrapper<ProjectDocument>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Sprint: ResolverTypeWrapper<SprintDocument>;
   Date: ResolverTypeWrapper<Scalars["Date"]>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInput: LoginInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   UpdateUserInput: UpdateUserInput;
+  CreateSpaceInput: CreateSpaceInput;
+  UpdateSpaceInput: UpdateSpaceInput;
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
   CreateTaskInput: CreateTaskInput;
@@ -362,17 +414,20 @@ export type ResolversParentTypes = ResolversObject<{
   User: UserDocument;
   ID: Scalars["ID"];
   String: Scalars["String"];
-  Project: ProjectDocument;
+  Space: SpaceDocument;
   SearchTasksInput: SearchTasksInput;
   TaskState: TaskState;
   Task: TaskDocument;
+  Project: ProjectDocument;
+  Int: Scalars["Int"];
   Sprint: SprintDocument;
   Date: Scalars["Date"];
-  Int: Scalars["Int"];
   Mutation: {};
   LoginInput: LoginInput;
   Boolean: Scalars["Boolean"];
   UpdateUserInput: UpdateUserInput;
+  CreateSpaceInput: CreateSpaceInput;
+  UpdateSpaceInput: UpdateSpaceInput;
   CreateProjectInput: CreateProjectInput;
   UpdateProjectInput: UpdateProjectInput;
   CreateTaskInput: CreateTaskInput;
@@ -404,6 +459,18 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUpdateUserArgs, "input">
+  >;
+  createSpace?: Resolver<
+    ResolversTypes["Space"],
+    ParentType,
+    ContextType,
+    MutationCreateSpaceArgs
+  >;
+  updateSpace?: Resolver<
+    Maybe<ResolversTypes["Space"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateSpaceArgs, "input">
   >;
   createProject?: Resolver<
     ResolversTypes["Project"],
@@ -461,6 +528,7 @@ export type ProjectResolvers<
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  space?: Resolver<Maybe<ResolversTypes["Space"]>, ParentType, ContextType>;
   tasks?: Resolver<
     Array<ResolversTypes["Task"]>,
     ParentType,
@@ -480,6 +548,13 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  spaces?: Resolver<Array<ResolversTypes["Space"]>, ParentType, ContextType>;
+  space?: Resolver<
+    Maybe<ResolversTypes["Space"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySpaceArgs, "id">
+  >;
   projects?: Resolver<
     Array<ResolversTypes["Project"]>,
     ParentType,
@@ -518,6 +593,31 @@ export type QueryResolvers<
   >;
 }>;
 
+export type SpaceResolvers<
+  ContextType = GraphqlContext,
+  ParentType extends ResolversParentTypes["Space"] = ResolversParentTypes["Space"]
+> = ResolversObject<{
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  tasks?: Resolver<
+    Array<ResolversTypes["Task"]>,
+    ParentType,
+    ContextType,
+    SpaceTasksArgs
+  >;
+  taskCount?: Resolver<
+    ResolversTypes["Int"],
+    ParentType,
+    ContextType,
+    SpaceTaskCountArgs
+  >;
+  projects?: Resolver<
+    Array<ResolversTypes["Project"]>,
+    ParentType,
+    ContextType
+  >;
+}>;
+
 export type SprintResolvers<
   ContextType = GraphqlContext,
   ParentType extends ResolversParentTypes["Sprint"] = ResolversParentTypes["Sprint"]
@@ -546,6 +646,7 @@ export type TaskResolvers<
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes["TaskState"], ParentType, ContextType>;
+  space?: Resolver<Maybe<ResolversTypes["Space"]>, ParentType, ContextType>;
   project?: Resolver<Maybe<ResolversTypes["Project"]>, ParentType, ContextType>;
   sprints?: Resolver<Array<ResolversTypes["Sprint"]>, ParentType, ContextType>;
 }>;
@@ -565,6 +666,7 @@ export type Resolvers<ContextType = GraphqlContext> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Space?: SpaceResolvers<ContextType>;
   Sprint?: SprintResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

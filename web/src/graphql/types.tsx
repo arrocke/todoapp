@@ -20,6 +20,11 @@ export type AddToSprintInput = {
 
 export type CreateProjectInput = {
   name?: Maybe<Scalars['String']>,
+  space?: Maybe<Scalars['ID']>,
+};
+
+export type CreateSpaceInput = {
+  name?: Maybe<Scalars['String']>,
 };
 
 export type CreateSprintInput = {
@@ -31,6 +36,7 @@ export type CreateTaskInput = {
   name?: Maybe<Scalars['String']>,
   status?: Maybe<TaskState>,
   project?: Maybe<Scalars['ID']>,
+  space?: Maybe<Scalars['ID']>,
 };
 
 
@@ -44,6 +50,8 @@ export type Mutation = {
   login?: Maybe<User>,
   logout?: Maybe<Scalars['Boolean']>,
   updateUser?: Maybe<User>,
+  createSpace: Space,
+  updateSpace?: Maybe<Space>,
   createProject: Project,
   updateProject?: Maybe<Project>,
   createTask: Task,
@@ -62,6 +70,16 @@ export type MutationLoginArgs = {
 
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput
+};
+
+
+export type MutationCreateSpaceArgs = {
+  input?: Maybe<CreateSpaceInput>
+};
+
+
+export type MutationUpdateSpaceArgs = {
+  input: UpdateSpaceInput
 };
 
 
@@ -108,6 +126,7 @@ export type Project = {
   __typename?: 'Project',
   id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
+  space?: Maybe<Space>,
   tasks: Array<Task>,
   taskCount: Scalars['Int'],
 };
@@ -125,6 +144,8 @@ export type ProjectTaskCountArgs = {
 export type Query = {
   __typename?: 'Query',
   user?: Maybe<User>,
+  spaces: Array<Space>,
+  space?: Maybe<Space>,
   projects: Array<Project>,
   project?: Maybe<Project>,
   tasks: Array<Task>,
@@ -132,6 +153,11 @@ export type Query = {
   task?: Maybe<Task>,
   sprints: Array<Sprint>,
   sprint?: Maybe<Sprint>,
+};
+
+
+export type QuerySpaceArgs = {
+  id: Scalars['ID']
 };
 
 
@@ -168,6 +194,25 @@ export type SearchTasksInput = {
   status?: Maybe<Array<TaskState>>,
 };
 
+export type Space = {
+  __typename?: 'Space',
+  id: Scalars['ID'],
+  name?: Maybe<Scalars['String']>,
+  tasks: Array<Task>,
+  taskCount: Scalars['Int'],
+  projects: Array<Project>,
+};
+
+
+export type SpaceTasksArgs = {
+  input?: Maybe<SearchTasksInput>
+};
+
+
+export type SpaceTaskCountArgs = {
+  input?: Maybe<SearchTasksInput>
+};
+
 export type Sprint = {
   __typename?: 'Sprint',
   id: Scalars['ID'],
@@ -192,6 +237,7 @@ export type Task = {
   id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
   status: TaskState,
+  space?: Maybe<Space>,
   project?: Maybe<Project>,
   sprints: Array<Sprint>,
 };
@@ -204,6 +250,12 @@ export enum TaskState {
 }
 
 export type UpdateProjectInput = {
+  id: Scalars['ID'],
+  name?: Maybe<Scalars['String']>,
+  space?: Maybe<Scalars['ID']>,
+};
+
+export type UpdateSpaceInput = {
   id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
 };
@@ -219,6 +271,7 @@ export type UpdateTaskInput = {
   name?: Maybe<Scalars['String']>,
   status?: Maybe<TaskState>,
   project?: Maybe<Scalars['ID']>,
+  space?: Maybe<Scalars['ID']>,
 };
 
 export type UpdateUserInput = {
