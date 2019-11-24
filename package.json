@@ -1,22 +1,14 @@
 {
   "name": "todoapp",
   "scripts": {
-    "api:start": "(cd api && npm run start)",
-    "api:test": "(cd api && npm run test)",
-    "api:test:coverage": "(cd api && npm run test:coverage)",
-    "web:start": "(cd web && npm run start)",
-    "web:build": "(cd web && npm run build)",
-    "web:test": "(cd web && npm run test)",
-    "web:test:coverage": "(cd web && npm run test:coverage)",
-    "e2e:start": "(cd e2e && npm run start)",
+    "e2e": "(cd e2e && npm run start)",
     "generate": "(cd api && npm run generate) && (cd web && npm run generate)",
-    "postinstall": "(cd web && npm install) && (cd e2e && npm install) && (cd api ** npm install)",
-    "precommit": "(cd web && npm run precommit) && (cd e2e && npm run precommit) && (cd api && npm run precommit)"
+    "postinstall": "(cd web && npm i) && (cd e2e && npm i) && (cd api && npm i)",
+    "precommit": "(cd e2e && npm run precommit) && (cd api && npm run precommit)"
   },
   "dependencies": {},
   "devDependencies": {
-    "husky": "^3.0.4",
-    "lint-staged": "^9.2.3"
+    "husky": "^3.0.4"
   },
   "husky": {
     "hooks": {

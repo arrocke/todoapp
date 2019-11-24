@@ -3,14 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/dotenv": "^6.1.1",
-    "@types/graphql": "^14.2.3",
-    "@types/mongoose": "^5.5.13",
-    "@types/node": "12.7.1",
     "@typescript-eslint/eslint-plugin": "2.0.0",
     "@typescript-eslint/parser": "2.0.0",
     "connect-mongo": "3.0.0",
-    "dotenv": "^8.1.0",
     "eslint": "6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-prettier": "^3.1.0",
@@ -27,23 +22,17 @@
     "@graphql-codegen/typescript": "1.6.1",
     "@graphql-codegen/typescript-operations": "1.6.1",
     "@graphql-codegen/typescript-resolvers": "1.6.1",
+    "@types/dotenv": "^6.1.1",
+    "@types/graphql": "^14.2.3",
+    "@types/mongoose": "^5.5.13",
+    "@types/node": "12.7.1",
     "@types/connect-mongo": "0.0.43",
     "@types/express-session": "^1.15.14",
-    "@types/jest": "24.0.17",
     "@types/passport-local-mongoose": "4.0.12",
-    "jest": "24.9.0",
-    "jest-watch-typeahead": "^0.3.1",
-    "lint-staged": "^9.2.1",
-    "nodemon": "1.19.1",
-    "ts-jest": "24.0.2",
-    "ts-node": "^8.3.0",
-    "ts-node-dev": "^1.0.0-pre.41"
+    "lint-staged": "^9.2.1"
   },
   "scripts": {
-    "start": "ts-node-dev --no-notify --respawn --transpileOnly ./",
     "lint": "eslint **/*.ts",
-    "test": "jest --watch",
-    "test:coverage": "jest --coverage",
     "generate": "graphql-codegen --config codegen.yml",
     "precommit": "lint-staged"
   },
@@ -61,10 +50,6 @@
       "ecmaVersion": 2018,
       "sourceType": "module"
     }
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [

@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import { GraphQLServer } from "graphql-yoga";
 import fs from "fs";
 import path from "path";
@@ -9,8 +8,6 @@ import storeBuilder from "connect-mongo";
 import { GraphqlContext } from "context";
 import { IMiddlewareFunction } from "graphql-middleware";
 const MongoStore = storeBuilder(session);
-
-dotenv.config();
 
 const typeDefs = fs.readFileSync(
   path.join(__dirname, "schema.graphql"),

@@ -6,8 +6,6 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "build",
     "baseUrl": ".",
-    "types": ["jest"]
   }
 }

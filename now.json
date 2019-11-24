@@ -4,11 +4,8 @@
   "alias": ["todo.adrianrocke.com"],
   "builds": [
     {
-      "src": "web/package.json",
-      "use": "@now/static-build",
-      "config": {
-        "distDir": "build"
-      }
+      "src": "web/next.config.js",
+      "use": "@now/next"
     },
     {
       "src": "api/index.ts",
@@ -21,11 +18,8 @@
     }
   ],
   "routes": [
-    { "src": "^/api", "dest": "api/index.ts" },
-    { "src": "^/static/(.*)", "dest": "web/static/$1" },
-    { "src": "^/favicon.ico", "dest": "web/favicon.ico" },
-    { "src": "^/manifest.json", "dest": "web/manifest.json" },
-    { "src": "^/(.*)", "dest": "web/index.html" }
+    { "src": "^/api", "dest": "/api/index.ts" },
+    { "src": "^/(.*)", "dest": "/web/$1", "continue": true }
   ],
   "env": {
     "MONGODB_URI": "@todo-mongodb-uri"
