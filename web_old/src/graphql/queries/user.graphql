@@ -1,8 +1,0 @@
-query User {
-  user {
-    id
-    firstName
-    lastName
-    email
-  }
-}
