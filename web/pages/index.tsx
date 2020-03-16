@@ -1,5 +1,5 @@
 const Index: React.FC = () => {
-  return <div>Hello next.js</div>
-}
+  return <div>Hello next.js</div>;
+};
 
-export default Index
+export default Index;
