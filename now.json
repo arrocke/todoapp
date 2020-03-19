@@ -8,17 +8,17 @@
       "use": "@now/next"
     },
     {
-      "src": "api/index.ts",
+      "src": "api/src/index.ts",
       "use": "@now/node",
       "config": {
         "includeFiles": [
-          "api/schema.graphql"
+          "api/src/schema.graphql"
         ]
       }
     }
   ],
   "routes": [
-    { "src": "^/api", "dest": "/api/index.ts" },
+    { "src": "^/api", "dest": "/api/src/index.ts" },
     { "src": "^/(.*)", "dest": "/web/$1", "continue": true }
   ],
   "env": {

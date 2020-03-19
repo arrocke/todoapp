@@ -15,6 +15,7 @@ type User {
 }
 
 type Query {
+
 }
 
 type Mutation {
