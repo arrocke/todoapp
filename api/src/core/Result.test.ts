@@ -1,4 +1,4 @@
-import Result from "./Result";
+import Result from "core/Result";
 
 test("ok constructs a successful result", () => {
   const result = Result.ok<string>("success message");
