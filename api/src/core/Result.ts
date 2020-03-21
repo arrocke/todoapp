@@ -1,4 +1,4 @@
-/** Returns a successful or failed result from an operation. */
+/** A successful or failed result from an operation. */
 export default class Result<T> {
   private _value?: T | Error;
 
