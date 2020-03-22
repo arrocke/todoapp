@@ -7,5 +7,6 @@ module.exports = {
   moduleDirectories: [
     path.resolve(__dirname, "node_modules"),
     path.resolve(__dirname, "src")
-  ]
+  ],
+  setupFilesAfterEnv: ["./test/setup.ts"]
 };
