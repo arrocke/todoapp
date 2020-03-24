@@ -11,17 +11,30 @@ interface ValidateArgs {
   };
 }
 
+export class ValidationError extends Error {
+  readonly propName: string;
+
+  constructor(message: string, propName: string) {
+    super(message);
+    this.propName = propName;
+  }
+}
+
 export default function validate(...args: ValidateArgs[]): Result<void> {
   for (const { value, name, ...validates } of args) {
     if (validates.notUndefined && value === undefined) {
-      return Result.fail(new Error(`${name} must not be undefined.`));
+      return Result.fail(
+        new ValidationError(`${name} must not be undefined.`, name)
+      );
     }
     if (validates.notNull && value === null) {
-      return Result.fail(new Error(`${name} must not be null.`));
+      return Result.fail(
+        new ValidationError(`${name} must not be null.`, name)
+      );
     }
     if (validates.matches && !String(value).match(validates.matches.pattern)) {
       return Result.fail(
-        new Error(`${name} must be ${validates.matches.label}.`)
+        new ValidationError(`${name} must be ${validates.matches.label}.`, name)
       );
     }
   }

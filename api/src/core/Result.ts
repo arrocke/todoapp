@@ -1,5 +1,5 @@
 /** A successful or failed result from an operation. */
-export default class Result<T> {
+export default class Result<T = undefined> {
   private _value?: T | Error;
 
   /** True if result is a success. */
@@ -50,7 +50,7 @@ export default class Result<T> {
     this.isFailure = !isSuccess;
     this._value = value;
 
-    Object.freeze(this);
+    // Object.freeze(this);
   }
 
   /**

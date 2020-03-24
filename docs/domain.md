@@ -16,6 +16,7 @@
 * Update User
 * Log In
 * Log Out
+* Change Password
 
 
 ##  Tasks

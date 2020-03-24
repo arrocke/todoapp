@@ -1,4 +1,4 @@
-import validate from "core/validate";
+import validate, { ValidationError } from "core/validate";
 import Result from "./Result";
 
 test("validates that a value is not undefined", () => {
@@ -8,7 +8,9 @@ test("validates that a value is not undefined", () => {
       name: "value",
       notUndefined: true
     })
-  ).toEqual(Result.fail(new Error("value must not be undefined.")));
+  ).toEqual(
+    Result.fail(new ValidationError("value must not be undefined.", "value"))
+  );
   expect(
     validate({
       value: 1,
@@ -32,7 +34,9 @@ test("validates that a value is not null", () => {
       name: "value",
       notNull: true
     })
-  ).toEqual(Result.fail(new Error("value must not be null.")));
+  ).toEqual(
+    Result.fail(new ValidationError("value must not be null.", "value"))
+  );
   expect(
     validate({
       value: 1,
@@ -59,7 +63,9 @@ test("validates that a value matches a string", () => {
         label: "a valid value"
       }
     })
-  ).toEqual(Result.fail(new Error("value must be a valid value.")));
+  ).toEqual(
+    Result.fail(new ValidationError("value must be a valid value.", "value"))
+  );
   expect(
     validate({
       value: "does match",
@@ -82,7 +88,9 @@ test("validates that a value matches a regular expression", () => {
         label: "a valid value"
       }
     })
-  ).toEqual(Result.fail(new Error("value must be a valid value.")));
+  ).toEqual(
+    Result.fail(new ValidationError("value must be a valid value.", "value"))
+  );
   expect(
     validate({
       value: "does match",
@@ -109,7 +117,9 @@ test("validates mutliple values", () => {
         notUndefined: true
       }
     )
-  ).toEqual(Result.fail(new Error("value1 must not be undefined.")));
+  ).toEqual(
+    Result.fail(new ValidationError("value1 must not be undefined.", "value1"))
+  );
   expect(
     validate(
       {
@@ -123,7 +133,9 @@ test("validates mutliple values", () => {
         notUndefined: true
       }
     )
-  ).toEqual(Result.fail(new Error("value2 must not be undefined.")));
+  ).toEqual(
+    Result.fail(new ValidationError("value2 must not be undefined.", "value2"))
+  );
   expect(
     validate(
       {
