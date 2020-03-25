@@ -6,6 +6,9 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "test/*": ["../test/*"]
+    }
   }
 }

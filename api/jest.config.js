@@ -4,9 +4,9 @@ module.exports = {
   transform: {
     "^.+\\.tsx?$": "ts-jest"
   },
-  moduleDirectories: [
-    path.resolve(__dirname, "node_modules"),
-    path.resolve(__dirname, "src")
-  ],
+  modulePaths: [path.resolve(__dirname, "src")],
+  moduleNameMapper: {
+    "^test/(.+)": "<rootDir>/test/$1"
+  },
   setupFilesAfterEnv: ["./test/setup.ts"]
 };

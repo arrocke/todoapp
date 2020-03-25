@@ -1,3 +1,4 @@
+import "config/pg";
 import DomainEventBus from "core/DomainEventBus";
 
 beforeEach(() => {

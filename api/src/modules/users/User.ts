@@ -30,8 +30,8 @@ export interface UserProps {
   email: string;
   firstName: string;
   lastName: string;
-  salt?: string;
-  hash?: string;
+  salt: string;
+  hash: string;
 }
 
 /** Data for creating a new User entity. */

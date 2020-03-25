@@ -7,6 +7,7 @@ import session from "express-session";
 import storeBuilder from "connect-mongo";
 import { GraphqlContext } from "context";
 import { IMiddlewareFunction } from "graphql-middleware";
+import "config/pg";
 const MongoStore = storeBuilder(session);
 
 const typeDefs = fs.readFileSync(
