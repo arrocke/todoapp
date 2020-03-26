@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { AggregateRoot, EntityIdentifier, Result, validate } from "core";
+import UserCreatedEvent from "./events";
 
 const SALT_LEN = 16;
 
@@ -143,7 +144,10 @@ export default class User extends AggregateRoot<UserProps> {
       const salt = generateSalt(SALT_LEN);
       const hash = sha512(salt, password);
 
-      return Result.ok(new User({ email, firstName, lastName, salt, hash }));
+      const user = new User({ email, firstName, lastName, salt, hash });
+      user.addEvent(new UserCreatedEvent(user.id));
+
+      return Result.ok(user);
     }
   }
 

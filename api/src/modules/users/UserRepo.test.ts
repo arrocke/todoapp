@@ -110,6 +110,7 @@ test("save creates a new record if it does not exist", async () => {
     },
     new EntityIdentifier(faker.random.uuid())
   );
+  jest.spyOn(user, "dispatchEvents");
   await repo.save(user);
   await expect(getUser(user.id.toValue())).resolves.toEqual({
     id: user.id.toValue(),
@@ -119,6 +120,7 @@ test("save creates a new record if it does not exist", async () => {
     salt: user.props.salt,
     hash: user.props.hash
   });
+  expect(user.dispatchEvents).toHaveBeenCalled();
 });
 
 test("save updates existing user if it already exists", async () => {
@@ -133,6 +135,7 @@ test("save updates existing user if it already exists", async () => {
     },
     new EntityIdentifier(dbUser.id)
   );
+  jest.spyOn(user, "dispatchEvents");
   await repo.save(user);
   await expect(getUser(dbUser.id)).resolves.toEqual({
     id: user.id.toValue(),
@@ -142,4 +145,5 @@ test("save updates existing user if it already exists", async () => {
     salt: user.props.salt,
     hash: user.props.hash
   });
+  expect(user.dispatchEvents).toHaveBeenCalled();
 });

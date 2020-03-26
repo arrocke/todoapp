@@ -1,7 +1,8 @@
 import crypto from "crypto";
 import faker from "faker";
 import User, { UserProps } from "modules/users/User";
-import { EntityIdentifier, ValidationError } from "core";
+import { EntityIdentifier, ValidationError, DomainEventBus } from "core";
+import UserCreatedEvent from "modules/users/events";
 
 function getUserProps(
   overrides: Partial<UserProps> = {},
@@ -137,6 +138,10 @@ test("create returns a User entity", () => {
   expect(result.isSuccess).toBe(true);
   expect(result.value.props).toEqual(props);
   expect(result.value.id).toEqual(id);
+  const handler = jest.fn();
+  DomainEventBus.addHandler(UserCreatedEvent.name, handler);
+  result.value.dispatchEvents();
+  expect(handler).not.toHaveBeenCalled();
 });
 
 test("register returns an error if email is undefined", () => {
@@ -221,7 +226,7 @@ test("register returns an error if password is null", () => {
   );
 });
 
-test("register returns a User entity with a salt and hash", () => {
+test("register returns a User entity with a salt and hash and raises event", () => {
   const props = getUserProps();
   const password = faker.internet.password();
   const result = User.register(props, password);
@@ -237,6 +242,13 @@ test("register returns a User entity with a salt and hash", () => {
   expect(result.value.id.toValue()).toMatch(
     /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/
   );
+  const handler = jest.fn();
+  DomainEventBus.addHandler(UserCreatedEvent.name, handler);
+  result.value.dispatchEvents();
+  expect(handler).toHaveBeenCalledWith({
+    timestamp: expect.any(Date),
+    aggregateId: result.value.id
+  });
 });
 
 test("updateName returns an error if new firstName is undefined", () => {

@@ -114,5 +114,6 @@ export class PostgresUserRepo implements UserRepo {
         dbUser.hash
       ]
     });
+    user.dispatchEvents();
   }
 }
