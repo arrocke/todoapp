@@ -4,20 +4,19 @@ import User, { UserProps } from "modules/users/User";
 import { EntityIdentifier, ValidationError } from "core";
 
 function getUserProps(
-  props: Partial<UserProps> = {},
+  overrides: Partial<UserProps> = {},
   password: string = faker.internet.password()
 ): UserProps {
   const salt = crypto.randomBytes(8).toString("hex");
   const hash = crypto.createHmac("sha512", salt);
   hash.update(password);
   return {
-    email: props.hasOwnProperty("email")
-      ? props.email
-      : "Marilou.Abbott@hotmail.com",
-    firstName: props.hasOwnProperty("firstName") ? props.firstName : "Marilou",
-    lastName: props.hasOwnProperty("lastName") ? props.lastName : "Abbott",
-    salt: props.hasOwnProperty("salt") ? props.salt : salt,
-    hash: props.hasOwnProperty("hash") ? props.hash : hash.digest("hex")
+    email: faker.internet.email(),
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    salt,
+    hash: hash.digest("hex"),
+    ...overrides
   };
 }
 
