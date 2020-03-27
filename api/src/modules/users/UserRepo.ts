@@ -1,7 +1,7 @@
 import User from "modules/users/User";
 import { EntityIdentifier } from "core";
 import { Pool } from "pg";
-import * as mapUser from "modules/users/mapUser";
+import * as mapUser from "modules/users/map-user";
 
 /** Repository for working with users. */
 export interface UserRepo {

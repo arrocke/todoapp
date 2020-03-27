@@ -1,5 +1,5 @@
 import faker from "faker";
-import createUserMock from "modules/users/UserRepoMock";
+import createUserMock from "modules/users/tests/UserRepoMock";
 import { UserRepo } from "modules/users/UserRepo";
 import RegisterUserUseCase, {
   RegisterUserRequest,
@@ -10,16 +10,13 @@ import { ValidationError } from "core";
 let userRepo: jest.Mocked<UserRepo>;
 let useCase: RegisterUserUseCase;
 
-function getRequest(
-  overrides: Partial<RegisterUserRequest> = {}
-): RegisterUserRequest {
-  return {
-    email: faker.internet.email(),
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    password: faker.internet.password(),
-    ...overrides
-  };
+function getRequest({
+  email = faker.internet.email(),
+  firstName = faker.name.firstName(),
+  lastName = faker.name.lastName(),
+  password = faker.internet.password()
+}: Partial<RegisterUserRequest> = {}): RegisterUserRequest {
+  return { email, firstName, lastName, password };
 }
 
 beforeEach(() => {
@@ -44,7 +41,7 @@ test("returns error if user validation fails", async () => {
   );
 });
 
-test("saves user to database if successful", async () => {
+test("saves user to database", async () => {
   const request = getRequest();
   userRepo.save.mockResolvedValue(undefined);
   const result = await useCase.execute(request);

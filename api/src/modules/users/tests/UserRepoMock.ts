@@ -1,4 +1,4 @@
-import { UserRepo } from "./UserRepo";
+import { UserRepo } from "../UserRepo";
 
 function createUserRepoMock(): jest.Mocked<UserRepo> {
   return {
