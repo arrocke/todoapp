@@ -1,5 +1,6 @@
 import { UserRepo } from "modules/users/UserRepo";
 import { UseCase, Result, EntityIdentifier } from "core";
+import UserEmail from "modules/users/UserEmail";
 
 export interface UpdateUserRequest {
   id: string;
@@ -29,9 +30,13 @@ export default class UpdateUserUseCase extends UseCase<
       }
 
       if (request.email) {
-        const emailResult = user.updateEmail(request.email);
+        const emailResult = UserEmail.create(request.email);
         if (emailResult.isFailure) {
           return this.fail(emailResult.error);
+        }
+        const changeEmailResult = user.updateEmail(emailResult.value);
+        if (changeEmailResult.isFailure) {
+          return this.fail(changeEmailResult.error);
         }
       }
 

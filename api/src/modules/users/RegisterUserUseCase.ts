@@ -1,6 +1,7 @@
-import { UseCase, Result, validate } from "core";
+import { UseCase, Result } from "core";
 import { UserRepo } from "modules/users/UserRepo";
-import User from "./User";
+import User from "modules/users/User";
+import UserEmail from "modules/users/UserEmail";
 
 export interface RegisterUserRequest {
   email: string;
@@ -29,10 +30,16 @@ export default class RegisterUserUseCase extends UseCase<
 
   async execute(request: RegisterUserRequest): Promise<Result> {
     try {
-      const { email, firstName, lastName, password } = request;
+      const { firstName, lastName, password } = request;
 
-      if (await this._userRepo.exists(email)) {
-        return this.fail(new UsersExistsError(email));
+      const emailResult = UserEmail.create(request.email);
+      if (emailResult.isFailure) {
+        return this.fail(emailResult.error);
+      }
+      const email = emailResult.value;
+
+      if (await this._userRepo.exists(request.email)) {
+        return this.fail(new UsersExistsError(request.email));
       }
 
       const userResult = User.register(

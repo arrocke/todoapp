@@ -3,6 +3,7 @@ import faker from "faker";
 import User, { UserProps } from "modules/users/User";
 import { EntityIdentifier, ValidationError, DomainEventBus } from "core";
 import UserCreatedEvent from "modules/users/events";
+import UserEmail from "modules/users/UserEmail";
 
 function getUserProps(
   overrides: Partial<UserProps> = {},
@@ -12,7 +13,7 @@ function getUserProps(
   const hash = crypto.createHmac("sha512", salt);
   hash.update(password);
   return {
-    email: faker.internet.email(),
+    email: UserEmail.create(faker.internet.email()).value,
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     salt,
@@ -331,7 +332,7 @@ test("updateEmail returns an error if new email is null", () => {
 
 test("updateEmail changes email", () => {
   const { value: user } = User.create(getUserProps(), new EntityIdentifier());
-  const newEmail = faker.internet.email();
+  const newEmail = UserEmail.create(faker.internet.email()).value;
   const result = user.updateEmail(newEmail);
   expect(result.isSuccess).toBe(true);
   expect(user.props).toMatchObject({

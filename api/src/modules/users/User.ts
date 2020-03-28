@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { AggregateRoot, EntityIdentifier, Result, validate } from "core";
-import UserCreatedEvent from "./events";
+import UserCreatedEvent from "modules/users/events";
+import UserEmail from "modules/users/UserEmail";
 
 const SALT_LEN = 16;
 
@@ -28,7 +29,7 @@ function sha512(salt: string, password: string): string {
 
 /** Data for the User entity. */
 export interface UserProps {
-  email: string;
+  email: UserEmail;
   firstName: string;
   lastName: string;
   salt: string;
@@ -41,7 +42,7 @@ export type RegisterUserProps = Omit<UserProps, "salt" | "hash">;
 /** A user who can log in to the app. */
 export default class User extends AggregateRoot<UserProps> {
   /** The email address of the user. */
-  get email(): string {
+  get email(): UserEmail {
     return this.props.email;
   }
 
@@ -230,7 +231,7 @@ export default class User extends AggregateRoot<UserProps> {
    * Updates the email address of the user.
    * @param email The new email address to set.
    */
-  updateEmail(email: string): Result {
+  updateEmail(email: UserEmail): Result {
     const validateResult = validate({
       value: email,
       name: "email",

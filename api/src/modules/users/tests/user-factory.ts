@@ -1,9 +1,10 @@
 import faker from "faker";
 import crypto from "crypto";
+import { Pool } from "pg";
 import { EntityIdentifier } from "core";
 import User from "modules/users/User";
 import { DbUser } from "modules/users/UserRepo";
-import { Pool } from "pg";
+import UserEmail from "modules/users/UserEmail";
 
 function sha512(salt: string, password: string): string {
   const hash = crypto.createHmac("sha512", salt);
@@ -30,7 +31,13 @@ export function buildUser({
   salt = crypto.randomBytes(8).toString("hex"),
   hash = sha512(salt, password)
 }: UserBuilderProps = {}): User {
-  const props = { firstName, lastName, email, salt, hash };
+  const props = {
+    firstName,
+    lastName,
+    email: UserEmail.create(email).value,
+    salt,
+    hash
+  };
   return User.create(props, new EntityIdentifier(id)).value;
 }
 

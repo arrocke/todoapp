@@ -1,10 +1,14 @@
 import faker from "faker";
 import { Pool } from "pg";
 import { getDb } from "test/utils";
-import { insertDbUser, findDbUser } from "modules/users/tests/user-factory";
+import {
+  insertDbUser,
+  findDbUser,
+  buildUser
+} from "modules/users/tests/user-factory";
 import { EntityIdentifier } from "core";
 import { PostgresUserRepo, UserRepo } from "modules/users/UserRepo";
-import User from "modules/users/User";
+import UserEmail from "modules/users/UserEmail";
 
 let pool: Pool;
 let repo: UserRepo;
@@ -36,7 +40,7 @@ test("findByEmail returns the user if it exists in the database", async () => {
   const user = await repo.findByEmail(dbUser.email);
   expect(user.id.toValue()).toEqual(dbUser.id);
   expect(user.props).toEqual({
-    email: dbUser.email,
+    email: UserEmail.create(dbUser.email).value,
     firstName: dbUser.first_name,
     lastName: dbUser.last_name,
     salt: dbUser.salt,
@@ -53,7 +57,7 @@ test("findById returns the user if it exists in the database", async () => {
   const user = await repo.findById(new EntityIdentifier(dbUser.id));
   expect(user.id.toValue()).toEqual(dbUser.id);
   expect(user.props).toEqual({
-    email: dbUser.email,
+    email: UserEmail.create(dbUser.email).value,
     firstName: dbUser.first_name,
     lastName: dbUser.last_name,
     salt: dbUser.salt,
@@ -68,21 +72,12 @@ test("findById returns null if it does not exist in the database", async () => {
 });
 
 test("save creates a new record if it does not exist", async () => {
-  const { value: user } = User.create(
-    {
-      email: faker.internet.email(),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      salt: faker.random.alphaNumeric(16),
-      hash: faker.random.alphaNumeric(128)
-    },
-    new EntityIdentifier(faker.random.uuid())
-  );
+  const user = buildUser();
   jest.spyOn(user, "dispatchEvents");
   await repo.save(user);
   await expect(findDbUser(pool, user.id.toValue())).resolves.toEqual({
     id: user.id.toValue(),
-    email: user.props.email,
+    email: user.props.email.value,
     first_name: user.props.firstName,
     last_name: user.props.lastName,
     salt: user.props.salt,
@@ -93,21 +88,12 @@ test("save creates a new record if it does not exist", async () => {
 
 test("save updates existing user if it already exists", async () => {
   const dbUser = await insertDbUser(pool);
-  const { value: user } = User.create(
-    {
-      email: faker.internet.email(),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      salt: faker.random.alphaNumeric(16),
-      hash: faker.random.alphaNumeric(128)
-    },
-    new EntityIdentifier(dbUser.id)
-  );
+  const user = buildUser({ id: dbUser.id });
   jest.spyOn(user, "dispatchEvents");
   await repo.save(user);
   await expect(findDbUser(pool, dbUser.id)).resolves.toEqual({
     id: user.id.toValue(),
-    email: user.props.email,
+    email: user.props.email.value,
     first_name: user.props.firstName,
     last_name: user.props.lastName,
     salt: user.props.salt,

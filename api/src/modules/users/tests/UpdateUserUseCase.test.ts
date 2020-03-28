@@ -6,18 +6,10 @@ import UpdateUserUseCase, {
 } from "modules/users/UpdateUserUseCase";
 import { ValidationError } from "core";
 import { buildUser } from "modules/users/tests/user-factory";
+import UserEmail from "modules/users/UserEmail";
 
 let userRepo: jest.Mocked<UserRepo>;
 let useCase: UpdateUserUseCase;
-
-function getRequest({
-  id = faker.random.uuid(),
-  email = faker.internet.email(),
-  firstName = faker.name.firstName(),
-  lastName = faker.name.lastName()
-}: Partial<UpdateUserRequest> = {}): UpdateUserRequest {
-  return { id, email, firstName, lastName };
-}
 
 beforeEach(() => {
   userRepo = createUserMock();
@@ -25,7 +17,27 @@ beforeEach(() => {
 });
 
 test.todo("returns error if user does not exist");
-test.todo("returns error if email validation fails");
+
+test("returns error if email validation fails", async () => {
+  const user = buildUser();
+  const request: UpdateUserRequest = {
+    id: user.id.toValue(),
+    email: "not an email"
+  };
+  userRepo.findById.mockResolvedValue(user);
+  userRepo.save.mockResolvedValue(undefined);
+  const result = await useCase.execute(request);
+  expect(result.isFailure).toEqual(true);
+  expect(result.error).toEqual(
+    new ValidationError("email must be a valid email.", "email")
+  );
+  expect(userRepo.findById).toHaveBeenCalledWith(user.id);
+  expect(userRepo.save).not.toHaveBeenCalled();
+  expect(user.props).not.toMatchObject({
+    email: request.email
+  });
+});
+
 test.todo("returns error if name validation fails");
 
 test("updates email in database", async () => {
@@ -41,7 +53,7 @@ test("updates email in database", async () => {
   expect(userRepo.findById).toHaveBeenCalledWith(user.id);
   expect(userRepo.save).toHaveBeenCalledWith(user);
   expect(user.props).toMatchObject({
-    email: request.email
+    email: UserEmail.create(request.email).value
   });
 });
 
