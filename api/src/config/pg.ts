@@ -1,3 +1,3 @@
 import { types } from "pg";
 
-types.setTypeParser(20, val => parseInt(val));
+types.setTypeParser(20, (val: string) => parseInt(val));
