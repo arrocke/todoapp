@@ -3,10 +3,11 @@ import { ValidationError } from "core";
 import createUserMock from "modules/users/tests/UserRepoMock";
 import { UserRepo } from "modules/users/UserRepo";
 import RegisterUserUseCase, {
-  RegisterUserRequest,
-  UsersExistsError
+  RegisterUserRequest
 } from "modules/users/RegisterUserUseCase";
 import UserEmail from "modules/users/UserEmail";
+import UserName from "modules/users/UserName";
+import { UsersExistsError } from "modules/users/errors";
 
 let userRepo: jest.Mocked<UserRepo>;
 let useCase: RegisterUserUseCase;
@@ -31,6 +32,24 @@ test("returns error if email validation fails", async () => {
   expect(result.isFailure).toEqual(true);
   expect(result.error).toEqual(
     new ValidationError("email must be a valid email.", "email")
+  );
+});
+
+test("returns error if firstName validation fails", async () => {
+  const request = getRequest({ firstName: "" });
+  const result = await useCase.execute(request);
+  expect(result.isFailure).toEqual(true);
+  expect(result.error).toEqual(
+    new ValidationError("name must have a length of at least 1.", "name")
+  );
+});
+
+test("returns error if lastName validation fails", async () => {
+  const request = getRequest({ lastName: "" });
+  const result = await useCase.execute(request);
+  expect(result.isFailure).toEqual(true);
+  expect(result.error).toEqual(
+    new ValidationError("name must have a length of at least 1.", "name")
   );
 });
 
@@ -60,8 +79,8 @@ test("saves user to database", async () => {
   const [savedUser] = userRepo.save.mock.calls[0];
   expect(savedUser.props).toEqual({
     email: UserEmail.create(request.email).value,
-    firstName: request.firstName,
-    lastName: request.lastName,
+    firstName: UserName.create(request.firstName).value,
+    lastName: UserName.create(request.lastName).value,
     salt: expect.any(String),
     hash: expect.any(String)
   });

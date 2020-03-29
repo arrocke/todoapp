@@ -5,6 +5,7 @@ import { EntityIdentifier } from "core";
 import User from "modules/users/User";
 import { DbUser } from "modules/users/UserRepo";
 import UserEmail from "modules/users/UserEmail";
+import UserName from "modules/users/UserName";
 
 function sha512(salt: string, password: string): string {
   const hash = crypto.createHmac("sha512", salt);
@@ -32,8 +33,8 @@ export function buildUser({
   hash = sha512(salt, password)
 }: UserBuilderProps = {}): User {
   const props = {
-    firstName,
-    lastName,
+    firstName: UserName.create(firstName).value,
+    lastName: UserName.create(lastName).value,
     email: UserEmail.create(email).value,
     salt,
     hash

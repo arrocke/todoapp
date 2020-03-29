@@ -2,19 +2,14 @@ import { UseCase, Result } from "core";
 import { UserRepo } from "modules/users/UserRepo";
 import User from "modules/users/User";
 import UserEmail from "modules/users/UserEmail";
+import UserName from "modules/users/UserName";
+import { UsersExistsError } from "modules/users/errors";
 
 export interface RegisterUserRequest {
   email: string;
   firstName: string;
   lastName: string;
   password: string;
-}
-
-export class UsersExistsError extends Error {
-  constructor(email: string) {
-    super(`A user with the email ${email} already exists.`);
-    this.name = "UsersExistsError";
-  }
 }
 
 export default class RegisterUserUseCase extends UseCase<
@@ -30,7 +25,7 @@ export default class RegisterUserUseCase extends UseCase<
 
   async execute(request: RegisterUserRequest): Promise<Result> {
     try {
-      const { firstName, lastName, password } = request;
+      const { password } = request;
 
       const emailResult = UserEmail.create(request.email);
       if (emailResult.isFailure) {
@@ -41,6 +36,18 @@ export default class RegisterUserUseCase extends UseCase<
       if (await this._userRepo.exists(request.email)) {
         return this.fail(new UsersExistsError(request.email));
       }
+
+      const firstNameResult = UserName.create(request.firstName);
+      if (firstNameResult.isFailure) {
+        return this.fail(firstNameResult.error);
+      }
+      const firstName = firstNameResult.value;
+
+      const lastNameResult = UserName.create(request.lastName);
+      if (lastNameResult.isFailure) {
+        return this.fail(lastNameResult.error);
+      }
+      const lastName = lastNameResult.value;
 
       const userResult = User.register(
         { email, firstName, lastName },

@@ -9,6 +9,7 @@ import {
 import { EntityIdentifier } from "core";
 import { PostgresUserRepo, UserRepo } from "modules/users/UserRepo";
 import UserEmail from "modules/users/UserEmail";
+import UserName from "modules/users/UserName";
 
 let pool: Pool;
 let repo: UserRepo;
@@ -41,8 +42,8 @@ test("findByEmail returns the user if it exists in the database", async () => {
   expect(user.id.toValue()).toEqual(dbUser.id);
   expect(user.props).toEqual({
     email: UserEmail.create(dbUser.email).value,
-    firstName: dbUser.first_name,
-    lastName: dbUser.last_name,
+    firstName: UserName.create(dbUser.first_name).value,
+    lastName: UserName.create(dbUser.last_name).value,
     salt: dbUser.salt,
     hash: dbUser.hash
   });
@@ -58,8 +59,8 @@ test("findById returns the user if it exists in the database", async () => {
   expect(user.id.toValue()).toEqual(dbUser.id);
   expect(user.props).toEqual({
     email: UserEmail.create(dbUser.email).value,
-    firstName: dbUser.first_name,
-    lastName: dbUser.last_name,
+    firstName: UserName.create(dbUser.first_name).value,
+    lastName: UserName.create(dbUser.last_name).value,
     salt: dbUser.salt,
     hash: dbUser.hash
   });
@@ -78,8 +79,8 @@ test("save creates a new record if it does not exist", async () => {
   await expect(findDbUser(pool, user.id.toValue())).resolves.toEqual({
     id: user.id.toValue(),
     email: user.props.email.value,
-    first_name: user.props.firstName,
-    last_name: user.props.lastName,
+    first_name: user.props.firstName.value,
+    last_name: user.props.lastName.value,
     salt: user.props.salt,
     hash: user.props.hash
   });
@@ -94,8 +95,8 @@ test("save updates existing user if it already exists", async () => {
   await expect(findDbUser(pool, dbUser.id)).resolves.toEqual({
     id: user.id.toValue(),
     email: user.props.email.value,
-    first_name: user.props.firstName,
-    last_name: user.props.lastName,
+    first_name: user.props.firstName.value,
+    last_name: user.props.lastName.value,
     salt: user.props.salt,
     hash: user.props.hash
   });

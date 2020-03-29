@@ -1,6 +1,8 @@
 import { UserRepo } from "modules/users/UserRepo";
 import { UseCase, Result, EntityIdentifier } from "core";
 import UserEmail from "modules/users/UserEmail";
+import UserName from "modules/users/UserName";
+import { UserNotFoundError } from "modules/users/errors";
 
 export interface UpdateUserRequest {
   id: string;
@@ -22,11 +24,10 @@ export default class UpdateUserUseCase extends UseCase<
 
   async execute(request: UpdateUserRequest): Promise<Result> {
     try {
-      const { id } = request;
-
-      const user = await this._userRepo.findById(new EntityIdentifier(id));
+      const id = new EntityIdentifier(request.id);
+      const user = await this._userRepo.findById(id);
       if (!user) {
-        return this.fail(new Error());
+        return this.fail(new UserNotFoundError(id));
       }
 
       if (request.email) {
@@ -40,11 +41,30 @@ export default class UpdateUserUseCase extends UseCase<
         }
       }
 
-      if (request.firstName || request.lastName) {
-        const nameResult = user.updateName(
-          request.firstName || user.firstName,
-          request.lastName || user.lastName
+      if (
+        typeof request.firstName === "string" ||
+        typeof request.lastName === "string"
+      ) {
+        const firstNameResult = UserName.create(
+          typeof request.firstName === "string"
+            ? request.firstName
+            : user.firstName.value
         );
+        if (firstNameResult.isFailure) {
+          return this.fail(firstNameResult.error);
+        }
+        const firstName = firstNameResult.value;
+
+        const lastNameResult = UserName.create(
+          typeof request.lastName === "string"
+            ? request.lastName
+            : user.lastName.value
+        );
+        if (lastNameResult.isFailure) {
+          return this.fail(lastNameResult.error);
+        }
+        const lastName = lastNameResult.value;
+        const nameResult = user.updateName(firstName, lastName);
         if (nameResult.isFailure) {
           return this.fail(nameResult.error);
         }

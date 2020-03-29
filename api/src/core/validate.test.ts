@@ -103,6 +103,27 @@ test("validates that a value matches a regular expression", () => {
   ).toEqual(Result.ok());
 });
 
+test("validates that a value has a minimum length", () => {
+  expect(
+    validate({
+      value: "a",
+      name: "value",
+      minLength: 2
+    })
+  ).toEqual(
+    Result.fail(
+      new ValidationError("value must have a length of at least 2.", "value")
+    )
+  );
+  expect(
+    validate({
+      value: "is long enough",
+      name: "value",
+      minLength: 2
+    })
+  ).toEqual(Result.ok());
+});
+
 test("validates mutliple values", () => {
   expect(
     validate(

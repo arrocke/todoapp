@@ -4,6 +4,7 @@ import User, { UserProps } from "modules/users/User";
 import { EntityIdentifier, ValidationError, DomainEventBus } from "core";
 import UserCreatedEvent from "modules/users/events";
 import UserEmail from "modules/users/UserEmail";
+import UserName from "modules/users/UserName";
 
 function getUserProps(
   overrides: Partial<UserProps> = {},
@@ -14,8 +15,8 @@ function getUserProps(
   hash.update(password);
   return {
     email: UserEmail.create(faker.internet.email()).value,
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
+    firstName: UserName.create(faker.name.firstName()).value,
+    lastName: UserName.create(faker.name.lastName()).value,
     salt,
     hash: hash.digest("hex"),
     ...overrides
@@ -255,7 +256,10 @@ test("register returns a User entity with a salt and hash and raises event", () 
 test("updateName returns an error if new firstName is undefined", () => {
   const { value: user } = User.create(getUserProps(), new EntityIdentifier());
   const { firstName, lastName } = user.props;
-  const result = user.updateName(undefined, faker.name.lastName());
+  const result = user.updateName(
+    undefined,
+    UserName.create(faker.name.lastName()).value
+  );
   expect(result.isFailure).toBe(true);
   expect(result.error).toEqual(
     new ValidationError("firstName must not be undefined.", "firstName")
@@ -266,7 +270,10 @@ test("updateName returns an error if new firstName is undefined", () => {
 test("updateName returns an error if new firstName is null", () => {
   const { value: user } = User.create(getUserProps(), new EntityIdentifier());
   const { firstName, lastName } = user.props;
-  const result = user.updateName(null, faker.name.lastName());
+  const result = user.updateName(
+    null,
+    UserName.create(faker.name.lastName()).value
+  );
   expect(result.isFailure).toBe(true);
   expect(result.error).toEqual(
     new ValidationError("firstName must not be null.", "firstName")
@@ -277,7 +284,10 @@ test("updateName returns an error if new firstName is null", () => {
 test("updateName returns an error if new lastName is undefined", () => {
   const { value: user } = User.create(getUserProps(), new EntityIdentifier());
   const { firstName, lastName } = user.props;
-  const result = user.updateName(faker.name.lastName(), undefined);
+  const result = user.updateName(
+    UserName.create(faker.name.lastName()).value,
+    undefined
+  );
   expect(result.isFailure).toBe(true);
   expect(result.error).toEqual(
     new ValidationError("lastName must not be undefined.", "lastName")
@@ -288,7 +298,10 @@ test("updateName returns an error if new lastName is undefined", () => {
 test("updateName returns an error if new lastName is null", () => {
   const { value: user } = User.create(getUserProps(), new EntityIdentifier());
   const { firstName, lastName } = user.props;
-  const result = user.updateName(faker.name.lastName(), null);
+  const result = user.updateName(
+    UserName.create(faker.name.lastName()).value,
+    null
+  );
   expect(result.isFailure).toBe(true);
   expect(result.error).toEqual(
     new ValidationError("lastName must not be null.", "lastName")
@@ -298,8 +311,8 @@ test("updateName returns an error if new lastName is null", () => {
 
 test("updateName changes first and last names", () => {
   const { value: user } = User.create(getUserProps(), new EntityIdentifier());
-  const newFirstName = faker.name.firstName();
-  const newLastName = faker.name.lastName();
+  const newFirstName = UserName.create(faker.name.firstName()).value;
+  const newLastName = UserName.create(faker.name.lastName()).value;
   const result = user.updateName(newFirstName, newLastName);
   expect(result.isSuccess).toBe(true);
   expect(user.props).toMatchObject({

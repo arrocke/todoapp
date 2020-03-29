@@ -9,6 +9,7 @@ interface ValidateArgs {
     pattern: RegExp | string;
     label: string;
   };
+  minLength?: number;
 }
 
 export class ValidationError extends Error {
@@ -35,6 +36,17 @@ export default function validate(...args: ValidateArgs[]): Result<void> {
     if (validates.matches && !String(value).match(validates.matches.pattern)) {
       return Result.fail(
         new ValidationError(`${name} must be ${validates.matches.label}.`, name)
+      );
+    }
+    if (
+      typeof validates.minLength === "number" &&
+      value.length < validates.minLength
+    ) {
+      return Result.fail(
+        new ValidationError(
+          `${name} must have a length of at least ${validates.minLength}.`,
+          name
+        )
       );
     }
   }
