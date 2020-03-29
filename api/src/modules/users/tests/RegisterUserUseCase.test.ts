@@ -1,6 +1,6 @@
 import faker from "faker";
 import { ValidationError } from "core";
-import createUserMock from "modules/users/tests/UserRepoMock";
+import createUserRepoMock from "modules/users/tests/UserRepoMock";
 import { UserRepo } from "modules/users/UserRepo";
 import RegisterUserUseCase, {
   RegisterUserRequest
@@ -22,7 +22,7 @@ function getRequest({
 }
 
 beforeEach(() => {
-  userRepo = createUserMock();
+  userRepo = createUserRepoMock();
   useCase = new RegisterUserUseCase(userRepo);
 });
 

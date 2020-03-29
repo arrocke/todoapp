@@ -13,3 +13,10 @@ export class UserNotFoundError extends Error {
     this.name = "UserNotFoundError";
   }
 }
+
+export class InvalidEmailError extends Error {
+  constructor(email: string) {
+    super(`No user with the email ${email} exists.`);
+    this.name = "UserNotFoundError";
+  }
+}

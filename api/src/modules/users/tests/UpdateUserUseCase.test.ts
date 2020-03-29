@@ -1,5 +1,5 @@
 import faker from "faker";
-import createUserMock from "modules/users/tests/UserRepoMock";
+import createUserRepoMock from "modules/users/tests/UserRepoMock";
 import { UserRepo } from "modules/users/UserRepo";
 import UpdateUserUseCase, {
   UpdateUserRequest
@@ -14,7 +14,7 @@ let userRepo: jest.Mocked<UserRepo>;
 let useCase: UpdateUserUseCase;
 
 beforeEach(() => {
-  userRepo = createUserMock();
+  userRepo = createUserRepoMock();
   useCase = new UpdateUserUseCase(userRepo);
 });
 
